@@ -8,9 +8,8 @@
 \usepackage{xpatch}
 \usepackage{xcolor}
 \usepackage{url, hyperref}
-\usepackage[authoryear,round]{natbib}
 
-\usepackage{amsmath, amsthm, amssymb}
+\usepackage{amsmath, amsthm, amssymb, amsfonts} 
 
 %------------------------------------
 %----------Configurations------------
@@ -34,21 +33,47 @@
 
 \hypersetup{colorlinks=true,citecolor=blue, urlcolor = cien, linkcolor=blue}
 
-%--- space between items 
+%---------------------------------------------------
+%------------------Itemize--------------------------
+%---------------------------------------------------
 
-\xpatchcmd{\itemize}
-  {\def\makelabel}
-  {\ifnum\@itemdepth=1\relax
-     \setlength\itemsep{3ex}% separation for first level
+\makeatletter
+\newcommand{\my@beamer@setsep}{%
+\ifnum\@itemdepth=1\relax
+     \setlength\itemsep{\my@beamer@itemsepi}% separation for first level
    \else
      \ifnum\@itemdepth=2\relax
-       \setlength\itemsep{2ex}% separation for second level
+       \setlength\itemsep{\my@beamer@itemsepii}% separation for second level
      \else
        \ifnum\@itemdepth=3\relax
-         \setlength\itemsep{0.5ex}% separation for third level
-   \fi\fi\fi\def\makelabel
-  }
-{}{}
+         \setlength\itemsep{\my@beamer@itemsepiii}% separation for third level
+   \fi\fi\fi}
+\newlength{\my@beamer@itemsepi}\setlength{\my@beamer@itemsepi}{3ex}
+\newlength{\my@beamer@itemsepii}\setlength{\my@beamer@itemsepii}{1.5ex}
+\newlength{\my@beamer@itemsepiii}\setlength{\my@beamer@itemsepiii}{1.5ex}
+\newcommand\setlistsep[3]{%
+    \setlength{\my@beamer@itemsepi}{#1}%
+    \setlength{\my@beamer@itemsepii}{#2}%
+    \setlength{\my@beamer@itemsepiii}{#3}%
+}
+\xpatchcmd{\itemize}
+  {\def\makelabel}
+  {\my@beamer@setsep\def\makelabel}
+ {}
+ {}
+
+\xpatchcmd{\beamer@enum@}
+  {\def\makelabel}
+  {\my@beamer@setsep\def\makelabel}
+ {}
+ {}
+\makeatother
+
+%---------------------------------------------------
+%-----------------Definitions-----------------------
+%---------------------------------------------------
+
+\newcommand{\Space}{\vspace{3ex}}
 
 %---------------------------------------------------
 %----------------Front page-------------------------
@@ -81,11 +106,10 @@
     \tableofcontents[currentsection]
   \end{frame}
 }
-%----------------------------------------------------
 
-%alert and alertblock -> red
-%block -> blue
-%examples -> green 
+%---------------------------------------------------
+%---------------- Document -------------------------
+%---------------------------------------------------
 
 \begin{document}
 
@@ -120,26 +144,26 @@
     \frametitle{Existing sampling methods}
 
     \begin{itemize}
-        \item Snowball (\cite{goodman1961})
+        \item {\bf Snowball} \cite{goodman1961}
     \end{itemize}
 
     From starting individuals, each subject provides a list of names of known
     individuals from the target population. The researcher invites this person
     to participate, who can agree or deny it. 
 
-    \vspace{2ex}
+    \Space
 
     \begin{itemize}
-      \item Key informant (\cite{deaux-callaghan1985})
+      \item {\bf Key informant} \cite{deaux-callaghan1985}
     \end{itemize}
 
     Expert respondents are selected to answer about others' behavior. For
     instance, social workers, drug abuse counselors, official, etc. 
 
-    \vspace{2ex}
+    \Space
 
     \begin{itemize}
-      \item Targeted (\cite{watters-biernacki1989})
+      \item {\bf Targeted} \cite{watters-biernacki1989}
     \end{itemize}
 
    Field researchers build an ethnographic mapping of a target population, and
@@ -166,6 +190,37 @@
   
   \frametitle{Respondent-driven sampling}
 
+  \begin{enumerate}
+    \item The researchers select a handful of individuals from a target
+    population who serve as {\em seeds}.
+    \item Each participant receives a fixed number of {\em recruitment coupons} and invite
+    members of their own social network to participate in exchange of a
+    reward.   
+    \item The sampling is without replacement. 
+    \item If the individual accepts to participate, they answer a
+    questionnaire and inform the network degree. One important point is that
+    the recruiter doesn't say the name of the other members, reducing the
+    mask effect. 
+  \end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+  
+  \frametitle{System of incentives}
+    
+  Two different sources of theoretical incentive (dual incentive system):
+
+  \Space
+
+  \begin{itemize}
+    \item {\bf Individual-sanction based control:} reward for participating
+    in the research. 
+    \item {\bf Group-mediated social control:} reward for recruiting peers.
+    When social approval is important, it's more efficient and cheaper.
+    Symbolic incentive is also important. 
+  \end{itemize}
+
 \end{frame}
 
 %------------------------------------------------------
@@ -173,7 +228,38 @@
 \section{Mathematical formulation}
 
 \begin{frame}
-\frametitle{Markov chain}
+  
+  \frametitle{Modelo formal}
+
+  The RDS can be seen mathematically in two different approaches. 
+
+  \Space
+
+  \begin{itemize}
+    \item {\bf Stochastic process} \cite{heckathorn1997}
+  \end{itemize}
+
+  Each recruiter's social characteristics affect the characteristics of the
+  recruits. There are a limited number of states that subjects can assume and
+  the recruits are function of the recruiter characteristics.
+
+  \Space
+
+  \begin{itemize}
+    \item {\bf Graphical structure} \cite{crawford2016}
+  \end{itemize}
+
+  A hidden population is an undirected graph, and we observe it partially in
+  the {\em recruitment graph}, as also the coupon matrix and recruitment
+  times. The unobserved graph is treated as {\em missing data} what can be
+  interpreted as as Exponential Random Graph Model.  
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Markov chain model}
+
+
 
 \end{frame}
 
@@ -187,9 +273,9 @@
 \section{Applications with real data}
 
 \begin{frame}[t, allowframebreaks]
-  \frametitle{References}
-  \bibliographystyle{apalike}
-  \bibliography{biblio}
-\end{frame}
+   \frametitle{References}
+   \bibliographystyle{apalike}
+   \bibliography{biblio}
+ \end{frame}
 
 \end{document}
