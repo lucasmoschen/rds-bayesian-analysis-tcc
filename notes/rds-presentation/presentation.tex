@@ -6,6 +6,7 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage{xpatch}
+\usepackage{ragged2e}
 \usepackage{xcolor}
 \usepackage{url, hyperref}
 
@@ -32,6 +33,8 @@
 \setbeamercolor{section in toc}{fg=FirstColor}
 
 \hypersetup{colorlinks=true,citecolor=blue, urlcolor = cien, linkcolor=blue}
+
+\apptocmd{\frame}{}{\justifying}{}
 
 %---------------------------------------------------
 %------------------Itemize--------------------------
@@ -129,6 +132,7 @@
 \frametitle{Hidden and hard-to-reach populations}
 
 \begin{itemize}
+    \justifying
     \item No sampling frame exists: size and boundaries of the population are unknown.
     \item Privacy concerns: stigmatized or illegal behavior. 
     \item Fear of exposition or prosecution complicates the enumeration and learning about these populations.
@@ -176,6 +180,7 @@
   \frametitle{Problems with snowball sampling}
 
   \begin{itemize}
+    \justifying
     \item Inferences about the individuals depend on the initial sample. 
     \item Bias towards individuals who are more cooperative and agree to
     participate. 
@@ -191,6 +196,7 @@
   \frametitle{Respondent-driven sampling}
 
   \begin{enumerate}
+    \justifying
     \item The researchers select a handful of individuals from a target
     population who serve as {\em seeds}.
     \item Each participant receives a fixed number of {\em recruitment coupons} and invite
@@ -201,6 +207,7 @@
     questionnaire and inform the network degree. One important point is that
     the recruiter doesn't say the name of the other members, reducing the
     mask effect. 
+
   \end{enumerate}
 
 \end{frame}
@@ -214,6 +221,7 @@
   \Space
 
   \begin{itemize}
+    \justifying
     \item {\bf Individual-sanction based control:} reward for participating
     in the research. 
     \item {\bf Group-mediated social control:} reward for recruiting peers.
@@ -229,7 +237,7 @@
 
 \begin{frame}
   
-  \frametitle{Modelo formal}
+  \frametitle{Formal model}
 
   The RDS can be seen mathematically in two different approaches. 
 
@@ -259,15 +267,102 @@
 \begin{frame}
 \frametitle{Markov chain model}
 
+\begin{itemize}
+  \justifying
+  \item In a survey, questions about ethnicity, location, and gender create
+  states in which each participant will be. By statistical tests, one can
+  verify association between the recruiter and recruited responses. 
 
+  \item Heckathorn concluded that the recruitment was a memoryless process, and concluded RDS was a first-oder Markov process. At
+  any instant, the current location of the point indicates the most recent
+  recruit's characteristic. 
 
+  \item The markov chain must be ergodic. 
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example of RDS in Markov chain}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Consequences of Markov chain theory}
+
+  \begin{theorem}
+    \justifying
+    An equilibrium mix of recruits will be attained when the number of waves
+    goes to infinity, and it is independent from which recruitment began. 
+  \end{theorem}
+
+  \begin{theorem}
+    The subject pool generated approaches the equilibrium in a geometric rate.
+  \end{theorem}
+
+  \begin{theorem}[Remark]
+    If there is a substancial in-group selection bias, this convergence will
+    take longer. 
+  \end{theorem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Assessing bias in RDS}
 \end{frame}
 
 \begin{frame}
 \frametitle{Network model}  
 
+\begin{itemize}
+  \justifying
+  \item Let $G = (V, E)$ be an undirected graph representing the hidden
+  population. The {\em Recruitment Graph} is $G_R = (V_R, E_R)$,
+  where $V_S$ represents the recruited individuals, and $E_R$ the recruitment
+  edge. The {\em Recruitment-induced Subgraph} is the induced subgraph by
+  $V_R$. 
+
+  \item The {\em Coupon Matrix} $C$ has elements $C_{ij} = 1$ if the subject
+  $i$ has at least one coupon just before the jth recruitment event. 
+
+  \item We observe $Y = (G_R, d, t, C)$. 
+  
+  \item The time to recruitment along a {\em susceptible edge} has Exponential
+  distribution, independent of the identity, neighbor, and all the other
+  waiting times.
+
+\end{itemize}
+
 \end{frame}
 
+\begin{frame}
+
+  \frametitle{Example of observed data}
+
+\end{frame}
+
+\begin{frame}
+  
+  \frametitle{Consequences}
+
+  \begin{theorem}[Waiting time for a recruitment]
+    Let $u$ be a recruiter and $v \in S_u$ a susceptible neighbor. The waiting
+    time to $u$ recruit $v$ conditioned on the recruitment event has
+    distribution Exponential with rate $\lambda |S_u|$. The probability of $v
+    \in S_u$ to be the next recruited is uniform.  
+  \end{theorem}
+
+  \begin{theorem}[Waiting time for some recruitment to occur]
+    The waiting time to the next recruitment is distributed as Exponential
+    with rate $\lambda \sum_{u \in R} |S_u|$.  
+  \end{theorem}
+
+\end{frame}
+
+\begin{frame}
+  
+  \frametitle{Likelihood of the recruitment time series}
+
+\end{frame}
+  
 \section{Examples and usages}
 
 \section{Applications with real data}
