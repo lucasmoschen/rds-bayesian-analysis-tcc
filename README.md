@@ -24,9 +24,9 @@ model the uncertainty of these variables and, for that, Bayesian statistics is t
 Finally, we intend to apply this framework efficiently, in particular,
 comparing the Markov chain Monte Carlo algorithms and the nested Laplace Approximation (INLA) and programming them with the help of some programming language such as R, Stan, or Python. 
 
-## First contact with RDS
+## Network-based and RDS datasets available
 
-In order to understand how RDS works in real-world applications, we use a Political Science dataset obtained at [Harvard
-Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/XKOVUN),
-which contains information about activist refugees from Syria. The
-visualizations are available in a Python Jupyter Notebook. 
+|Data Archive|Author|Description|Located at|
+|------------|------|-----------|----------|
+|Harvard Dataverse|Khoury, Rana B|Activist refugees from Syria|[Open access](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/XKOVUN)|
+|Princeton|Centers for Disease Control and Prevention (CDC)|HIV transmission in a community of high-risk heterosexuals|[Login access](https://opr.princeton.edu/archive/P90/)|
