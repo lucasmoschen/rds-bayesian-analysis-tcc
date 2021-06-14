@@ -30,8 +30,9 @@
 \documentclass[
 	% -- opções da classe memoir --
 	12pt,				% tamanho da fonte
-	openright,			% capítulos começam em pág ímpar (insere página vazia caso preciso)
-	twoside,			% para impressão em recto e verso. Oposto a oneside
+	%openright,			% capítulos começam em pág ímpar (insere página vazia caso preciso)
+	%twoside,			% para impressão em recto e verso. Oposto a 
+	oneside,
 	a4paper,			% tamanho do papel. 
 	% -- opções da classe abntex2 --
 	%chapter=TITLE,		% títulos de capítulos convertidos em letras maiúsculas
@@ -41,7 +42,7 @@
 	% -- opções do pacote babel --
 	english,			% idioma adicional para hifenização
 	french,				% idioma adicional para hifenização
-	spanish,			% idioma adicional para hifenização
+	spanish,			% i      option. Reported}%dioma adicional para hifenização
 	brazil,				% o último idioma é o principal do documento
 	]{abntex2}
 
@@ -239,20 +240,30 @@ Applied (FGV) as a partial requirement for continuing the monograph work.}
 % ----------------------------------------------------------
 % Introdução
 % ----------------------------------------------------------
-\chapter*[Introdução]{Introduction}
-\addcontentsline{toc}{chapter}{Introduction}
+\chapter{Introduction}
+%\addcontentsline{toc}{chapter}{Introduction}
 
-\input{files/intro.tex}
+\input{files/introduction.tex}
 
-\chapter{Literature exploratory research}
+\chapter{Justification}
 
-\chapter{Body and expected results}
+\input{files/justification.tex}
+
+\chapter{Objectives}
+
+\input{files/objectives.tex}
 
 \chapter{Methodology}
 
-\input{files/expected_results.tex}
+\input{files/methodology.tex}
 
 \chapter{Preliminary results}
+
+\input{files/preliminary_results.tex}
+
+\chapter{Schedule}
+
+\input{files/schedule.tex}
 
 \phantompart
 
@@ -305,7 +316,7 @@ Applied (FGV) as a partial requirement for continuing the monograph work.}
 %------------------------------------------------------------
 
 \phantompart
-
+Introdução
 \printindex
 
 
