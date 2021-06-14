@@ -7,4 +7,70 @@ o embasa, a metodologia a ser utilizada, assim como os recursos e o cronograma
 necessários à sua consecução.
 \end{citacao}
 
-\section{Literature exploratory research}
+The proposal of this work is to study the survey method Respondent-Driven
+Sampling, a chain-referral method with the objetive of sample from
+hard-to-reach populations, when it is necessary to estimate the prevalence of
+some characteristic from this population. It is also regarded the imperfection
+of the tests of this characteristic, so sensibility and sensitivity are
+accounted in the model.  
+
+Hidden or hard-to-reach populations have two main features: no sampling frame
+exists, so size and boundaries of the population are unknown; and there are
+heavy privacy concerns because the subjects are stigmatized or have illegal
+behavior \cite{heckathorn1997}. Fear of exposition of prosecution complicates
+the enumeration of the populations and the learning about them. Moreover, if
+the occurrence frequency of the characteristic is low, there is high logistic
+cost involved. Some examples are heavy drug users, sex workers, homeless
+people, and men who have sex with men. 
+
+Some methods were developed to reach these populations, such as, for
+example, snowball method \cite{goodman1961}, key important method
+\cite{deaux-callaghan1985}, and targeted method \cite{watters-biernacki1989}.
+\citeauthor{heckathorn1997} introduced the Respondent-Driven Sampling (RDS) to
+fill some gaps he depicted in his work. In his proposed method, the researches
+select a handful of individuals from the target population and give them
+coupons to recruit others from the population. The individuals receive a
+reward for being recruited and for each recruitment, which creates a dual
+incentive system. Several papers after \citeyear{heckathorn1997} were written.
+
+After sampling individuals from the target population, a questionnaire is
+conducted, and in this work takes questions with binary outcome. 
+
+\lucas{Falar um pouco de como esse estudo vai ser feito: estatística bayesiana}
+
+\lucas{Falar um pouco do objetivo deste trabalho.}
+
+
+\section{Respondent-driven sampling}
+
+
+\section{Regression with binary outcome with imperfect tests}
+
+
+\section{Bayesian statistics}
+
+Respondant-Driven Sampling (RDS) é um procedimento utilizado para amostrar
+populações de difícil acesso, como exemplo a população de usuários de drogas
+pesadas e profissionais do sexo. Ele funciona de forma similar a um processo de
+ramificação em formato de rede, em que os participantes em cada estágio recrutam,
+em sua própria sub-rede, os próximos participantes e o primeiro estágio é chamado de
+semente.
+
+Esse método pode ser utilizado em forma de pesquisa a fim de estimar a
+prevalência de alguma característica, isto é, o número total de indivíduos que
+possuem determinada característica. Nessa pesquisa, cada participante responde uma
+série de perguntas relacionadas ao objeto de estudo e outras covariáveis. Vamos
+considerar neste trabalho que o desfecho de interesse é uma variável binária e sujeita
+a erro de medição, isto é, não é possível ter certeza sobre a veracidade da resposta
+dada. Usamos os conceitos de sensitividade e especificidade para lidar com
+isso.
+
+Todavia, em vista de nosso desconhecimento sobre a natureza em si, se faz
+necessário modelar a incerteza dessas variáveis e, para tanto, a Estatística bayesiana é
+a área de estudo indicada. A ideia, portanto, é propagar a incerteza sobre a resposta
+dos participantes pela rede de contatos.
+
+Por fim, pretende-se aplicar esse framework de forma eficiente, em particular,
+comparando os algoritmos de Markov chain Monte Carlo e Aproximação de Laplace
+aninhada (INLA) e programando-os com ajuda de alguma linguagem de programação
+como R, Stan ou Python.
