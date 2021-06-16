@@ -1,76 +1,92 @@
-\begin{citacao}
-O texto deve ser constituído de uma parte introdutória, na qual devem ser
-expostos o tema do projeto, o problema a ser abordado, a(s) hipótese(s),
-quando couber(em), bem como o(s) objetivo(s) a ser(em) atingido(s) e a(s)
-justificativa(s). É necessário que sejam indicados o referencial teórico que
-o embasa, a metodologia a ser utilizada, assim como os recursos e o cronograma
-necessários à sua consecução.
-\end{citacao}
-
-The proposal of this work is to study the survey method Respondent-Driven
-Sampling, a chain-referral method with the objetive of sample from
-hard-to-reach populations, when it is necessary to estimate the prevalence of
-some characteristic from this population. It is also regarded the imperfection
-of the tests of this characteristic, so sensibility and sensitivity are
-accounted in the model.  
+This work proposes to study the survey method Respondent-Driven Sampling (RDS), a chain-referral method with the objective of sampling from hard-to-reach populations when necessary to estimate the prevalence of some binary condition from this population. The modeling also accounts for sensibility and sensitivity since the imperfection of the detection tests.  
 
 Hidden or hard-to-reach populations have two main features: no sampling frame
-exists, so size and boundaries of the population are unknown; and there are
-heavy privacy concerns because the subjects are stigmatized or have illegal
-behavior \cite{heckathorn1997}. Fear of exposition of prosecution complicates
-the enumeration of the populations and the learning about them. Moreover, if
-the occurrence frequency of the characteristic is low, there is high logistic
-cost involved. Some examples are heavy drug users, sex workers, homeless
-people, and men who have sex with men. 
+exists, given that their size and boundaries are unknown, and there are
+privacy concerns because the subjects are stigmatized or have illegal behavior
+\cite{heckathorn1997}. Fear of exposition or prosecution complicates the
+enumeration of the populations and the learning about them. Moreover, if the
+occurrence frequency of the condition is low, there are high logistic costs
+involved. Some examples are heavy drug users, sex workers, homeless people,
+and men who have sex with men. 
 
-Some methods were developed to reach these populations, such as, for
-example, snowball method \cite{goodman1961}, key important method
-\cite{deaux-callaghan1985}, and targeted method \cite{watters-biernacki1989}.
-\citeauthor{heckathorn1997} introduced the Respondent-Driven Sampling (RDS) to
-fill some gaps he depicted in his work. In his proposed method, the researches
-select a handful of individuals from the target population and give them
-coupons to recruit others from the population. The individuals receive a
-reward for being recruited and for each recruitment, which creates a dual
-incentive system. Several papers after \citeyear{heckathorn1997} were written.
+Researches have been done with the development of some methods to reach these
+populations, such as, for example, snowball sampling \cite{goodman1961}, key
+important sampling \cite{deaux-callaghan1985}, 
+and targeted sampling \cite{watters-biernacki1989}. \citeauthor{heckathorn1997} introduced the Respondent-Driven Sampling (RDS) to
+fill some gaps from other methods he depicted in his work. In his proposed
+approach, the researchers select a handful of individuals from the target
+population and give them coupons to recruit their peers. The individuals
+receive a reward for being recruited and for recruiting, which creates a dual
+incentive system. After \citeyear{heckathorn1997}, several papers studied this
+topic more deeply. 
 
-After sampling individuals from the target population, a questionnaire is
-conducted, and in this work takes questions with binary outcome. 
+Following the sampling from the target population, a questionnaire or a
+disease test is conducted. This work considers binary outcomes. For
+instance, asking about smoking status or testing for HIV infections. However,
+the diagnoses are subject to measure error, and regard their accuracy is a
+vital step \cite{reitsma2005bivariate}. In particular, we propose the joint
+use of sensitivity (the ability to detect the condition) and specificity (the
+ability to identify the absence of it).  
 
-\lucas{Falar um pouco de como esse estudo vai ser feito: estatística bayesiana}
+Nevertheless, because of our lack of knowledge about nature itself, it is
+necessary to model the uncertainty of this process, and Bayesian Statistics is
+the indicated area of study. In the Bayesian view, the parameters are random
+variables, and the beliefs about them are updated given new data. The idea is
+to propagate uncertainty about the outcome through the network of contacts,
+which has its probability distribution.
 
-\lucas{Falar um pouco do objetivo deste trabalho.}
-
+The objective of this work is to analyze the network structure as a stochastic object, along with the sensibility and sensitivity. We also intend to apply this framework efficiently, comparing Monte Carlo algorithms and Laplace approximations.
 
 \section{Respondent-driven sampling}
 
+RDS is commonly used to survey hidden or hard-to-reach populations when
+no sampling frame exists \cite{heckathorn1997}. In this approach, the
+researchers select some individuals, called {\em seeds} from the target
+population, and give them a fixed amount of {\em recruitment coupons} to
+recruit their peers. Each recipient of the coupons reclaims it in the study
+site, is interviewed, and receives more coupons to continue the recruitment.
+This process occurs until it reaches some criteria. The sampling is without
+replacement, so the participants cannot be recruited more than once. Moreover,
+the respondents inform their {\em network degree}.
 
-\section{Regression with binary outcome with imperfect tests}
+The subjects receive a reward for being interviewed and for each recruitment
+which establishes a dual system incentive. The {\em primary incentive} is the
+{\em individual-sanction-based control}, so there is a reward for
+participating. The second one is the {\em group-mediated social control} that
+influences the participants seeking to induce others to comply. When social
+approval is important, recruitment can be even more efficient and cheaper.
+Moreover, the material incentive can be converted into symbolic by the
+individuals. 
 
+\lucas{Descrever o modelo de Heckathorn}
+
+\lucas{Descrever o modelo de Crawford}
+
+\lucas{Discutir detalhes adicionais de outros artigos como aplicações}
+
+\section{Prevalence estimation with imperfect tests}
+
+Consider a population of interest and a known condition, such as, for example,
+a disease or a binary behavior. It is important to understand the proportion
+of individuals in this population exposed at time $t$, called {\em
+prevalence}. In hidden networks, the population size is unknown prior to the
+study, what makes the proceeding to be hard. Suppose a diagnostic test is done to measure the presence or the
+absence of this condition in the individuals. 
+
+Mathematically, let $\theta \in (0,1)$ be the prevalence of a condition and
+$Y_i$ be an  indicator function of the condition in the i$^{th}$ individual.
+Assuming for simplicity that all tests are performed at time $t$, and the
+sample is $\{y_1, ..., y_n\}$, the RDS estimator was
+proposed based largely on Markov chain theory and social network theory
+\cite{heckathorn1997, heckathorn2002}. 
+
+\begin{equation}
+    \label{eq:rdsI}
+     a = 1
+\end{equation}
+
+\lucas{Citar} \cite{volz2008probability} para o estimador RDS II. 
 
 \section{Bayesian statistics}
 
-Respondant-Driven Sampling (RDS) é um procedimento utilizado para amostrar
-populações de difícil acesso, como exemplo a população de usuários de drogas
-pesadas e profissionais do sexo. Ele funciona de forma similar a um processo de
-ramificação em formato de rede, em que os participantes em cada estágio recrutam,
-em sua própria sub-rede, os próximos participantes e o primeiro estágio é chamado de
-semente.
-
-Esse método pode ser utilizado em forma de pesquisa a fim de estimar a
-prevalência de alguma característica, isto é, o número total de indivíduos que
-possuem determinada característica. Nessa pesquisa, cada participante responde uma
-série de perguntas relacionadas ao objeto de estudo e outras covariáveis. Vamos
-considerar neste trabalho que o desfecho de interesse é uma variável binária e sujeita
-a erro de medição, isto é, não é possível ter certeza sobre a veracidade da resposta
-dada. Usamos os conceitos de sensitividade e especificidade para lidar com
-isso.
-
-Todavia, em vista de nosso desconhecimento sobre a natureza em si, se faz
-necessário modelar a incerteza dessas variáveis e, para tanto, a Estatística bayesiana é
-a área de estudo indicada. A ideia, portanto, é propagar a incerteza sobre a resposta
-dos participantes pela rede de contatos.
-
-Por fim, pretende-se aplicar esse framework de forma eficiente, em particular,
-comparando os algoritmos de Markov chain Monte Carlo e Aproximação de Laplace
-aninhada (INLA) e programando-os com ajuda de alguma linguagem de programação
-como R, Stan ou Python.
+\lucas{Breve discussão sobre o teorema de Bayes e estatística bayesiana}
