@@ -1,1 +1,22 @@
-\lipsum[1]
+\begin{enumerate}
+    \item Easy to use implementation inbrms/rstanarm;
+    \item Prior calibration (weird prior on $p$ if priors on $\beta$ is too wide;
+    \item Uncertainty propagation (grid):  we do not want to learn sens/spec from data;
+    \item Efficient implementation in INLA;
+    \item Analysis of RDS epidemiological studies
+\end{enumerate}
+
+\begin{alineas}
+    \item Descrição do problema em termos matemáticos e revisão bibliográfica:
+    material sobre RDS (formalização matemática em forma de cadeia ou processo
+    de ramificação), regressão logística em que a resposta tem incerteza e
+    aplicações em usuários de drogas, infecções transmissíveis, entre outros. 
+    \item Incerteza sobre especificidade e sensitividade do teste e como
+    propagar a classificação errada na rede. Comparação de prioris e, por isso, estudo de
+    métodos Bayesianos. Justificar utilização desses métodos com argumento da
+    incerteza. 
+    \item Estudo do MCMC e Aproximação de Laplace, comparação dos algoritmos
+    em alguns artigos e, quem sabe, codificação em Python e R. 
+    \item Implementação de inferência eficiente em INLA, com possibilidades
+    abertas em Python (talvez Julia?)
+\end{alineas}
