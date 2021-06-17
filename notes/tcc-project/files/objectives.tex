@@ -1,22 +1,30 @@
-\begin{enumerate}
-    \item Easy to use implementation inbrms/rstanarm;
-    \item Prior calibration (weird prior on $p$ if priors on $\beta$ is too wide;
-    \item Uncertainty propagation (grid):  we do not want to learn sens/spec from data;
-    \item Efficient implementation in INLA;
-    \item Analysis of RDS epidemiological studies
-\end{enumerate}
+\section{Main}
+
+The objective of this work is to analyze the network structure of RDS as a
+stochastic object, along with the sensibility and sensitivity. We also intend
+to apply this framework efficiently, comparing Monte Carlo algorithms and
+Laplace approximations.
+
+
+
+\section{Specifics}
 
 \begin{alineas}
-    \item Descrição do problema em termos matemáticos e revisão bibliográfica:
-    material sobre RDS (formalização matemática em forma de cadeia ou processo
-    de ramificação), regressão logística em que a resposta tem incerteza e
-    aplicações em usuários de drogas, infecções transmissíveis, entre outros. 
-    \item Incerteza sobre especificidade e sensitividade do teste e como
-    propagar a classificação errada na rede. Comparação de prioris e, por isso, estudo de
-    métodos Bayesianos. Justificar utilização desses métodos com argumento da
-    incerteza. 
-    \item Estudo do MCMC e Aproximação de Laplace, comparação dos algoritmos
-    em alguns artigos e, quem sabe, codificação em Python e R. 
-    \item Implementação de inferência eficiente em INLA, com possibilidades
-    abertas em Python (talvez Julia?)
+    \item Bibliography review including possible mathematical formulations of
+    RDS, logistic regression when the outcome has uncertainty (imperfect
+    tests) and applications in hidden or hard-to-reach populations; 
+
+    \item Problem description in mathematical terms considering the
+    uncertainty in the network (missing data in the RDS) and the
+    diagnose. Uncertainty propagation; 
+
+    \item Bayesian methods and prior calibration. Prior predictive checking on
+    the positive test probability when there are weak priors of the
+    regression parameters; 
+
+    \item Efficient implementation using statistical packages, as {\em
+    rstanarm} \cite{rstanarm} and {\em INLA} \cite{rue2009approximate}. Comparison between MCMC and Laplace
+    approximation; 
+
+    \item Analysis of RDS epidemiological studies.
 \end{alineas}
