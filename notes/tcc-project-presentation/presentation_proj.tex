@@ -1,0 +1,376 @@
+\documentclass{beamer}
+
+%------------------------------------
+%------------Libraries---------------
+%------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage{xpatch}
+\usepackage{ragged2e}
+\usepackage{xcolor}
+\usepackage{url, hyperref}
+
+\usepackage{amsmath, amsthm, amssymb, amsfonts} 
+
+%------------------------------------
+%----------Configurations------------
+%------------------------------------
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\useinnertheme{circles}
+
+\definecolor{FirstColor}{rgb}{0.0157,0.2392,0.4902}
+\definecolor{SecondColor}{rgb}{0.0157, 0.549, 0.8}
+
+\setbeamertemplate{itemize items}[triangle]
+
+\setbeamercolor*{palette primary}{bg=FirstColor, fg=white}
+\setbeamercolor*{palette secondary}{bg=SecondColor, fg=white}
+\setbeamercolor*{palette tertiary}{bg=white, fg=FirstColor}
+\setbeamercolor*{palette quaternary}{bg=FirstColor,fg=white}
+\setbeamercolor{structure}{fg=FirstColor}
+\setbeamercolor{section in toc}{fg=FirstColor}
+
+\hypersetup{colorlinks=true,citecolor=blue, urlcolor = cien, linkcolor=blue}
+
+\apptocmd{\frame}{}{\justifying}{}
+
+%---------------------------------------------------
+%------------------Itemize--------------------------
+%---------------------------------------------------
+
+\makeatletter
+\newcommand{\my@beamer@setsep}{%
+\ifnum\@itemdepth=1\relax
+     \setlength\itemsep{\my@beamer@itemsepi}% separation for first level
+   \else
+     \ifnum\@itemdepth=2\relax
+       \setlength\itemsep{\my@beamer@itemsepii}% separation for second level
+     \else
+       \ifnum\@itemdepth=3\relax
+         \setlength\itemsep{\my@beamer@itemsepiii}% separation for third level
+   \fi\fi\fi}
+\newlength{\my@beamer@itemsepi}\setlength{\my@beamer@itemsepi}{3ex}
+\newlength{\my@beamer@itemsepii}\setlength{\my@beamer@itemsepii}{1.5ex}
+\newlength{\my@beamer@itemsepiii}\setlength{\my@beamer@itemsepiii}{1.5ex}
+\newcommand\setlistsep[3]{%
+    \setlength{\my@beamer@itemsepi}{#1}%
+    \setlength{\my@beamer@itemsepii}{#2}%
+    \setlength{\my@beamer@itemsepiii}{#3}%
+}
+\xpatchcmd{\itemize}
+  {\def\makelabel}
+  {\my@beamer@setsep\def\makelabel}
+ {}
+ {}
+
+\xpatchcmd{\beamer@enum@}
+  {\def\makelabel}
+  {\my@beamer@setsep\def\makelabel}
+ {}
+ {}
+\makeatother
+
+%---------------------------------------------------
+%-----------------Definitions-----------------------
+%---------------------------------------------------
+
+\newcommand{\Space}{\vspace{3ex}}
+
+%---------------------------------------------------
+%----------------Front page-------------------------
+%---------------------------------------------------
+
+\title[Respondent driven-sampling]
+{Respondent driven-sampling}
+\subtitle{Bayesian analysis of respondent-driven survey with outcome uncertainty}
+\author[Lucas Moschen]
+{Lucas Moschen}
+\institute[EMAp/FGV]
+{
+  School of Applied Mathematics\\
+  Fundação Getulio Vargas
+}
+\date[\today]
+{\today}
+
+\titlegraphic{
+    \vspace*{1.2cm}
+    \hspace*{9.5cm}
+    \includegraphics[width=.2\textwidth]{../rds-presentation/images/logo-emap.png}
+}
+%--------------------------------------------------
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+%---------------------------------------------------
+%---------------- Document -------------------------
+%---------------------------------------------------
+
+\begin{document}
+
+\frame{\titlepage}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Table of Contents}
+\tableofcontents
+\end{frame}
+%----------------------------------------------------
+
+\section{Introduction}
+
+%---------------------------------------------------
+\begin{frame}
+\frametitle{Hidden and hard-to-reach populations}
+
+\begin{itemize}
+    \justifying
+    \item No sampling frame exists: size and boundaries of the population are unknown.
+    \item Privacy concerns: stigmatized or illegal behavior. 
+    \item Fear of exposition or prosecution complicates the enumeration and learning about these populations.
+    \item High logistic cost when the occurrence frequency is low.
+    \item Examples: Heavy drug users, sex workers, homeless people, and men who have sex
+    with men. 
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+    
+    \frametitle{Existing sampling methods}
+
+    \begin{itemize}
+        \item {\bf Snowball} \cite{goodman1961}
+    \end{itemize}
+
+    From starting individuals, each subject provides a list of names of known
+    individuals from the target population. The researcher invites this person
+    to participate, who can agree or deny it. 
+
+    \Space
+
+    \begin{itemize}
+      \item {\bf Key informant} \cite{deaux-callaghan1985}
+    \end{itemize}
+
+    Expert respondents are selected to answer about others' behavior. For
+    instance, social workers, drug abuse counselors, official, etc. 
+
+    \Space
+
+    \begin{itemize}
+      \item {\bf Targeted} \cite{watters-biernacki1989}
+    \end{itemize}
+
+   Field researchers build an ethnographic mapping of a target population, and
+   recruit a number of individuals at sites identified by this map.
+
+\end{frame}
+
+\begin{frame}
+
+  \frametitle{Problems with snowball sampling}
+
+  \begin{itemize}
+    \justifying
+    \item Inferences about the individuals depend on the initial sample. 
+    \item Bias towards individuals who are more cooperative and agree to
+    participate. 
+    \item Bias because of masking, that is, protecting friends by not
+    referring them. 
+    \item Individuals with more links may be oversampled.  
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}
+  
+  \frametitle{Respondent-driven sampling}
+
+  \begin{enumerate}
+    \justifying
+    \item The researchers select a handful of individuals from a target
+    population who serve as {\em seeds}.
+    \item Each participant receives a fixed number of {\em recruitment coupons} and invite
+    members of their own social network to participate in exchange of a
+    reward.   
+    \item The sampling is without replacement. 
+    \item If the individual accepts to participate, they answer a
+    questionnaire and inform the network degree. One important point is that
+    the recruiter doesn't say the name of the other members, reducing the
+    mask effect. 
+
+  \end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+  
+  \frametitle{System of incentives}
+    
+  Two different sources of theoretical incentive (dual incentive system):
+
+  \Space
+
+  \begin{itemize}
+    \justifying
+    \item {\bf Individual-sanction based control:} reward for participating
+    in the research. 
+    \item {\bf Group-mediated social control:} reward for recruiting peers.
+    When social approval is important, it's more efficient and cheaper.
+    Symbolic incentive is also important. 
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------
+
+\section{Mathematical formulation}
+
+\begin{frame}
+  
+  \frametitle{Formal model}
+
+  The RDS can be seen mathematically in two different approaches. 
+
+  \Space
+
+  \begin{itemize}
+    \item {\bf Stochastic process} \cite{heckathorn1997}
+  \end{itemize}
+
+  Each recruiter's social characteristics affect the characteristics of the
+  recruits. There are a limited number of states that subjects can assume and
+  the recruits are function of the recruiter characteristics.
+
+  \Space
+
+  \begin{itemize}
+    \item {\bf Graphical structure} \cite{crawford2016}
+  \end{itemize}
+
+  A hidden population is an undirected graph, and we observe it partially in
+  the {\em recruitment graph}, as also the coupon matrix and recruitment
+  times. The unobserved graph is treated as {\em missing data} what can be
+  interpreted as as Exponential Random Graph Model.  
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Markov chain model}
+
+\begin{itemize}
+  \justifying
+  \item In a survey, questions about ethnicity, location, and gender create
+  states in which each participant will be. By statistical tests, one can
+  verify association between the recruiter and recruited responses. 
+
+  \item Heckathorn concluded that the recruitment was a memoryless process, and concluded RDS was a first-oder Markov process. At
+  any instant, the current location of the point indicates the most recent
+  recruit's characteristic. 
+
+  \item The markov chain must be ergodic. 
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example of RDS in Markov chain}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Consequences of Markov chain theory}
+
+  \begin{theorem}
+    \justifying
+    An equilibrium mix of recruits will be attained when the number of waves
+    goes to infinity, and it is independent from which recruitment began. 
+  \end{theorem}
+
+  \begin{theorem}
+    The subject pool generated approaches the equilibrium in a geometric rate.
+  \end{theorem}
+
+  \begin{theorem}[Remark]
+    If there is a substancial in-group selection bias, this convergence will
+    take longer. 
+  \end{theorem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Assessing bias in RDS}
+\end{frame}
+
+\begin{frame}
+\frametitle{Network model}  
+
+\begin{itemize}
+  \justifying
+  \item Let $G = (V, E)$ be an undirected graph representing the hidden
+  population. The {\em Recruitment Graph} is $G_R = (V_R, E_R)$,
+  where $V_S$ represents the recruited individuals, and $E_R$ the recruitment
+  edge. The {\em Recruitment-induced Subgraph} is the induced subgraph by
+  $V_R$. 
+
+  \item The {\em Coupon Matrix} $C$ has elements $C_{ij} = 1$ if the subject
+  $i$ has at least one coupon just before the jth recruitment event. 
+
+  \item We observe $Y = (G_R, d, t, C)$. 
+  
+  \item The time to recruitment along a {\em susceptible edge} has Exponential
+  distribution, independent of the identity, neighbor, and all the other
+  waiting times.
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+  \frametitle{Example of observed data}
+
+\end{frame}
+
+\begin{frame}
+  
+  \frametitle{Consequences}
+
+  \begin{theorem}[Waiting time for a recruitment]
+    Let $u$ be a recruiter and $v \in S_u$ a susceptible neighbor. The waiting
+    time to $u$ recruit $v$ conditioned on the recruitment event has
+    distribution Exponential with rate $\lambda |S_u|$. The probability of $v
+    \in S_u$ to be the next recruited is uniform.  
+  \end{theorem}
+
+  \begin{theorem}[Waiting time for some recruitment to occur]
+    The waiting time to the next recruitment is distributed as Exponential
+    with rate $\lambda \sum_{u \in R} |S_u|$.  
+  \end{theorem}
+
+\end{frame}
+
+\begin{frame}
+  
+  \frametitle{Likelihood of the recruitment time series}
+
+\end{frame}
+  
+\section{Examples and usages}
+
+\section{Real-world application}
+
+\begin{frame}[t, allowframebreaks]
+   \frametitle{References}
+   \bibliographystyle{apalike}
+   \bibliography{../tcc-project/biblio}
+ \end{frame}
+
+\end{document}
