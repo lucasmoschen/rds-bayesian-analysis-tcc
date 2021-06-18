@@ -95,23 +95,39 @@ disease prevalence estimation \cite{albuquerque2009avaliaccao}, among others.
 Consider a population of interest and a known condition, such as, for example,
 a disease or a binary behavior. It is important to understand the proportion
 of individuals in this population exposed at time $t$, called {\em
-prevalence}. In hidden networks, the population size is unknown prior to the
-study, what makes the proceeding to be hard. Suppose a diagnostic test is done to measure the presence or the
-absence of this condition in the individuals. 
-
-Mathematically, let $\theta \in (0,1)$ be the prevalence of a condition and
-$Y_i$ be an  indicator function of the condition in the i$^{th}$ individual.
+prevalence}. Suppose a diagnostic test is done to measure the presence or the
+absence of this condition in the individuals. Mathematically, let $\theta \in
+(0,1)$ be the prevalence (parameter of interest) of the condition and $Y_i$ be an indicator function of the presence of the condition in the i$^{th}$ individual.
 Assuming for simplicity that all tests are performed at time $t$, and the
-sample is $\{y_1, ..., y_n\}$, the RDS estimator was
-proposed based largely on Markov chain theory and social network theory
-\cite{heckathorn1997, heckathorn2002}. 
-
+sample is $\{y_1, ..., y_n\}$, the maximum likelihood estimator is 
 \begin{equation}
-    \label{eq:rdsI}
-     a = 1
+    \label{eq:naive-estimator}
+    \hat{\theta} = \frac{1}{n}\sum_{i=1}^n y_i.
 \end{equation}
+However this estimator has two problems in this context: it is assumed perfect
+diagnostic test, what is often incorrect, and the samples in RDS are not
+independent by definition (network structure). The latter was a study object
+in \cite{heckathorn1997,heckathorn2002} where the estimator was proposed
+based largely on Markov chain theory and social network theory.
+\cite{volz2008probability} improved it with the RDS II estimator considering
+the network degree
+\begin{equation}
+    \hat{\theta}^{RDS II} = \frac{\sum_{i=1}^n y_i \delta_i^{-1}}{\sum_{i=1}^n \delta_i^{-1}},
+\end{equation}
+such that $\delta_i$ is the i$^{th}$ individual's degree. However, this is an
+area of research in progress. 
 
-\lucas{Citar} \cite{volz2008probability} para o estimador RDS II. 
+The first problem in \eqref{eq:naive-estimator} was tackled several times in
+the literature, such as \cite{mcinturff2004modelling}. A possible way to
+handle is to bring to the model the sensitivity ($\gamma_s$) and specificity
+($\gamma_e$). Let $\pi$ be the probability of a test comes positive. Then 
+$$
+\pi\ = \theta\gamma_s + (1-\theta)(1-\gamma_e).
+$$
+Establish a link function in $(\pi, \gamma_s, \gamma_e)$, it is possible to
+use linear regression and prior distributions to the regressors
+$\boldsymbol{\beta}$. One important problem is to consider the correlation
+between $\gamma_s$ and $\gamma_e$. 
 
 \section{Bayesian statistics}
 
