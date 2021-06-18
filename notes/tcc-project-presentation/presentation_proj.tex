@@ -128,6 +128,7 @@
 \section{Introduction}
 
 %---------------------------------------------------
+
 \begin{frame}
 \frametitle{Hidden and hard-to-reach populations}
 
@@ -144,56 +145,7 @@
 \end{frame}
 
 \begin{frame}
-    
-    \frametitle{Existing sampling methods}
-
-    \begin{itemize}
-        \item {\bf Snowball} \cite{goodman1961}
-    \end{itemize}
-
-    From starting individuals, each subject provides a list of names of known
-    individuals from the target population. The researcher invites this person
-    to participate, who can agree or deny it. 
-
-    \Space
-
-    \begin{itemize}
-      \item {\bf Key informant} \cite{deaux-callaghan1985}
-    \end{itemize}
-
-    Expert respondents are selected to answer about others' behavior. For
-    instance, social workers, drug abuse counselors, official, etc. 
-
-    \Space
-
-    \begin{itemize}
-      \item {\bf Targeted} \cite{watters-biernacki1989}
-    \end{itemize}
-
-   Field researchers build an ethnographic mapping of a target population, and
-   recruit a number of individuals at sites identified by this map.
-
-\end{frame}
-
-\begin{frame}
-
-  \frametitle{Problems with snowball sampling}
-
-  \begin{itemize}
-    \justifying
-    \item Inferences about the individuals depend on the initial sample. 
-    \item Bias towards individuals who are more cooperative and agree to
-    participate. 
-    \item Bias because of masking, that is, protecting friends by not
-    referring them. 
-    \item Individuals with more links may be oversampled.  
-  \end{itemize}
-  
-\end{frame}
-
-\begin{frame}
-  
-  \frametitle{Respondent-driven sampling}
+\frametitle{Respondent-driven sampling}
 
   \begin{enumerate}
     \justifying
@@ -211,29 +163,6 @@
   \end{enumerate}
 
 \end{frame}
-
-\begin{frame}
-  
-  \frametitle{System of incentives}
-    
-  Two different sources of theoretical incentive (dual incentive system):
-
-  \Space
-
-  \begin{itemize}
-    \justifying
-    \item {\bf Individual-sanction based control:} reward for participating
-    in the research. 
-    \item {\bf Group-mediated social control:} reward for recruiting peers.
-    When social approval is important, it's more efficient and cheaper.
-    Symbolic incentive is also important. 
-  \end{itemize}
-
-\end{frame}
-
-%------------------------------------------------------
-
-\section{Mathematical formulation}
 
 \begin{frame}
   
@@ -264,108 +193,124 @@
 
 \end{frame}
 
-\begin{frame}
-\frametitle{Markov chain model}
-
-\begin{itemize}
-  \justifying
-  \item In a survey, questions about ethnicity, location, and gender create
-  states in which each participant will be. By statistical tests, one can
-  verify association between the recruiter and recruited responses. 
-
-  \item Heckathorn concluded that the recruitment was a memoryless process, and concluded RDS was a first-oder Markov process. At
-  any instant, the current location of the point indicates the most recent
-  recruit's characteristic. 
-
-  \item The markov chain must be ergodic. 
-\end{itemize}
+\begin{frame}{Prevalence estimation with imperfect tests}
 
 \end{frame}
 
-\begin{frame}
-  \frametitle{Example of RDS in Markov chain}
+\begin{frame}{Bayesian statistics}
+
 \end{frame}
 
-\begin{frame}
-  \frametitle{Consequences of Markov chain theory}
+%----------------------------------------------------
 
-  \begin{theorem}
-    \justifying
-    An equilibrium mix of recruits will be attained when the number of waves
-    goes to infinity, and it is independent from which recruitment began. 
-  \end{theorem}
+\section{Justification}
 
-  \begin{theorem}
-    The subject pool generated approaches the equilibrium in a geometric rate.
-  \end{theorem}
+\begin{frame}{Justification}
 
-  \begin{theorem}[Remark]
-    If there is a substancial in-group selection bias, this convergence will
-    take longer. 
-  \end{theorem}
+  \begin{itemize}
+    \item Hidden populations are often omitted from national representative
+    surveys and have higher risk of drug abuse or sexually transmitted
+    infections. 
+
+    \pause
+
+    \Space
+    
+    \item The topic has a lot of gaps in Statistics and regression approaches
+    to prevalence estimation taking the network structure can be built \cite{bastos2012binary}.
+  \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Assessing bias in RDS}
-\end{frame}
+%---------------------------------------------------
 
-\begin{frame}
-\frametitle{Network model}  
+%----------------------------------------------------
 
-\begin{itemize}
-  \justifying
-  \item Let $G = (V, E)$ be an undirected graph representing the hidden
-  population. The {\em Recruitment Graph} is $G_R = (V_R, E_R)$,
-  where $V_S$ represents the recruited individuals, and $E_R$ the recruitment
-  edge. The {\em Recruitment-induced Subgraph} is the induced subgraph by
-  $V_R$. 
+\section{Objectives}
 
-  \item The {\em Coupon Matrix} $C$ has elements $C_{ij} = 1$ if the subject
-  $i$ has at least one coupon just before the jth recruitment event. 
+\begin{frame}{Main objective}
 
-  \item We observe $Y = (G_R, d, t, C)$. 
+  The objective of this work is to analyze the network structure of RDS as a
+stochastic object, along with the sensibility and sensitivity. We also intend
+to apply this framework efficiently, comparing Monte Carlo algorithms and
+Laplace approximations.
   
-  \item The time to recruitment along a {\em susceptible edge} has Exponential
-  distribution, independent of the identity, neighbor, and all the other
-  waiting times.
-
-\end{itemize}
-
 \end{frame}
 
-\begin{frame}
+\begin{frame}{Specific}
 
-  \frametitle{Example of observed data}
+  \begin{enumerate}
+    \item Bibliography review; 
 
-\end{frame}
+    \item Problem description in mathematical terms and uncertainty propagation; 
 
-\begin{frame}
+    \item Bayesian methods and prior calibration; 
+
+    \item Joint prior distribution for sensitivity and specificity;
+
+    \item Efficient implementation using statistical packages, as {\em
+    rstanarm} and {\em INLA}. Comparison between MCMC and Laplace
+    approximation; 
+
+    \item Analysis of RDS epidemiological studies.
+  \end{enumerate}
   
-  \frametitle{Consequences}
+\end{frame}
 
-  \begin{theorem}[Waiting time for a recruitment]
-    Let $u$ be a recruiter and $v \in S_u$ a susceptible neighbor. The waiting
-    time to $u$ recruit $v$ conditioned on the recruitment event has
-    distribution Exponential with rate $\lambda |S_u|$. The probability of $v
-    \in S_u$ to be the next recruited is uniform.  
-  \end{theorem}
+%---------------------------------------------------
 
-  \begin{theorem}[Waiting time for some recruitment to occur]
-    The waiting time to the next recruitment is distributed as Exponential
-    with rate $\lambda \sum_{u \in R} |S_u|$.  
-  \end{theorem}
+%----------------------------------------------------
+
+\section{Methodology}
+
+%---------------------------------------------------
+
+\begin{frame}{Methodology}
+
+{\bf Document research}
+
+The theoretical foundation will be through papers in the topics indicated in
+the introduction, RDS, bayesian statistics, and prevalence estimation through
+regression. 
+
+\Space
+
+{\bf Technical resources}
+
+All the necessary programming will be done in the programming languages
+\textit{Python} and \textit{R}. 
+
+\Space
+
+{\bf Formal study}
+
+Two subjects from the PhD in Mathematical Modelling at EMAp will be taken:
+Bayesian Statistics and Network Science.
 
 \end{frame}
 
-\begin{frame}
-  
-  \frametitle{Likelihood of the recruitment time series}
+%----------------------------------------------------
 
+\section{Preliminary results}
+
+%---------------------------------------------------
+
+\begin{frame}{RDS studies}
+  
 \end{frame}
-  
-\section{Examples and usages}
 
-\section{Real-world application}
+\begin{frame}{Regression}
+  
+\end{frame}
+
+%----------------------------------------------------
+
+\section{Schedule}
+
+\begin{frame}{Schedule}
+  
+\end{frame}
+
+%---------------------------------------------------
 
 \begin{frame}[t, allowframebreaks]
    \frametitle{References}
