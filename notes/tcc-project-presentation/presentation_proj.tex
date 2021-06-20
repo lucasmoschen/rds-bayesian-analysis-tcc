@@ -195,9 +195,43 @@
 
 \begin{frame}{Prevalence estimation with imperfect tests}
 
+  \begin{itemize}
+    \item Prevalence ($\theta$) = Proportion of a disease (or condition) at time $t$;
+    
+    \item {\em Specificity} $(\gamma_s)$ and {\em Sensitivity} ($\gamma_e$) are (jointly) measures of
+    the disease diagnose accuracy;
+
+    \item If a sample $\{y_1, ..., y_n\}$ is observed, its mean is the maximum
+    likelihood estimator, but it supposes a perfect test; 
+
+    \item If $\pi$ is the probability of a positive test, 
+    $$
+    \pi = \theta\gamma_s + (1-\theta)(1-\gamma_e),
+    $$
+    and we can study $\theta$ regarding $\gamma_s, \gamma_e$. 
+
+    \item Observe also that for a network the independence of the sample is
+    also not valid. Other estimators are better. 
+
+  \end{itemize}
+
 \end{frame}
 
 \begin{frame}{Bayesian statistics}
+
+  \begin{itemize}
+    \item Interpretation based on an individual's degree of belief in a statement;
+
+    \Space
+
+    \item Bayes' formula relates the probability of a parameter after
+    observing new data with evidente and previous information about it;
+
+    \Space
+
+    \item It allows the quantification of uncertainty in a straightforward
+    way: the process do not need to be random.
+  \end{itemize}
 
 \end{frame}
 
@@ -211,8 +245,6 @@
     \item Hidden populations are often omitted from national representative
     surveys and have higher risk of drug abuse or sexually transmitted
     infections. 
-
-    \pause
 
     \Space
     
