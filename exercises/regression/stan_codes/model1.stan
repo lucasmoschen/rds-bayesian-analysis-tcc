@@ -33,7 +33,7 @@ model {
 generated quantities {
   real<lower = 0, upper = 1> spec_prior = beta_rng(alpha_spec, beta_spec); 
   real<lower = 0, upper = 1> sens_prior = beta_rng(alpha_sens, beta_sens);
-  real<lower = 0, upper = 1> pi_prior   = beta_rng(alpha_pi, beta_pi
+  real<lower = 0, upper = 1> pi_prior   = beta_rng(alpha_pi, beta_pi);
   
-  real p_prior = (1 - spec)*(1 - pi) + sens*pi;
+  real p_prior = (1 - spec_prior)*(1 - pi_prior) + sens_prior*pi_prior;
 }

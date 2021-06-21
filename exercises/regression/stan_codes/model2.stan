@@ -1,3 +1,11 @@
+functions { 
+    real truncated_normal_rng(real mu, real sigma) {
+          real p_lb = normal_cdf(0, mu, sigma);
+          real u = uniform_rng(p_lb, 1);
+          real y = mu + sigma * Phi(u);
+          return y;
+    }
+}
 data {
   int<lower = 0> positive_tests;        
   int<lower = 0> number_tests;
@@ -20,6 +28,10 @@ data {
   real<lower = 0> sd_hyper_sd_spec; 
   real<lower = 0> sd_hyper_sd_sens; 
 }
+transformed data{
+    vector[J_spec] one_spec = rep_vector(1, J_spec);
+    vector[J_sens] one_sens = rep_vector(1, J_sens);
+}
 parameters {
   real<lower = 0, upper = 1> pi;
 
@@ -27,10 +39,7 @@ parameters {
   real mean_logit_sens;
   real<lower = 0> sd_logit_spec; 
   real<lower = 0> sd_logit_sens; 
-
-  // vector[J_spec] logit_spec;
-  // vector[J_sens] logit_sens;
-
+  
   vector<offset=mean_logit_spec, multiplier=sd_logit_spec>[J_spec] logit_spec;
   vector<offset=mean_logit_sens, multiplier=sd_logit_sens>[J_sens] logit_sens;
 }
@@ -57,5 +66,25 @@ model {
     pos_tests_pos_subj ~ binomial(n_sens, sens);
 }
 generated quantities{
+
+    // predictive distribution 
     int<lower = 0> positive_tests_rep = binomial_rng(number_tests, p); 
+    
+    // prior predictive distribution 
+    
+    real<lower = 0, upper = 1> pi_prior = beta_rng(alpha_pi,beta_pi);
+
+    real mean_logit_spec_prior = normal_rng(mean_hyper_mean_spec, sd_hyper_mean_spec);
+    real mean_logit_sens_prior = normal_rng(mean_hyper_mean_sens, sd_hyper_mean_sens);
+
+    real<lower = 0> sd_logit_spec_prior = truncated_normal_rng(0, sd_hyper_sd_spec); 
+    real<lower = 0> sd_logit_sens_prior = truncated_normal_rng(0, sd_hyper_sd_sens); 
+  
+    real logit_spec_prior[J_spec] = normal_rng(one_spec * mean_logit_spec_prior, sd_logit_spec_prior);
+    real logit_sens_prior[J_sens] = normal_rng(one_sens * mean_logit_sens_prior, sd_logit_sens_prior);
+    
+    real spec_prior[J_spec] = inv_logit(logit_spec_prior);
+    real sens_prior[J_sens] = inv_logit(logit_sens_prior);
+
+    real p_prior = (1 - spec_prior[1])*(1 - pi_prior) + sens_prior[1]*pi_prior;
 }
