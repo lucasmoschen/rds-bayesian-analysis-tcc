@@ -93,7 +93,7 @@
 \title[Respondent driven-sampling]
 {Análise bayesiana de pesquisas RDS com incerteza no desfecho}
 \author[Lucas Moschen]
-{Lucas Moschen}
+{Lucas M. Moschen \\ Orientador: Luiz Max F. de Carvalho}
 \institute[EMAp/FGV]
 {
   Escola de Matemática Aplicada\\
@@ -339,18 +339,41 @@ Disciplinas do Doutorado em Modelagem Matemática da EMAp: Estatística Bayesian
 
 %---------------------------------------------------
 
-\begin{frame}
-  
-  Observe also that for a network the independence of the sample is
-  also not valid. Other estimators are better. Adicionar o modelo 1 e comentar
-  sobre a beta bivariada.
-  
-  Se $\pi$ é a probabilidade do teste ser positivo,
-  $$
-  \pi = \theta\gamma_s + (1-\theta)(1-\gamma_e),
-  $$
-  e podemos estudar $\theta$ considerando $\gamma_s, \gamma_e$. 
+\begin{frame}{Um resultado preliminar}
 
+  Considere o modelo \cite{gelman2020bayesian}:
+  \begin{gather*}
+    y \sim \operatorname{Binomial}(n, p), \\
+    p = \theta\gamma_s + (1- \theta)(1-\gamma_e).
+  \end{gather*}
+
+  Informação a priori sobre especificidade e sensibilidade:
+  \begin{gather*}
+    y_{negativos} \sim \operatorname{Binomial}(n_{\gamma_e}, \gamma_e), \\
+    y_{positivos} \sim \operatorname{Binomial}(n_{\gamma_s}, \gamma_s).
+  \end{gather*}
+  Distribuições a priori para os parâmetros: 
+  \begin{gather*}
+    \gamma_e \sim \operatorname{Beta}(a_e, b_e), \\
+    \gamma_s \sim \operatorname{Beta}(a_s, b_s), \\
+    \theta \sim \operatorname{Beta}(a_{\theta}, b_{\theta}).
+  \end{gather*}  
+
+\end{frame}
+
+\begin{frame}{Um resultado preliminar}
+
+  Dados de soroprevalência de COVID:  
+  \begin{align*}
+    y/n &= 50/3330,\\
+  y_{negativos}/n_{\gamma_e} &= 399/401, \\
+  y_{positivos}/n_{\gamma_s} &= 103/122.
+  \end{align*}
+  \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{../../images/model1_gelman_figure.png}
+  \end{figure}
+  
 \end{frame}
 
 %----------------------------------------------------
@@ -358,6 +381,11 @@ Disciplinas do Doutorado em Modelagem Matemática da EMAp: Estatística Bayesian
 \section{Cronograma}
 
 \begin{frame}{Cronograma}
+
+  \begin{figure}
+    \centering
+    \includegraphics[width = \textwidth]{../../images/gantt-chart-schedule.png}
+  \end{figure}
   
 \end{frame}
 
@@ -366,6 +394,7 @@ Disciplinas do Doutorado em Modelagem Matemática da EMAp: Estatística Bayesian
 \begin{frame}[t, allowframebreaks]
    \frametitle{References}
    \bibliographystyle{apalike}
+   \nocite{*}
    \bibliography{../tcc-project/biblio}
  \end{frame}
 
