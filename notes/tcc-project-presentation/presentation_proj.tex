@@ -4,7 +4,9 @@
 %------------Libraries---------------
 %------------------------------------
 
+\usepackage[portuguese]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage{xpatch}
 \usepackage{ragged2e}
 \usepackage{xcolor}
@@ -13,6 +15,10 @@
 \usepackage[percent]{overpic}
 
 \usepackage{amsmath, amsthm, amssymb, amsfonts} 
+
+%\usepackage{ifelse}
+\usepackage{hyphenat}
+\hyphenation{mate-mática recu-perar}
 
 %------------------------------------
 %----------Configurations------------
@@ -85,13 +91,12 @@
 %---------------------------------------------------
 
 \title[Respondent driven-sampling]
-{Respondent driven-sampling}
-\subtitle{Bayesian analysis of respondent-driven survey with outcome uncertainty}
+{Análise bayesiana de pesquisas RDS com incerteza no desfecho}
 \author[Lucas Moschen]
 {Lucas Moschen}
 \institute[EMAp/FGV]
 {
-  School of Applied Mathematics\\
+  Escola de Matemática Aplicada\\
   Fundação Getulio Vargas
 }
 \date[\today]
@@ -107,7 +112,7 @@
 \AtBeginSection[]
 {
   \begin{frame}
-    \frametitle{Table of Contents}
+    \frametitle{Sumário}
     \tableofcontents[currentsection]
   \end{frame}
 }
@@ -122,26 +127,31 @@
 
 %-----------------------------------------------------
 \begin{frame}
-\frametitle{Table of Contents}
+\frametitle{Sumário}
 \tableofcontents
 \end{frame}
 %----------------------------------------------------
 
-\section{Introduction}
+\section{Introdução}
 
 %---------------------------------------------------
 
 \begin{frame}
-\frametitle{Hidden and hard-to-reach populations}
+\frametitle{Populações de difícil acesso ou ``escondidas''}
 
 \begin{itemize}
     \justifying
-    \item No sampling frame exists: size and boundaries of the population are unknown.
-    \item Privacy concerns: stigmatized or illegal behavior. 
-    \item Fear of exposition or prosecution complicates the enumeration and learning about these populations.
-    \item High logistic cost when the occurrence frequency is low.
-    \item Examples: Heavy drug users, sex workers, homeless people, and men who have sex
-    with men. 
+    \item Não existe um esquema de amostragem clássico: tamanho e fronteiras da
+    população são desconhecidos;
+    \Space
+    \item Preocupações com a privacidade e medo de exposição: comportamento
+    estigmatizado ou ilegal;
+    \Space
+    \item Exemplos: Usuários de drogas pesadas, profissionais do sexo, pessoas
+    em situação de rua, entre outros;
+    \Space 
+    \item Abordagens existentes de amostragem têm vários espaços para
+    desenvolvimento.
 \end{itemize}
 
 \end{frame}
@@ -149,210 +159,205 @@
 \begin{frame}
 \frametitle{Respondent-driven sampling}
 
-  \begin{enumerate}
+  \begin{itemize}
     \justifying
-    \item The researchers select a handful of individuals from a target
-    population who serve as {\em seeds}.
-    \item Each participant receives a fixed number of {\em recruitment coupons} and invite
-    members of their own social network to participate in exchange of a
-    reward.   
-    \item The sampling is without replacement. 
-    \item If the individual accepts to participate, they answer a
-    questionnaire and inform the network degree. One important point is that
-    the recruiter doesn't say the name of the other members, reducing the
-    mask effect. 
+    \item Proposta em \cite{heckathorn1997} como uma abordagem de estimar
+    proporções em uma população alvo; 
 
-  \end{enumerate}
+    \Space
+
+    \item Teoria baseada em cadeias de Markov; 
+    
+    \Space
+    
+    \item \cite{crawford2016} modela como uma rede com interações e nós
+    faltantes e define uma distribuição de probabilidade sobre o subgrafo
+    observado;
+    
+    \Space 
+
+    \item Amostragem sem reposição. 
+
+  \end{itemize}
 
 \end{frame}
+
+\begin{frame}{Estudo RDS: refugiados e ativistas na Síria}
+  \begin{figure}
+    \begin{overprint}
+    \onslide<1>\includegraphics[width=\textwidth]{../../images/graph-rds-harvard-1.png}
+    \onslide<2>\includegraphics[width=\textwidth]{../../images/graph-rds-harvard-2.png}
+    \onslide<3>\includegraphics[width=\textwidth]{../../images/graph-rds-harvard-3.png}
+    \onslide<4>\includegraphics[width=\textwidth]{../../images/graph-rds-harvard-4.png}
+    \end{overprint}
+  \end{figure}  
+\end{frame}
+
+\begin{frame}{Estimação de prevalência com testes imperfeitos}
+  \begin{figure}
+    \begin{overprint}
+    \onslide<1>\includegraphics[width=\textwidth]{../../images/prevalence-1.png}
+    \onslide<2>\includegraphics[width=\textwidth]{../../images/prevalence-2.png}
+    \onslide<3>\begin{overpic}[width=\textwidth]{../../images/prevalence-3.png}
+    \put (62.5,33) {A média da amostra,} 
+    \put (57.2,28) {{\em prevalência aparente} e {\em MLE},} 
+    \put (60.5,23) {é um possível estimador.}
+     \end{overpic}
+    \end{overprint}
+  \end{figure}  
+\end{frame}
+
+\begin{frame}{Especificidade e Sensibilidade}
+
+  {\bf Especificidade:} Probabilidade de resultado negativo nos não doentes.
+
+  \vspace{2mm}
+  {\bf Sensibilidade:} Probabilidade de resultado positivo nos doentes.
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.95\textwidth]{../../images/prevalence-4.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Estatística bayesiana}
+
+  \begin{itemize}
+    \item Interpretação baseada no grau de crença em uma afirmação por um
+    indivíduo;
+
+    \Space
+
+    \item A fórmula de Bayes relaciona a probabilidade de um parâmetro após
+    observar novos dados com a evidência e a informação prévia sobre ele;
+
+    \Space
+
+    \item Permite a quantificação da incerteza de uma forma direta, dado que o
+    processo não precisa ser aleatório.
+  \end{itemize}
+
+\end{frame}
+
+%----------------------------------------------------
+
+\section{Justificativa}
+
+\begin{frame}{Justificativa}
+  \begin{itemize}
+
+    \justifying
+
+    \item Populações escondidas são sub-representadas em pesquisas nacionais e
+    têm maior risco de abuso de drogas ou contrair infecções sexualmente
+    transmissíveis;
+
+    \Space
+    
+    \item O tópico tem vários gaps na estatística e abordagens de regressão
+    para estimar prevalência considerando a estrutura de rede podem ser
+    construídas \cite{bastos2012binary}.
+  \end{itemize}
+\end{frame}
+
+%---------------------------------------------------
+
+%----------------------------------------------------
+
+\section{Objetivos}
+
+\begin{frame}{Objetivo geral}
+
+  \justifying
+
+  Este trabalho tem o objetivo de estudar o problema da estimação de
+  prevalência em uma estrutura de rede RDS considerando a Especificidade e a
+  Sensitividade do diagnóstico. 
+
+  \Space
+  
+  Também se pretende aplicar esse framework de
+  forma eficiente, comparando algoritmos Monte Carlo e Aproximações de Laplace. 
+\end{frame}
+
+\begin{frame}{Específicos}
+
+  \begin{enumerate}
+
+    \justifying
+
+    \item Revisão bibliográfica, descrição matemática do problema e propagação
+    da incerteza com métodos Bayesianos; 
+
+    \Space
+
+    \item Distribuição conjunta a priori da especificidade e sensibilidade;
+    
+    \Space
+
+    \item Implementação eficiente utilizando pacotes estatísticos, como {\em rstanarm} e {\em INLA};
+    
+    \Space
+
+    \item Análise de estudos epidemiológicos RDS.
+  \end{enumerate}
+  
+\end{frame}
+
+%---------------------------------------------------
+
+%----------------------------------------------------
+
+\section{Metodologia}
+
+%---------------------------------------------------
+
+\begin{frame}{Metodologia}
+
+{\bf Pesquisa bibliográfica}
+
+A fundamentação teórica se dará por meio de artigos nos tópicos indicados na
+introdução: RDS, estimativa de prevalência por meio de
+regressão, e estatística bayesiana. 
+
+\Space
+
+{\bf Recursos técnicos}
+
+Toda a programação necessária será feita nas linguagens de programação \textit{Python} e \textit{R}. 
+
+\Space
+
+{\bf Estudo formal}
+
+Disciplinas do Doutorado em Modelagem Matemática da EMAp: Estatística Bayesiana e Ciências de Redes.
+
+\end{frame}
+
+%----------------------------------------------------
+
+\section{Resultados preliminares}
+
+%---------------------------------------------------
 
 \begin{frame}
   
-  \frametitle{Formal model}
-
-  The RDS can be seen mathematically in two different approaches. 
-
-  \Space
-
-  \begin{itemize}
-    \item {\bf Stochastic process} \cite{heckathorn1997}
-  \end{itemize}
-
-  Each recruiter's social characteristics affect the characteristics of the
-  recruits. There are a limited number of states that subjects can assume and
-  the recruits are function of the recruiter characteristics.
-
-  \Space
-
-  \begin{itemize}
-    \item {\bf Graphical structure} \cite{crawford2016}
-  \end{itemize}
-
-  A hidden population is an undirected graph, and we observe it partially in
-  the {\em recruitment graph}, as also the coupon matrix and recruitment
-  times. The unobserved graph is treated as {\em missing data} what can be
-  interpreted as as Exponential Random Graph Model.  
-
-\end{frame}
-
-\begin{frame}{Prevalence estimation with imperfect tests}
-
-  \begin{itemize}
-    \item Prevalence ($\theta$) = Proportion of a disease (or condition) at time $t$;
-    
-    \item {\em Specificity} $(\gamma_s)$ and {\em Sensitivity} ($\gamma_e$) are (jointly) measures of
-    the disease diagnose accuracy;
-
-    \item If a sample $\{y_1, ..., y_n\}$ is observed, its mean is the maximum
-    likelihood estimator, but it supposes a perfect test; 
-
-    \item If $\pi$ is the probability of a positive test, 
-    $$
-    \pi = \theta\gamma_s + (1-\theta)(1-\gamma_e),
-    $$
-    and we can study $\theta$ regarding $\gamma_s, \gamma_e$. 
-
-    \item Observe also that for a network the independence of the sample is
-    also not valid. Other estimators are better. 
-
-  \end{itemize}
-
-\end{frame}
-
-\begin{frame}{Bayesian statistics}
-
-  \begin{itemize}
-    \item Interpretation based on an individual's degree of belief in a statement;
-
-    \Space
-
-    \item Bayes' formula relates the probability of a parameter after
-    observing new data with evidente and previous information about it;
-
-    \Space
-
-    \item It allows the quantification of uncertainty in a straightforward
-    way: the process do not need to be random.
-  \end{itemize}
-
-\end{frame}
-
-%----------------------------------------------------
-
-\section{Justification}
-
-\begin{frame}{Justification}
-
-  \begin{itemize}
-    \item Hidden populations are often omitted from national representative
-    surveys and have higher risk of drug abuse or sexually transmitted
-    infections. 
-
-    \Space
-    
-    \item The topic has a lot of gaps in Statistics and regression approaches
-    to prevalence estimation taking the network structure can be built \cite{bastos2012binary}.
-  \end{itemize}
-\end{frame}
-
-%---------------------------------------------------
-
-%----------------------------------------------------
-
-\section{Objectives}
-
-\begin{frame}{Main objective}
-
-  The objective of this work is to analyze the network structure of RDS as a
-stochastic object, along with the sensibility and sensitivity. We also intend
-to apply this framework efficiently, comparing Monte Carlo algorithms and
-Laplace approximations.
+  Observe also that for a network the independence of the sample is
+  also not valid. Other estimators are better. Adicionar o modelo 1 e comentar
+  sobre a beta bivariada.
   
-\end{frame}
-
-\begin{frame}{Specific}
-
-  \begin{enumerate}
-    \item Bibliography review; 
-
-    \item Problem description in mathematical terms and uncertainty propagation; 
-
-    \item Bayesian methods and prior calibration; 
-
-    \item Joint prior distribution for sensitivity and specificity;
-
-    \item Efficient implementation using statistical packages, as {\em
-    rstanarm} and {\em INLA}. Comparison between MCMC and Laplace
-    approximation; 
-
-    \item Analysis of RDS epidemiological studies.
-  \end{enumerate}
-  
-\end{frame}
-
-%---------------------------------------------------
-
-%----------------------------------------------------
-
-\section{Methodology}
-
-%---------------------------------------------------
-
-\begin{frame}{Methodology}
-
-{\bf Document research}
-
-The theoretical foundation will be through papers in the topics indicated in
-the introduction, RDS, bayesian statistics, and prevalence estimation through
-regression. 
-
-\Space
-
-{\bf Technical resources}
-
-All the necessary programming will be done in the programming languages
-\textit{Python} and \textit{R}. 
-
-\Space
-
-{\bf Formal study}
-
-Two subjects from the PhD in Mathematical Modelling at EMAp will be taken:
-Bayesian Statistics and Network Science.
+  Se $\pi$ é a probabilidade do teste ser positivo,
+  $$
+  \pi = \theta\gamma_s + (1-\theta)(1-\gamma_e),
+  $$
+  e podemos estudar $\theta$ considerando $\gamma_s, \gamma_e$. 
 
 \end{frame}
 
 %----------------------------------------------------
 
-\section{Preliminary results}
+\section{Cronograma}
 
-%---------------------------------------------------
-
-\begin{frame}{RDS studies: refugees and activists in Syria}
-
-\begin{figure}
-  \centering
-  \begin{overpic}[width=\textwidth]{../../images/graph-rds-harvard.png}
-    \put (50,20) {Network generated by a RDS study}
-    \put (50,15) {with refugees and activists in Syria.}
-    \put (50,10) {We see part of the graph.}
-   \end{overpic}
-\end{figure}
-  
-\end{frame}
-
-\begin{frame}{Regression}
-  \begin{enumerate}
-    \item Adicionar o modelo 1 e comentar sobre a beta bivariada. 
-  \end{enumerate}
-
-\end{frame}
-
-%----------------------------------------------------
-
-\section{Schedule}
-
-\begin{frame}{Schedule}
+\begin{frame}{Cronograma}
   
 \end{frame}
 

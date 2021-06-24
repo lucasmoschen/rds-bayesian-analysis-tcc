@@ -12,7 +12,7 @@ data {
   vector<lower = 0>[4] alpha; 
 }
 parameters {
-  vector<lower = 0, upper = 1>[4] U;
+  simplex[4] U;
   real<lower = 0, upper = 1> pi;
 }
 transformed parameters {
@@ -24,11 +24,6 @@ transformed parameters {
 model {
   U  ~ dirichlet(alpha); 
   pi ~ beta(alpha_pi,beta_pi);
-  
-  real<lower = 0, upper = 1> spec = U[1] + U[2];
-  real<lower = 0, upper = 1> sens = U[1] + U[3];
-
-  real<lower = 0, upper = 1> p = (1 - spec)*(1 - pi) + sens*pi;
 
   positive_tests     ~ binomial(number_tests, p);
   neg_tests_neg_subj ~ binomial(n_spec, spec); 

@@ -1,3 +1,25 @@
+functions {
+    real integrand(real x, real xc, real[] theta, real[] x_r, int[] x_i){
+        real s = x_r[1];
+        real t = x_r[2];
+        real alpha11 = theta[1];
+        real alpha10 = theta[2];
+        real alpha01 = theta[3];
+        real alpha00 = theta[4];
+        
+        return x^(alpha11-1)*(s-x)^(alpha10-1)*(t-x)^(alpha01-1)*(1-s-t+x)^(alpha00-1);
+    }
+    real beta_bivariate_lpdf(vector[2] x, vector[4] theta){
+        real c = lgamma(sum(theta));
+        for (i in 1:4) {
+          c += -lgamma(theta[i]);
+        }
+        real lb = max(0, x[1]+x[2]-1);
+        real ub = min(x[1], x[2]);
+        return c + log(integrate_1d(integrand, lb, ub, alpha, x));
+    }
+    
+}
 data {
   int<lower = 0> positive_tests;        
   int<lower = 0> number_tests;
