@@ -100,15 +100,45 @@ prevalence}. Suppose a diagnostic test is done to measure the presence or the
 absence of this condition in the individuals. Mathematically, let $\theta \in
 (0,1)$ be the prevalence (parameter of interest) of the condition and $Y_i$ be an indicator function of the presence of the condition in the i$^{th}$ individual.
 Assuming for simplicity that all tests are performed at time $t$, and the
-sample is $\{y_1, ..., y_n\}$, the maximum likelihood estimator is 
+sample is $\{y_1, ..., y_n\}$, the maximum likelihood estimator is the
+apparent prevalence: 
 \begin{equation}
     \label{eq:naive-estimator}
     \hat{\theta} = \frac{1}{n}\sum_{i=1}^n y_i.
 \end{equation}
-However this estimator has two problems in this context: it is assumed perfect
-diagnostic test, what is often incorrect, and the samples in RDS are not
-independent by definition (network structure). The latter was a study object
-in \cite{heckathorn1997,heckathorn2002} where the estimator was proposed
+However, this estimator has two problems in this context: it assumes a perfect
+diagnostic test, which is often incorrect, and the samples in RDS are not
+independent by definition (network structure). 
+
+The first problem in \eqref{eq:naive-estimator} was tackled several times in
+the literature, such as \cite{mcinturff2004modelling}. The diagnose accuracy
+can be measured in many ways and the most considered is the joint analysis of
+the {\em sensitivity} ($\gamma_s$) and the {\em specificity}
+($\gamma_e$). 
+
+\begin{definition}[Specificity]
+    It is the probability of a negative test conditioned on the absence of the
+    disease (true negative).
+\end{definition}
+
+\begin{definition}[Sensitivity]
+    It is the probability of a positive test conditioned on the presence of
+    the disease (true positive). 
+\end{definition}
+
+Let $p$ be the probability of a positive test. Then, by Law of Total
+Probability: 
+\begin{equation}
+    p = \theta\gamma_s + (1-\theta)(1-\gamma_e).    
+\end{equation}
+
+Establishing a link function in $(\theta, \gamma_s, \gamma_e)$, it is possible
+to use linear regression and prior distributions to the regressors
+$\boldsymbol{\beta}$ to estimate $\theta$ conditioned on data. One important
+additional problem is to consider the correlation between $\gamma_s$ and $\gamma_e$. 
+
+
+The second problem was a study object in \cite{heckathorn1997,heckathorn2002} where the estimator was proposed
 based largely on Markov chain theory and social network theory.
 \cite{volz2008probability} improved it with the RDS II estimator considering
 the network degree
@@ -117,18 +147,6 @@ the network degree
 \end{equation}
 such that $\delta_i$ is the i$^{th}$ individual's degree. However, this is an
 area of research in progress. 
-
-The first problem in \eqref{eq:naive-estimator} was tackled several times in
-the literature, such as \cite{mcinturff2004modelling}. A possible way to
-handle is to bring to the model the sensitivity ($\gamma_s$) and specificity
-($\gamma_e$). Let $\pi$ be the probability of a test comes positive. Then 
-$$
-\pi\ = \theta\gamma_s + (1-\theta)(1-\gamma_e).
-$$
-Establish a link function in $(\pi, \gamma_s, \gamma_e)$, it is possible to
-use linear regression and prior distributions to the regressors
-$\boldsymbol{\beta}$. One important problem is to consider the correlation
-between $\gamma_s$ and $\gamma_e$. 
 
 \section{Bayesian statistics}
 
