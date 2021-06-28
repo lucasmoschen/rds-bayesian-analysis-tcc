@@ -10,16 +10,17 @@ specified. For instance, $\pi(\theta, \gamma_e, \gamma_s) =
 \operatorname{Beta}(\alpha_{\theta}, \beta_{\theta})$, in which
 $\alpha_{\theta}$ and $\beta_{\theta}$ are positive hyperparameters. Since the
 three parameters $\theta, \gamma_e$, and $\gamma_s$ are not jointly
-identifiables only from $y$, prior information on $\gamma_e$ and $\gamma_s$
+identifiable only from $y$, prior information on $\gamma_e$ and $\gamma_s$
 need be added. For this, 
 \begin{gather*}
-  y_{negativos} \sim \operatorname{Binomial}(n_{\gamma_e}, \gamma_e), \\
-  y_{positivos} \sim \operatorname{Binomial}(n_{\gamma_s}, \gamma_s),
+  y_{negative} \sim \operatorname{Binomial}(n_{\gamma_e}, \gamma_e), \\
+  y_{positive} \sim \operatorname{Binomial}(n_{\gamma_s}, \gamma_s),
 \end{gather*}
-such that $y_{negativos}$ are negative tests on known negative subjects
-(by a gold standard for example) and $y_{positivos}$ are positive tests on
-known positive. Given the data separates specificity and sensitivity, there is
-no information about their correlation. Then, we define the the prior distributions
+such that $y_{negative}$ are negative tests on known negative subjects
+(by a gold standard for example) and $y_{positive}$ are positive tests on
+known positive. When considering separated experiments for specificity and
+sensitivity, there is
+no information about their correlation, which is the case for our model. Then we define the the prior distributions
 \begin{gather*}
   \gamma_e \sim \operatorname{Beta}(a_e, b_e), \\
   \gamma_s \sim \operatorname{Beta}(a_s, b_s), \\
@@ -29,16 +30,16 @@ Using data from \cite{bennett2020estimating} about COVID-19 seroprevalence in
 Santa Clara:  
 \begin{align*}
   y/n &= 50/3330,\\
-y_{negativos}/n_{\gamma_e} &= 399/401, \\
-y_{positivos}/n_{\gamma_s} &= 103/122, 
+y_{negative}/n_{\gamma_e} &= 399/401, \\
+y_{positive}/n_{\gamma_s} &= 103/122, 
 \end{align*}
 we fit the model and obtain the results showed in Figure
 \ref{fig:results-posterior-model1}. All the codes were done in {\em Stan} and
-{\em pyStan}.
+{\em PyStan}.
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=\textwidth]{../../images/model1_gelman_figure.png}
+  \includegraphics[width=\textwidth]{../../images/model1_gelman_figure_english.png}
   \caption{Scatter plot of posterior simulations of prevalence against
   specificity and histogram of posterior simulations of the prevalence.}
   \label{fig:results-posterior-model1}
@@ -46,7 +47,7 @@ we fit the model and obtain the results showed in Figure
 
 Other approach considers more than one study about specificity and
 sensitivity. A {\em hierarchical partial pooling} model for these studies
-can be done in the following one: 
+can be done in the following way: 
 \begin{gather*}
     \operatorname{logit}(\gamma_s^j) \sim \operatorname{Normal}(\mu_{\gamma_s}, \sigma_{\gamma_s}), \\
     \operatorname{logit}(\gamma_e^j) \sim \operatorname{Normal}(\mu_{\gamma_e}, \sigma_{\gamma_e}), 
@@ -58,17 +59,16 @@ its one prior distributions. For instance,
 \begin{align*}
     \mu_{\gamma_s} &\sim N(0, 10), \\ 
     \mu_{\gamma_e} &\sim N(0, 10), \\
-    \sigma_{\gamma_s} &\sim |N(0,1)|, \text{ and } \\
-    \sigma_{\gamma_e} &\sim |N(0,1)|,
+    \sigma_{\gamma_s} &\sim N^+(0,1), \text{ and } \\
+    \sigma_{\gamma_e} &\sim N^+(0,1),
 \end{align*}
-where $|N(a,b)|$ is the truncated normal distribution in $[0,+\infty)$. All
+where $N^+(a,b)$ is the truncated normal distribution in $[0,+\infty)$. All
 the codes available at Github
 repository\footnote{\url{https://github.com/lucasmoschen/rds-bayesian-analysis}}.
 
 Finally, we studied a joint distribution for specificity and sensitivity, a
 possible bivariate beta distribution built in \cite{olkin2015constructions}.
-This distribution is derived from a Dirichlet distribution with four
-dimension. Let $U = (U[1],...,U[4]) \sim \operatorname{Dirichlet}(\boldsymbol{\alpha})$, where
+This distribution is derived from a Dirichlet distribution of order four. Let $U = (U[1],...,U[4]) \sim \operatorname{Dirichlet}(\boldsymbol{\alpha})$, where
 $\boldsymbol{\alpha} \in \mathbb{R}^4_+$. Therefore, defining $X = U[1] +
 U[2]$ and $Y = U[1] + U[3]$, we will have that $(X,Y)$ has a well-defined
 probability distribution in
