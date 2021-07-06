@@ -37,7 +37,7 @@
 \apptocmd{\frame}{}{\justifying}{}
 
 %---------------------------------------------------
-%------------------Itemize--------------------------
+%------------------Itemize-------------------------- Centro Médico Pasteur - R. Garibaldi, 476 - Centro, Caxias do Sul - RS, 95084-901, Brasil
 %---------------------------------------------------
 
 \makeatletter
@@ -77,6 +77,7 @@
 %---------------------------------------------------
 
 \newcommand{\Space}{\vspace{3ex}}
+\setbeamercovered{transparent} 
 
 %---------------------------------------------------
 %----------------Front page-------------------------
@@ -133,11 +134,13 @@
 
 \begin{itemize}
     \justifying
-    \item No sampling frame exists: size and boundaries of the population are unknown.
-    \item Privacy concerns: stigmatized or illegal behavior. 
-    \item Fear of exposition or prosecution complicates the enumeration and learning about these populations.
-    \item High logistic cost when the occurrence frequency is low.
-    \item Examples: Heavy drug users, sex workers, homeless people, and men who have sex
+    \item<1> No sampling frame exists: unknown size and boundaries;
+    \Space
+    \item<2> Privacy concerns: stigmatized or illegal behavior; 
+    \Space
+    \item<3> Fear of exposition or prosecution complicates the enumeration and learning about these populations;
+    \Space
+    \item<4> Examples: Heavy drug users, sex workers, homeless people, and men who have sex
     with men. 
 \end{itemize}
 
@@ -148,30 +151,39 @@
     \frametitle{Existing sampling methods}
 
     \begin{itemize}
-        \item {\bf Snowball} \cite{goodman1961}
+        \justifying
+
+        \item<1> {\bf Snowball} \cite{goodman1961} \\
+        
+        From starting individuals, each subject provides a list of names of known
+        individuals from the target population. The researcher invites this person
+        to participate, who can agree or deny it. 
     \end{itemize}
 
-    From starting individuals, each subject provides a list of names of known
-    individuals from the target population. The researcher invites this person
-    to participate, who can agree or deny it. 
+    
 
     \Space
 
     \begin{itemize}
-      \item {\bf Key informant} \cite{deaux-callaghan1985}
+      \justifying
+
+      \item<2> {\bf Key informant} \cite{deaux-callaghan1985}
+    
+      Expert respondents are selected to answer about others' behavior. For instance, social workers, drug abuse counselors, official, etc. 
     \end{itemize}
 
-    Expert respondents are selected to answer about others' behavior. For
-    instance, social workers, drug abuse counselors, official, etc. 
 
     \Space
 
     \begin{itemize}
-      \item {\bf Targeted} \cite{watters-biernacki1989}
+      \justifying
+
+      \item<3> {\bf Targeted} \cite{watters-biernacki1989}
+  
+      Field researchers build an ethnographic mapping of a target population,
+      and recruit a number of individuals at sites identified by this map.
     \end{itemize}
 
-   Field researchers build an ethnographic mapping of a target population, and
-   recruit a number of individuals at sites identified by this map.
 
 \end{frame}
 
@@ -181,40 +193,56 @@
 
   \begin{itemize}
     \justifying
-    \item Inferences about the individuals depend on the initial sample. 
-    \item Bias towards individuals who are more cooperative and agree to
-    participate. 
-    \item Bias because of masking, that is, protecting friends by not
-    referring them. 
-    \item Individuals with more links may be oversampled.  
+    \item<1> Inferences about the individuals depend on the initial sample;
+    \Space
+    \item<2> Bias towards individuals who are more cooperative;
+    \Space
+    \item<3> Bias by masking, that is, protecting friends by not referring them;
+    \Space
+    \item<4> Individuals with more links may be oversampled.  
   \end{itemize}
   
 \end{frame}
 
 \begin{frame}
-  
   \frametitle{Respondent-driven sampling}
+  
+    \begin{itemize}
+      \justifying
+      \item<1> Proposed by \cite{heckathorn1997} as an approach to estimate
+      proportions in a hard-to-reach population; 
+  
+      \Space
+  
+      \item<2> Theory based on Markov chains; 
+      
+      \Space
+      
+      \item<3> \cite{crawford2016} models as an interaction network and defines a probability distribution over the observed
+      subgraph;
+      
+      \Space 
+  
+      \item<4> The sampling is without replacement. 
+  
+    \end{itemize}
 
-  \begin{enumerate}
-    \justifying
-    \item The researchers select a handful of individuals from a target
-    population who serve as {\em seeds}.
-    \item Each participant receives a fixed number of {\em recruitment coupons} and invite
-    members of their own social network to participate in exchange of a
-    reward.   
-    \item The sampling is without replacement. 
-    \item If the individual accepts to participate, they answer a
-    questionnaire and inform the network degree. One important point is that
-    the recruiter doesn't say the name of the other members, reducing the
-    mask effect. 
+\end{frame}
 
-  \end{enumerate}
-
+\begin{frame}{Respondent-driven sampling}
+  \begin{figure}
+    \begin{overprint}
+    \onslide<1>\includegraphics[width=\textwidth]{../../images/graph-rds-harvard-1.png}
+    \onslide<2>\includegraphics[width=\textwidth]{../../images/graph-rds-harvard-2-english.png}
+    \onslide<3>\includegraphics[width=\textwidth]{../../images/graph-rds-harvard-3-english.png}
+    \onslide<4>\includegraphics[width=\textwidth]{../../images/graph-rds-harvard-4-english.png}
+    \end{overprint}
+  \end{figure}  
 \end{frame}
 
 \begin{frame}
   
-  \frametitle{System of incentives}
+  \frametitle{Dual system of incentives}
     
   Two different sources of theoretical incentive (dual incentive system):
 
@@ -222,9 +250,12 @@
 
   \begin{itemize}
     \justifying
-    \item {\bf Individual-sanction based control:} reward for participating
+    \item<1> {\bf Individual-sanction based control:} reward for participating
     in the research. 
-    \item {\bf Group-mediated social control:} reward for recruiting peers.
+
+    \Space
+
+    \item<2> {\bf Group-mediated social control:} reward for recruiting peers.
     When social approval is important, it's more efficient and cheaper.
     Symbolic incentive is also important. 
   \end{itemize}
@@ -239,51 +270,69 @@
   
   \frametitle{Formal model}
 
-  The RDS can be seen mathematically in two different approaches. 
+  The RDS can be built mathematically with different approaches: 
 
   \Space
 
   \begin{itemize}
-    \item {\bf Stochastic process} \cite{heckathorn1997}
-  \end{itemize}
+    \justifying
 
-  Each recruiter's social characteristics affect the characteristics of the
-  recruits. There are a limited number of states that subjects can assume and
-  the recruits are function of the recruiter characteristics.
+    \item<1> {\bf Markov process} \cite{heckathorn1997}
+  
+    Each recruiter's social characteristics affect the characteristics of the
+    recruits. There are a limited number of states that subjects can assume and
+    the recruits are function of the recruiter characteristics.
+  \end{itemize}
 
   \Space
 
   \begin{itemize}
-    \item {\bf Graphical structure} \cite{crawford2016}
+    \justifying
+
+    \item<2> {\bf Graphical structure} \cite{crawford2016}
+    
+    A hidden population is an undirected graph, and we observe it partially in
+    the {\em recruitment graph}, as also the coupon matrix and recruitment
+    times. The unobserved graph is treated as {\em missing data} and can be
+    interpreted as an Exponential Random Graph Model.
+  \end{itemize}  
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Markov chain model}
+  
+  \begin{itemize}
+    \justifying
+    \item<1> In a survey, questions create states describing the participant;
+    
+    \Space
+  
+    \item<2> Heckathorn concluded that the recruitment was a memoryless
+    process and first-order Markov process.
+    
+    \Space
+
+    \item<3> The Markov chain indicates the most recent recruit's characteristic;
+    
+    \Space
+  
+    \item<4> The Markov chain must be ergodic. 
   \end{itemize}
-
-  A hidden population is an undirected graph, and we observe it partially in
-  the {\em recruitment graph}, as also the coupon matrix and recruitment
-  times. The unobserved graph is treated as {\em missing data} what can be
-  interpreted as as Exponential Random Graph Model.  
-
-\end{frame}
+  
+  \end{frame}
 
 \begin{frame}
-\frametitle{Markov chain model}
+  
+  \frametitle{Markov chain model}
 
-\begin{itemize}
-  \justifying
-  \item In a survey, questions about ethnicity, location, and gender create
-  states in which each participant will be. By statistical tests, one can
-  verify association between the recruiter and recruited responses. 
-
-  \item Heckathorn concluded that the recruitment was a memoryless process, and concluded RDS was a first-oder Markov process. At
-  any instant, the current location of the point indicates the most recent
-  recruit's characteristic. 
-
-  \item The markov chain must be ergodic. 
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}
-  \frametitle{Example of RDS in Markov chain}
+  \begin{figure}
+    \begin{overprint}
+    \onslide<1>\includegraphics[width=0.98\textwidth]{../../images/rds-markov-harvard-1.png}
+    \onslide<2>\includegraphics[width=0.98\textwidth]{../../images/rds-markov-harvard-2.png}
+    \end{overprint}
+  \end{figure}  
+  
 \end{frame}
 
 \begin{frame}
@@ -292,21 +341,27 @@
   \begin{theorem}
     \justifying
     An equilibrium mix of recruits will be attained when the number of waves
-    goes to infinity, and it is independent from which recruitment began. 
+    goes to infinity, and it is independent from which recruitment began. The
+    pooling approaches the equilibrium in a geometric rate. 
   \end{theorem}
 
-  \begin{theorem}
-    The subject pool generated approaches the equilibrium in a geometric rate.
-  \end{theorem}
+\end{frame}
 
-  \begin{theorem}[Remark]
-    If there is a substancial in-group selection bias, this convergence will
-    take longer. 
-  \end{theorem}
+\begin{frame}
+  \frametitle{Convergence analysis}
+
+  \includegraphics[width=\textwidth]{../../images/recruitment-wave-convergence.png}
 \end{frame}
 
 \begin{frame}
   \frametitle{Assessing bias in RDS}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Network model}
+
+  \includegraphics[width=\textwidth]{../../images/graphical-model-example.png}
+  
 \end{frame}
 
 \begin{frame}
@@ -316,7 +371,7 @@
   \justifying
   \item Let $G = (V, E)$ be an undirected graph representing the hidden
   population. The {\em Recruitment Graph} is $G_R = (V_R, E_R)$,
-  where $V_S$ represents the recruited individuals, and $E_R$ the recruitment
+  where $V_R$ represents the recruited individuals, and $E_R$ the recruitment
   edge. The {\em Recruitment-induced Subgraph} is the induced subgraph by
   $V_R$. 
 
@@ -330,12 +385,6 @@
   waiting times.
 
 \end{itemize}
-
-\end{frame}
-
-\begin{frame}
-
-  \frametitle{Example of observed data}
 
 \end{frame}
 
