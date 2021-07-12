@@ -30,3 +30,4 @@ comparing the Markov chain Monte Carlo algorithms and the nested Laplace Approxi
 |------------|------|-----------|----------|
 |Harvard Dataverse|Khoury, Rana B|Activist refugees from Syria|[Open access](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/XKOVUN)|
 |Princeton|Centers for Disease Control and Prevention (CDC)|HIV transmission in a community of high-risk heterosexuals|[Login access](https://opr.princeton.edu/archive/P90/)|
+|Princeton|Salganik, M.J. et al|Heavy Drug Users in Curitiba, Brazil|[Login access](https://opr.princeton.edu/Archive/NSUM/)|
