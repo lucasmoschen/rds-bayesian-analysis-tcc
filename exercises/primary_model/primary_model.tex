@@ -42,6 +42,7 @@
 %----------------------------------------------
 
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\x}{\boldsymbol{x}}
 
 \newtheorem{theorem}{Theorem}[]
 \newtheorem{proposition}{Proposition}[]
@@ -88,14 +89,14 @@ sampling frame for it \cite{heckathorn1997}.
 
 \section{Preliminary definitions}
 
-Suppose we have a sample indexed by $i$. Let $X_i$ be the indicator
+Suppose we have a sample indexed by $i$. Let $Y_i$ be the indicator
 function of the $i^{th}$ individual exposed to the disease, and $T_i$ indicating whether the test in the $i^{th}$ individual is positive. Suppose that
-$\{X_i\}$ and $\{T_i\}$ are two independent and identically distributed
+$\{Y_i\}$ and $\{T_i\}$ are two independent and identically distributed
 random variables with $\Pr(X = 1) = \theta$ and $\Pr(T = 1) = p$. We say that
 $\theta$ is the prevalence and $p$ is the apparent prevalence in the
 population. 
 
-If the test is perfect, $T_i = X_i$ for every $i$, and
+If the test is perfect, $T_i = Y_i$ for every $i$, and
 $\theta = p$ (with probability one when they are random variables).
 Unfortunately, this is not true in the real world. For that, the evaluation of
 the diagnostic test must be regarded, and the following definitions are
@@ -103,17 +104,17 @@ important:
 
 \begin{definition}[Specificity]
   Probability of a negative test correctly identified. In mathematical terms,
-  conditioned on $X = 0$, the {\em specificity} $\gamma_e$ is the probability of $T = 0$: 
+  conditioned on $Y = 0$, the {\em specificity} $\gamma_e$ is the probability of $T = 0$: 
   \begin{equation}
-    \gamma_e = \Pr(T = 0|X = 0). 
+    \gamma_e = \Pr(T = 0|Y = 0). 
   \end{equation} 
 \end{definition}
 
 \begin{definition}[Sensitivity]
   Probability of a positive test correctly identified. In mathematical terms,
-  conditioned on $X = 1$, the {\em sensitivity} $\gamma_s$ is the probability of $T = 1$: 
+  conditioned on $Y = 1$, the {\em sensitivity} $\gamma_s$ is the probability of $T = 1$: 
   \begin{equation}
-    \gamma_s = \Pr(T = 1|X = 1). 
+    \gamma_s = \Pr(T = 1|Y = 1). 
   \end{equation} 
 \end{definition}
 
@@ -130,26 +131,67 @@ important:
   and the countable additivity axiom of Probability:
   \begin{equation*}
     \begin{split}
-      p &= \Pr(T = 1) = \Pr(T = 1, R = 1) + \Pr(T = 1, R = 0) \\
-      &= \Pr(T=1|R=1)\Pr(R=1) + \Pr(T=1|R=0)P(R=0) \\
-      &= \Pr(T=1|R=1)\Pr(R=1) + (1 - \Pr(T=0|R=0))(1-P(R=1)) \\
+      p &= \Pr(T = 1) = \Pr(T = 1, Y = 1) + \Pr(T = 1, Y = 0) \\
+      &= \Pr(T=1|Y=1)\Pr(Y=1) + \Pr(T=1|Y=0)\Pr(Y=0) \\
+      &= \Pr(T=1|Y=1)\Pr(Y=1) + (1 - \Pr(T=0|Y=0))(1-\Pr(Y=1)) \\
       &= \gamma_s\theta + (1 - \gamma_e)(1-\theta)
     \end{split}
   \end{equation*} 
 \end{proof}
 
+The intuition behind this equation is pretty simple: the proportion
+of positive test counts the correct identified exposed individuals and the
+incorrect identified not exposed. Observe that if $\gamma_s = \gamma_e = 1$, we have the trivial case $p =
+\theta$. Moreover, if $\gamma_s = \gamma_e = 0.5$, we have that
+$p = 0.5$ and it is impossible to have information about $\theta$. 
+
+\begin{remark}
+  Actually, we are interested in the pontual prevalence at time $t$. Being
+  impossible to test every individual at the same time, we assume that all
+  individuals remain exposed to the disease at time of the last tested. 
+\end{remark}
 
 \section{Prevalence model}
 
-
+Firstly, we make some assumptions to simplify the modeling:
 
 \begin{assumption}
-
+  For a Bayesian modeling, we assume each parameter of interest of the model
+  has a probability distribution to incorporate the uncertainty about it. 
 \end{assumption}
 
+\begin{assumption}
+  Suppose for each individual we observe $k$ features that can be possible
+  risk factors, and $\x_i$ is the vector for the $i^{th}$ individual.
+\end{assumption}
 
+\begin{assumption}
+  Suppose each individual has a probability $\theta_i$ of having been exposed
+  to the disease and $\theta_i$ dependes on $\x_i$, not necessarily linearly.
+  We therefore will have $p_i$ the probability of positive test in the
+  $i^{th}$ individual.
+\end{assumption} 
 
+\begin{assumption}
+  We assume sensitivity and specificity have the same distribution for all
+  individuals and it only depends on the test used to diagnose. 
+\end{assumption}
 
+From above, we develop three different models with different stages: 
+
+\subsection{Perfect tests}
+
+The first model only consider the risk factors $\x_i$. 
+
+\begin{equation}
+  \begin{aligned}
+    Y_i &\sim \operatorname{Bernoulli}(\theta_i) \\
+    g(\theta_i) &= \x_i\beta, 
+  \end{aligned}  
+\end{equation}
+where $g(\cdot)$ is a link function. These class of functions maps a
+non-linear relationship to a linear one. Examples include the logit and probit
+functions. For a Bayesian inference, priors on $\beta$ must be included. 
 
 
 
