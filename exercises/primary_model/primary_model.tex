@@ -1,0 +1,158 @@
+\documentclass[a4paper, notitlepage, 11pt]{article}
+
+%----------------------------------------------
+%-------------------Style----------------------
+%----------------------------------------------
+
+\usepackage{geometry}
+\fontfamily{times}
+\geometry{verbose,tmargin=30mm,bmargin=25mm,lmargin=25mm,rmargin=25mm}
+
+%----------------------------------------------
+%-----------------Packages---------------------
+%----------------------------------------------
+
+% Writing 
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[pdftex]{lscape}
+\fontfamily{times}
+\usepackage[affil-it]{authblk}
+\usepackage{lettrine}
+
+% Graphics
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\graphicspath{{img/}}
+
+% Math
+\usepackage{amsthm, amssymb, amsmath, mathtools}
+
+% Biblio
+\usepackage[authoryear, round]{natbib}
+\bibliographystyle{apalike}
+
+%Others
+\usepackage{url, hyperref}
+\hypersetup{colorlinks=true,citecolor=blue}
+
+%----------------------------------------------
+%---------------Math definitions---------------
+%----------------------------------------------
+
+\newcommand{\R}{\mathbb{R}}
+
+\newtheorem{theorem}{Theorem}[]
+\newtheorem{proposition}{Proposition}[]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+
+%----------------------------------------------
+%-----------------Title Page-------------------
+%----------------------------------------------
+
+\title{Prevalence estimation}
+
+\author{Lucas Machado Moschen}
+\affil{School of Applied Mathematics, \\ Fundação Getulio Vargas}
+
+\date{\today}
+
+%----------------------------------------------
+%------------------Document--------------------
+%----------------------------------------------
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+A key question for epidemiologists and public health authorities is about the
+proportion of individuals exposed to the disease at time $t$. This quantity
+can be measured periodically, and the evolution shows how the transmission is
+going on. For instance, if after a year the proportion grew 50\% it would be
+worrisome. We call it prevalence. High prevalence of a disease within a
+population might mean that there is a high incidence of it or prolonged
+survival without cure. 
+
+This report is the initial model for my bachelor dissertation entitled ``Bayesian analysis of respondent-driven surveys with
+outcome uncertainty'', which proposes to study prevalence when the diagnostic
+tests are imperfect and the population is hidden, that is, there is no
+sampling frame for it \cite{heckathorn1997}. 
+
+\section{Preliminary definitions}
+
+Suppose we have a sample indexed by $i$. Let $X_i$ be the indicator
+function of the $i^{th}$ individual exposed to the disease, and $T_i$ indicating whether the test in the $i^{th}$ individual is positive. Suppose that
+$\{X_i\}$ and $\{T_i\}$ are two independent and identically distributed
+random variables with $\Pr(X = 1) = \theta$ and $\Pr(T = 1) = p$. We say that
+$\theta$ is the prevalence and $p$ is the apparent prevalence in the
+population. 
+
+If the test is perfect, $T_i = X_i$ for every $i$, and
+$\theta = p$ (with probability one when they are random variables).
+Unfortunately, this is not true in the real world. For that, the evaluation of
+the diagnostic test must be regarded, and the following definitions are
+important:
+
+\begin{definition}[Specificity]
+  Probability of a negative test correctly identified. In mathematical terms,
+  conditioned on $X = 0$, the {\em specificity} $\gamma_e$ is the probability of $T = 0$: 
+  \begin{equation}
+    \gamma_e = \Pr(T = 0|X = 0). 
+  \end{equation} 
+\end{definition}
+
+\begin{definition}[Sensitivity]
+  Probability of a positive test correctly identified. In mathematical terms,
+  conditioned on $X = 1$, the {\em sensitivity} $\gamma_s$ is the probability of $T = 1$: 
+  \begin{equation}
+    \gamma_s = \Pr(T = 1|X = 1). 
+  \end{equation} 
+\end{definition}
+
+\begin{theorem}[Relation between prevalence and apparent prevalence] These quantities are related by the following equation:
+
+  \begin{equation}
+    p = \gamma_s\theta + (1-\gamma_e)(1-\theta).
+  \end{equation}
+  
+\end{theorem}
+
+\begin{proof}
+  This is a direct application of the definition of conditional probability
+  and the countable additivity axiom of Probability:
+  \begin{equation*}
+    \begin{split}
+      p &= \Pr(T = 1) = \Pr(T = 1, R = 1) + \Pr(T = 1, R = 0) \\
+      &= \Pr(T=1|R=1)\Pr(R=1) + \Pr(T=1|R=0)P(R=0) \\
+      &= \Pr(T=1|R=1)\Pr(R=1) + (1 - \Pr(T=0|R=0))(1-P(R=1)) \\
+      &= \gamma_s\theta + (1 - \gamma_e)(1-\theta)
+    \end{split}
+  \end{equation*} 
+\end{proof}
+
+
+\section{Prevalence model}
+
+
+
+\begin{assumption}
+
+\end{assumption}
+
+
+
+
+
+
+
+\bibliography{biblio} 
+
+\end{document}          
