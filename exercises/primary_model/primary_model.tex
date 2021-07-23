@@ -240,7 +240,7 @@ where $g(\cdot)$ is a link function. Note that $\theta_i = p_i$ for all $i$ in t
 The parameter $\beta \in \R^{k+1}$ is the risk effects. For Bayesian inference, priors on
 $\beta$ and $\theta$ must be included. We use $\beta ~ \sim \N(\mu, \Sigma)$
 and $\theta \sim \betadist(\alpha^{p}, \beta^p)$, where $\mu
-\in \R^{k+1}$, $\Sigma \in \R^{(k+1)\times(k+1)}$ positive-definite matrix,
+\in \R^{k+1}$, $\Sigma \in \R^{(k+1)\times(k+1)}$ symmetric positive-definite matrix,
 $\alpha^p \in \R_{++}$, and $\beta^p \in \R_{++}$
 are fixed hyperparameters. 
 
@@ -268,25 +268,35 @@ specificity and sensitivity.
 \subsection{Imperfect test and respondent-driven sampling}
 
 For now, we consider the network dependence induced by the RDS. Ideally, we 
-should build a model for it and include the uncertainty associated.
+should build a model for it and include the associated uncertainty.
 Since it is not possible (for a while), we treat it as a random effect for
-each individual. It is modeled using Conditionally autoregressive (CAR) in the
-Gaussian case. Therefore: 
+each individual. Conditionally autoregressive (CAR) models in the
+Gaussian case are used. Therefore: 
 \begin{equation}
   \begin{aligned}
     T_i &\sim \operatorname{Bernoulli}(p_i) \\
     p_i &= \gamma_s\theta_i + \gamma_e(1 - \theta_i),  \\
-    \theta_i &= \theta + \nu_i + \omega_i \\
-    g(\nu_i) &= \x_i\beta,  \\
-    \omega_i|\{\omega_j\}_{j\neq i}, d, \tau &\sim \N\left(\frac{1}{d+n_i}\sum_{i \sim j} \omega_j, \frac{1}{(n_i + d)\tau}\right) \\
+    g(\theta_i) &= g(\theta) + \x_i\beta + \omega_i,  \\
+    \omega_i|\{\omega_j\}_{j\neq i}, \tau &\sim \N\left(\rho\sum_j b_{ij}\omega_j/b_{i+}, \tau^2/b_{i+}\right) \\
     \beta &\sim \N(\mu, \Sigma), \\ 
     \theta &\sim \betadist(\alpha^p, \beta^p) \\
     \gamma_s &\sim \betadist(\alpha^s, \beta^s), \\
     \gamma_e &\sim \betadist(\alpha^e, \beta^e), \\  
-    d &\sim \\
-    \tau &\sim \N^+(0,\sigma^2_{\tau})  
+    \tau &\sim \N^+(0,\sigma^2_{\tau}),  
   \end{aligned}  
 \end{equation}
+such that $\rho$ is a fixed parameter in order to the distribution be proper, $[B]_{ij} = b_{ij}$ is a fixed matrix to measure the distance between $i$
+and $j$, and $b_{i+} = \sum_{j} b_{ij}$. For instance, 
+$$
+b_{ij} = \begin{cases}
+  1, &\text{if } i \text{ recruited } j \text{ or the contrary} \\
+  0, &\text{otherwise.} 
+\end{cases}
+$$
+RDS has the constraint of being without replacement. For that reason, we do
+not observe all links among the samples \cite{crawford2016}. One way to handle
+this is to use the model from Crawford to generate a posterior distribution to
+$B$ as the adjacency matrix of the recruited subgraph. 
 
 
 \section{Correlation analysis between specificity and sensitivity}
