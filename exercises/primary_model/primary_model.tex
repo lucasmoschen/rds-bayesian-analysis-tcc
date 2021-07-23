@@ -45,6 +45,7 @@
 \newcommand{\x}{\boldsymbol{x}}
 \newcommand{\N}{\operatorname{Normal}}
 \newcommand{\betadist}{\operatorname{Beta}}
+\newcommand{\tril}{\operatorname{tril}}
 
 \newtheorem{theorem}{Theorem}[]
 \newtheorem{proposition}{Proposition}[]
@@ -80,11 +81,11 @@ A key question for epidemiologists and public health authorities is about the
 proportion of individuals exposed to the disease at time $t$. This quantity
 can be measured periodically, and the evolution shows how the transmission is
 going on. For instance, if after a year the proportion grew 50\% it would be
-worrisome. We call it prevalence. High prevalence of a disease within a
+worrisome. We call it {\em prevalence}. High prevalence of a disease within a
 population might mean that there is a high incidence of it or prolonged
 survival without cure. 
 
-This report is the initial model for my bachelor dissertation entitled ``Bayesian analysis of respondent-driven surveys with
+This report presents the initial models for my bachelor dissertation entitled ``Bayesian analysis of respondent-driven surveys with
 outcome uncertainty'', which proposes to study prevalence when the diagnostic
 tests are imperfect and the population is hidden, that is, there is no
 sampling frame for it \cite{heckathorn1997}. 
@@ -137,7 +138,7 @@ random variables with $\Pr(X = 1) = \theta$ and $\Pr(T = 1) = p$. We say that
 $\theta$ is the prevalence and $p$ is the apparent prevalence in the
 population. 
 
-If the test is perfect, $T_i = Y_i$ for every $i$, and
+If the test is perfect, then for every $i$, $T_i = Y_i$, and
 $\theta = p$ (with probability one when they are random variables).
 Unfortunately, this is not true in the real world, what makes important to
 regard the evaluation of the diagnostic, and the following definitions are used:
@@ -201,8 +202,7 @@ functions.
 Firstly, we make some assumptions to simplify the modeling:
 
 \begin{assumption}
-  For a Bayesian modeling, we assume each parameter of the model
-  has a probability distribution that incorporates the researcher's uncertainty about it. 
+  For a Bayesian modeling, we assume each model's parameter has a probability distribution that incorporates the researcher's uncertainty about it. 
 \end{assumption}
 
 \begin{assumption}
@@ -224,11 +224,12 @@ Firstly, we make some assumptions to simplify the modeling:
   individuals and it only depends on the test used to diagnose. 
 \end{assumption}
 
-From above, we develop three different models with different stages.
+From above, we develop three different models.
 
 \subsection{Perfect tests}
 
-The first model only considers the risk factors $\x_i$. 
+The first model supposes the samples are independent and the test is perfect,
+which means that $\theta_i = p_i$ for all $i$. Therefore it only considers the risk factors $\x_i$. 
 
 \begin{equation}
   \begin{aligned}
@@ -236,7 +237,7 @@ The first model only considers the risk factors $\x_i$.
     g(\theta_i) &= g(\theta) + \x_i\beta, 
   \end{aligned}  
 \end{equation}
-where $g(\cdot)$ is a link function. Note that $\theta_i = p_i$ for all $i$ in this case.
+where $g(\cdot)$ is a link function.
 The parameter $\beta \in \R^{k+1}$ is the risk effects. For Bayesian inference, priors on
 $\beta$ and $\theta$ must be included. We use $\beta ~ \sim \N(\mu, \Sigma)$
 and $\theta \sim \betadist(\alpha^{p}, \beta^p)$, where $\mu
@@ -293,10 +294,50 @@ b_{ij} = \begin{cases}
   0, &\text{otherwise.} 
 \end{cases}
 $$
+
+\subsubsection{Exponential Random Graph Model (ERGM)}
+
 RDS has the constraint of being without replacement. For that reason, we do
-not observe all links among the samples \cite{crawford2016}. One way to handle
-this is to use the model from Crawford to generate a posterior distribution to
-$B$ as the adjacency matrix of the recruited subgraph. 
+not observe all links among the samples \cite{crawford2016}. Considering the
+model developed by Crawford, we can model the
+matrix $B$ as {\em Exponential Random Graph Model} (ERGM). Define the following
+
+\begin{enumerate}
+  \item $\boldsymbol{s} = \tril(BC)^T \boldsymbol{1} + C^Tu$, such that $B$ is the
+  adjacency matrix of the recruited subjects, $C$ is the {\em Coupon Matrix},
+  $u$ the vector of the number of edge ends belonging to each vertex
+  (in the order of recruitment) that are not connected to any other sampled
+  vertex, and $\tril(M)$ the lower triangle of $M$. 
+
+  \item $T(B) = -\lambda \boldsymbol{s}$, such that $\lambda$ is the rate of
+  the recruitment time. 
+
+  \item $V(B) = \sum_{k \text{ is not seed}} \log(\lambda \boldsymbol{s}_k)$
+  
+  \item $w = (0, t_2 - t_1, ..., t_n - t_{n-1})$ is the waiting times between
+  recruitments.  
+\end{enumerate}
+
+Therefore $\Pr(B|w) \propto \exp[T(B)^Tw + V(B)]$. With that, the model
+becomes 
+
+\begin{equation}
+  \begin{aligned}
+    T_i &\sim \operatorname{Bernoulli}(p_i) \\
+    p_i &= \gamma_s\theta_i + \gamma_e(1 - \theta_i),  \\
+    g(\theta_i) &= g(\theta) + \x_i\beta + \omega_i,  \\
+    \omega_i|\{\omega_j\}_{j\neq i}, \tau &\sim \N\left(\rho\sum_j b_{ij}\omega_j/b_{i+}, \tau^2/b_{i+}\right) \\
+    B|w &\propto \exp[T(B)^Tw + V(B)] \\
+    \lambda &\sim \Gamma(\alpha^{\lambda}, \beta^{\lambda}), \\ 
+    \beta &\sim \N(\mu, \Sigma), \\ 
+    \theta &\sim \betadist(\alpha^p, \beta^p) \\
+    \gamma_s &\sim \betadist(\alpha^s, \beta^s), \\
+    \gamma_e &\sim \betadist(\alpha^e, \beta^e), \\  
+    \tau &\sim \N^+(0,\sigma^2_{\tau}).
+  \end{aligned}  
+\end{equation}
+The problem with this model is that we are assigning a posterior distribution
+por $B$.
 
 
 \section{Correlation analysis between specificity and sensitivity}
