@@ -212,8 +212,8 @@ Firstly, we make some assumptions to simplify the modeling:
 \end{assumption}
 
 \begin{assumption}
-  Suppose that each individual has a probability $\theta_i = \theta + \nu_i$ of having been exposed
-  to the disease and $\nu_i$ dependes on $\x_i$, not necessarily linearly.
+  Suppose that each individual has a probability $\theta_i$ of having been exposed
+  to the disease that dependes on the prevalence $\theta$ and $\x_i$, not necessarily linearly.
   We therefore will have the probability of positive test $p_i$ in the
   $i^{th}$ individual. Therefore, the sequences $\{Y_i\}$ and $\{T_i\}$ are not
   identically distributed anymore.
@@ -233,15 +233,18 @@ The first model only considers the risk factors $\x_i$.
 \begin{equation}
   \begin{aligned}
     T_i &\sim \operatorname{Bernoulli}(\theta_i), \\
-    \theta_i &= \theta + \nu_i, \\
-    g(\nu_i) &= \x_i\beta, 
+    g(\theta_i) &= g(\theta) + \x_i\beta, 
   \end{aligned}  
 \end{equation}
 where $g(\cdot)$ is a link function. Note that $\theta_i = p_i$ for all $i$ in this case.
 The parameter $\beta \in \R^{k+1}$ is the risk effects. For Bayesian inference, priors on
 $\beta$ and $\theta$ must be included. We use $\beta ~ \sim \N(\mu, \Sigma)$
 and $\theta \sim \betadist(\alpha^{p}, \beta^p)$, where $\mu
-\in \R^{k+1}$, $\Sigma \in \R^{(k+1)\times(k+1)}$, $\alpha^p$, and $\beta^p$ are fixed hyperparameters. 
+\in \R^{k+1}$, $\Sigma \in \R^{(k+1)\times(k+1)}$ positive-definite matrix,
+$\alpha^p \in \R_{++}$, and $\beta^p \in \R_{++}$
+are fixed hyperparameters. 
+
+\subsubsection{Identifiability}
 
 \subsection{Imperfect tests}
 
@@ -251,15 +254,14 @@ This model includes the sensitivity and specificity of the diagnostic test.
   \begin{aligned}
     T_i &\sim \operatorname{Bernoulli}(p_i) \\
     p_i &= \gamma_s\theta_i + \gamma_e(1 - \theta_i),  \\
-    \theta_i &= \theta + \nu_i \\
-    g(\nu_i) &= \x_i\beta,  \\
+    g(\theta_i) &= g(\theta) + \x_i\beta,  \\
     \beta &\sim \N(\mu, \Sigma), \\ 
     \theta &\sim \betadist(\alpha^p, \beta^p) \\
     \gamma_s &\sim \betadist(\alpha^s, \beta^s), \\
     \gamma_e &\sim \betadist(\alpha^e, \beta^e), \\    
   \end{aligned}  
 \end{equation}
-where $\alpha^p, \alpha^s, \alpha^e, \beta^p, \beta^s$, and $\beta^e$ are fixed hyperparameters.
+where $\alpha^p, \alpha^s, \alpha^e, \beta^p, \beta^s, \beta^e \in \R_{++}$ are fixed hyperparameters.
 This model does not include prior knowledge about the correlation between
 specificity and sensitivity. 
 
