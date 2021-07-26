@@ -264,7 +264,7 @@ This model includes the sensitivity and specificity of the diagnostic test.
 \begin{equation}
   \begin{aligned}
     T_i &\sim \operatorname{Bernoulli}(p_i) \\
-    p_i &= \gamma_s\theta_i + \gamma_e(1 - \theta_i),  \\
+    p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
     g(\theta_i) &= g(\theta) + \x_i\beta,  \\
     \beta &\sim \N(\mu, \Sigma), \\ 
     \theta &\sim \betadist(\alpha^p, \beta^p) \\
@@ -286,7 +286,7 @@ Gaussian case are used. Therefore:
 \begin{equation}
   \begin{aligned}
     T_i &\sim \operatorname{Bernoulli}(p_i) \\
-    p_i &= \gamma_s\theta_i + \gamma_e(1 - \theta_i),  \\
+    p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
     g(\theta_i) &= g(\theta) + \x_i\beta + \omega_i,  \\
     \omega_i|\{\omega_j\}_{j\neq i}, \tau &\sim \N\left(\rho\sum_j b_{ij}\omega_j/b_{i+}, \tau^2/b_{i+}\right) \\
     \beta &\sim \N(\mu, \Sigma), \\ 
@@ -335,7 +335,7 @@ becomes
 \begin{equation}
   \begin{aligned}
     T_i &\sim \operatorname{Bernoulli}(p_i) \\
-    p_i &= \gamma_s\theta_i + \gamma_e(1 - \theta_i),  \\
+    p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
     g(\theta_i) &= g(\theta) + \x_i\beta + \omega_i,  \\
     \omega_i|\{\omega_j\}_{j\neq i}, \tau &\sim \N\left(\rho\sum_j b_{ij}\omega_j/b_{i+}, \tau^2/b_{i+}\right) \\
     B|w &\propto \exp[T(B)^Tw + V(B)] \\
