@@ -207,8 +207,7 @@ Firstly, we make some assumptions to simplify the modeling:
 
 \begin{assumption}
   For each individual, we observe $k$ features that are possible
-  risk factors represented by the vector $\x_i \in \R^{k+1}$ of the $i^{th}$ individual. The
-  first component of $\x_i$ is 1 to handle the intercept term. 
+  risk factors represented by the vector $\x_i \in \R^{k}$ of the $i^{th}$ individual.
 \end{assumption}
 
 \begin{assumption}
@@ -238,18 +237,25 @@ which means that $\theta_i = p_i$ for all $i$. Therefore it only considers the r
   \end{aligned}  
 \end{equation}
 where $g(\cdot)$ is a link function.
-The parameter $\beta \in \R^{k+1}$ is the risk effects. For Bayesian inference, priors on
+The parameter $\beta \in \R^{k}$ is the risk effects. For Bayesian inference, priors on
 $\beta$ and $\theta$ must be included. We use $\beta ~ \sim \N(\mu, \Sigma)$
 and $\theta \sim \betadist(\alpha^{p}, \beta^p)$, where $\mu
-\in \R^{k+1}$, $\Sigma \in \R^{(k+1)\times(k+1)}$ symmetric positive-definite matrix,
+\in \R^{k}$, $\Sigma \in \R^{k\times k}$ symmetric positive-definite matrix,
 $\alpha^p \in \R_{++}$, and $\beta^p \in \R_{++}$
 are fixed hyperparameters. 
+
+\begin{remark}
+  If the risk effects are zero, i.e $\x_i = 0$, the probability of the
+  $i^{th}$ having been exposed is the prevalence $\theta$, which means that in
+  a population with no risk effects, the probability of a person has the
+  disease is exactly the proportion in this population. 
+\end{remark}
 
 \subsubsection{Identifiability}
 
 \subsubsection{Experiments}
 
-
+\url{https://github.com/lucasmoschen/rds-bayesian-analysis/blob/main/exercises/primary_model/model_experiments.ipynb}
 
 \subsection{Imperfect tests}
 
@@ -342,8 +348,7 @@ becomes
   \end{aligned}  
 \end{equation}
 The problem with this model is that we are assigning a posterior distribution
-por $B$.
-
+for $B$.
 
 \section{Correlation analysis between specificity and sensitivity}
 
