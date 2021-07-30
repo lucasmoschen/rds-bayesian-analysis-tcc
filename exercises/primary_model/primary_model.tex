@@ -418,7 +418,7 @@ H(v) = \begin{bmatrix}
 \end{bmatrix}v, \text{ for } v \in \R^2.
 $$
 
-Then $(U_1, X) = H(U_1, U_2)$ and $H(\cdot)$ is bijective and differentiable function. By the Change of Variable Theorem, 
+Then $(U_1, X) = H(U_1, U_2)$ and $H(\cdot)$ is bijective and differentiable function. By the Change of Variable Formula, 
 \begin{equation}
   \begin{split}
     f_{U_1, X}(u_1, x) &= f({H^{-1}(u_1,x)})\bigg|\det\left[\frac{dH^{-1}(v)}{dv}\bigg|_{v=(u_1,x)}\right]\bigg| \\ 
@@ -448,7 +448,7 @@ Therefore $X \sim \betadist(\alpha_1+\alpha_2, \alpha_3+\alpha_4)$. Similarly $Y
 \end{proof}
 
 \begin{proposition}
-  The joint distribution with respect to the Lebesgue measure of $(X,Y)$ is
+  The joint density of $(X,Y)$ with respect to the Lebesgue measure is
   given by 
   \begin{equation}
     f_{X,Y}(x,y) = \frac{1}{B(\boldsymbol{\alpha})}\int_{\Omega} u_1^{\alpha_1 - 1}(x - u_1)^{\alpha_2 -1}(y-u_1)^{\alpha_3-1}(1-x-y+u_1)^{\alpha_4-1} \, du_1,
@@ -474,7 +474,7 @@ Therefore $X \sim \betadist(\alpha_1+\alpha_2, \alpha_3+\alpha_4)$. Similarly $Y
   $$
   where the linear function is bijective and differentiable function, such
   that the determinant of the derivative is 1. By the Change of Variable
-  Theorem, 
+  Formula, 
   \begin{equation}
     \begin{split}
       f_{U_1,X,Y}(u_1,x,y) &= f_{U_1,U_2,U_3}(u_1, x - u_1, y - u_2) \\ 
@@ -527,19 +527,53 @@ The original paper has a mistake in page
 
 \subsection{Comments about integration}
 
-There are some problems about the density written in equation
-\eqref{eq:dist-X-Y}. I will describe details in this section. 
-
-Let $0 < \alpha_2 = \alpha_3 = a \le 0.5$ and $x = y$. Denote $l =
-\max(0,x+y-1)$. Then
+The density of $(X,Y)$ with respect to the Lebesgue measure is $f_{X,Y}(x,y)$
+as in equation \eqref{eq:dist-X-Y}. Therefore it can be undefined in sets of
+null Lebesgue measure in $\R^2$. This section
+aims to find them to help writing the function properly. If $\alpha_i \ge 1,
+\, i = 1,...,4$, the integral is clearly well defined for every $x,y \in [0,1]$. Let $0 < \alpha_2 = \alpha_3 = a \le 0.5$ and $x = y < 0.5$. Then
 \begin{equation*}
   \begin{split}
-    f_{X,Y}(x,y) &= \frac{1}{B(\boldsymbol{\alpha})}\int_{l}^x u_1^{\alpha_1-1}(x-u_1)^{a-1}(x-u_1)^{a-1}(1-2x+u_1)^{\alpha_4-1} \, du_1 \\
-    &= \frac{1}{B(\boldsymbol{\alpha})}\int_{l}^{(x+l)/2} u_1^{\alpha_1-1}(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1 + \\
-    &~~~+ \frac{1}{B(\boldsymbol{\alpha})}\int_{(x+l)/2}^x u_1^{\alpha_1-1}(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1
+    f_{X,Y}(x,y) &= \frac{1}{B(\boldsymbol{\alpha})}\int_{0}^x u_1^{\alpha_1-1}(x-u_1)^{a-1}(x-u_1)^{a-1}(1-2x+u_1)^{\alpha_4-1} \, du_1 \\
+    &= \frac{1}{B(\boldsymbol{\alpha})}\int_{0}^{x/2} u_1^{\alpha_1-1}(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1 + \\
+    &~~~+ \frac{1}{B(\boldsymbol{\alpha})}\int_{x/2}^x u_1^{\alpha_1-1}(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1
   \end{split}
 \end{equation*}
 
+Note that the first integral is well defined and non-negative. If $\alpha_1 \ge 1$, 
+\begin{equation*}
+  \begin{split}
+    \int_{0}^{x/2} u_1^{\alpha_1-1}&(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1 \\
+    &\le \int_{0}^{x/2} \frac{x}{2}^{\alpha_1-1}\left(\frac{x}{2}\right)^{2a-2}\max\left(\left(1-\frac{3}{2}x\right)^{\alpha_4-1}, (1-2x)^{\alpha_4-1}\right) \, du_1 < +\infty.
+  \end{split}
+\end{equation*}
+
+If $0 < \alpha_1 < 1$, 
+\begin{equation*}
+  \begin{split}
+    \int_{0}^{x/2} u_1^{\alpha_1-1}&(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1 \\
+    &= \lim_{t\to 0^+}\int_{t}^{x/2} u_1^{\alpha_1-1}\left(\frac{x}{2}\right)^{2a-2}\max\left(\left(1-\frac{3}{2}x\right)^{\alpha_4-1}, (1-2x)^{\alpha_4-1}\right) \, du_1 \\ 
+    &= K(x)\lim_{t\to 0^+}\int_{t}^{x/2} u_1^{\alpha_1-1}\, du_1 \\ 
+    &= \frac{K(x)}{\alpha_1}\lim_{t\to 0^+} \, \left[\left(\frac{x}{2}\right)^{\alpha_1} - t^{\alpha_1}\right] < +\infty .\\ 
+  \end{split}
+\end{equation*}
+where $K(x)$ is a function of $x$. Moreover, since the integrand is non-negative, so is the integral. On the
+other hand, the second integral is not defined: 
+\begin{equation*}
+  \begin{split}
+    \int_{x/2}^{x} u_1^{\alpha_1-1}&(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1 \\
+    &\ge \int_{x/2}^x \min\left(\left(\frac{x}{2}\right)^{\alpha_1-1}, x^{\alpha_1-1}\right)(x-u_1)^{2a-2}\min\left(\left(1-\frac{3}{2}x\right)^{\alpha_4-1}, (1-x)^{\alpha_4-1}\right) \, du_1 \\
+    &= K'(x) \int_{0}^{x/2} v^{2a-2} \, dv \\ 
+    &= \begin{cases}
+      \dfrac{K'(x)}{2a-1} \lim_{t \to 0^+} \left[(x/2)^{2a-1} - t^{2a-1}\right] &\text{ if } a < 0.5 \\ 
+      K'(x) \lim_{t \to 0^+} \left[\log(x/2) - \log(t)\right] &\text{ if } a = 0.5
+    \end{cases} \\
+    &\to +\infty.
+  \end{split}
+\end{equation*}
+
+Based on this divergence, we conclude that if $0 < \alpha_2 = \alpha_3 \le 0.5$
+and $x = y < 0.5$, $f_{X,Y}(x,y)$ is not defined. 
 
 \bibliography{biblio} 
 
