@@ -357,49 +357,68 @@ In this section, we shall describe how to use the Bivariate Beta
 \cite[]{olkin2015constructions} to model the correlation between specificity
 and sensitivity.
 
-\subsection{Technical details}
+\subsection{Bivariate Beta construction}
 
 Let $U = (U_1, U_2, U_3, U_4) \sim
 \operatorname{Dirichlet}(\boldsymbol{\alpha})$, where $\boldsymbol{\alpha} =
-(\alpha_1, \alpha_2, \alpha_3, \alpha_4)$ and $U_4 = 1 - U_1 + U_2 + U_3$.
-Therefore the joint density of $U$ is 
+(\alpha_1, \alpha_2, \alpha_3, \alpha_4)$ with $\alpha_i > 0, i = 1,\dots,4$
+and $U_4 = 1 - U_1 + U_2 + U_3$. The joint density of $U$ with respect to the
+Lebesgue measure is given by
 \begin{equation}
-  f_U(u_1, u_2, u_3) = \frac{1}{B(\alpha_1,\alpha_2,\alpha_3,\alpha_4)}u_1^{\alpha_1-1}u_2^{\alpha_2-1}u_3^{\alpha_3-1}(1-u_1-u_2-u_3)^{\alpha_4-1}, 
+  f_U(u_1, u_2, u_3) = \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}u_3^{\alpha_3-1}(1-u_1-u_2-u_3)^{\alpha_4-1}, 
 \end{equation}
-where $u_i \in [0,1], i = 1,2,3$, $u_1 + u_2 + u_3 \le 1$, $\alpha_i > 0, i =
-1,...,4$ and for $v \in \R^n$,
+when $u_i \in [0,1], i = 1,2,3$, $u_1 + u_2 + u_3 \le 1$, and $0$ otherwise.
+The normalizing constant is, for $v \in \R^n$,
 $$B(v) = \frac{\prod_{i=1}^n \Gamma(v_i)}{\Gamma\left(\sum_{i=1}^n v_i\right)}.$$ 
-Define
-\begin{equation}
-  X = U_1 + U_2 \text{ and } Y = U_1 + U_3.
-\end{equation} 
-Let's check the distribution of $X$ first. For that, we need the distribution
-of $(U_1, U_2)$. 
-\begin{equation}
-  \label{eq:dist-u1-u2}
-  \begin{split}
-    f_{U_1, U_2}(u_1, u_2) &= \int_{-\infty}^{\infty} f_{U}(u_1,u_2,u_3) \, du_3 \\ 
-    &= \frac{1}{B(\boldsymbol{\alpha})}\int_0^1 u_1^{\alpha_1-1}u_2^{\alpha_2-1}u_3^{\alpha_3-1}(1-u_1-u_2-u_3)^{\alpha_4-1} \, du_3 \\
-    &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}\int_0^1 u_3^{\alpha_3-1}(1-u_1-u_2-u_3)^{\alpha_4-1} \, du_3.
-  \end{split}
-\end{equation}
-Let $u_3 = (1 - u_1 - u_2)z$. Then,
-\begin{equation}
-  \begin{split}
-    f_{U_1, U_2}(u_1, u_2) &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}\int_0^1 (1-u_1-u_2)^{\alpha_3-1}z^{\alpha_3-1}(1-u_1-u_2)^{\alpha_4}(1-z)^{\alpha_4-1} \, dz. \\
-    &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}(1-u_1-u_2)^{\alpha_3+\alpha_4-1}\int_0^1 z^{\alpha_3-1}(1-z)^{\alpha_4-1} \, dz. \\
-    &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}(1-u_1-u_2)^{\alpha_3+\alpha_4-1}\frac{\Gamma(\alpha_3)\Gamma(\alpha_4)}{\Gamma(\alpha_3 + \alpha_4)} \\
-    &= \frac{1}{B(\alpha_1, \alpha_2, \alpha_3+\alpha_4)}u_1^{\alpha_1-1}u_2^{\alpha_2-1}(1-u_1-u_2)^{\alpha_3+\alpha_4-1}.
-  \end{split}
-\end{equation}
-As expected, $(U_1, U_2, 1-U_1-U_2) \sim
-\operatorname{Dirichlet}(\alpha_1,\alpha_2,\alpha_3+\alpha_4)$. Define 
+
+\begin{definition}
+  Let 
+  \begin{equation}
+    X = U_1 + U_2 \text{ and } Y = U_1 + U_3.
+  \end{equation} 
+    The distribution of $(X,Y)$ is {\em Bivariate Beta} with parameters
+    $\boldsymbol{\alpha}$. 
+\end{definition}
+
+\begin{proposition}
+  The marginal distribution of $X$ is Beta with parameters $\alpha_1 +
+  \alpha_2$ and $\alpha_3 + \alpha_4$. Similarly, the marginal distribution of
+  $Y$ is Beta with parameters $\alpha_1 + \alpha_3$ and $\alpha_2 + \alpha_4$.
+\end{proposition}
+
+\begin{proof}
+  First we derive the probability density of $(U_1, U_2)$ with respect to the
+  Lebesgue measure. 
+  \begin{equation}
+    \label{eq:dist-u1-u2}
+    \begin{split}
+      f_{U_1, U_2}(u_1, u_2) &= \int_{-\infty}^{\infty} f_{U}(u_1,u_2,u_3) \, du_3 \\ 
+      &= \frac{1}{B(\boldsymbol{\alpha})}\int_0^1 u_1^{\alpha_1-1}u_2^{\alpha_2-1}u_3^{\alpha_3-1}(1-u_1-u_2-u_3)^{\alpha_4-1} \, du_3 \\
+      &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}\int_0^1 u_3^{\alpha_3-1}(1-u_1-u_2-u_3)^{\alpha_4-1} \, du_3.
+    \end{split}
+  \end{equation}
+  Let $u_3 = (1 - u_1 - u_2)z$. Then,
+  \begin{equation}
+    \begin{split}
+      f_{U_1, U_2}(u_1, u_2) &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}\int_0^1 (1-u_1-u_2)^{\alpha_3-1}z^{\alpha_3-1}(1-u_1-u_2)^{\alpha_4}(1-z)^{\alpha_4-1} \, dz. \\
+      &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}(1-u_1-u_2)^{\alpha_3+\alpha_4-1}\int_0^1 z^{\alpha_3-1}(1-z)^{\alpha_4-1} \, dz. \\
+      &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}(1-u_1-u_2)^{\alpha_3+\alpha_4-1}\frac{\Gamma(\alpha_3)\Gamma(\alpha_4)}{\Gamma(\alpha_3 + \alpha_4)} \\
+      &= \frac{1}{B(\alpha_1, \alpha_2, \alpha_3+\alpha_4)}u_1^{\alpha_1-1}u_2^{\alpha_2-1}(1-u_1-u_2)^{\alpha_3+\alpha_4-1}.
+    \end{split}
+  \end{equation}
+
+We conclude that
+$$(U_1, U_2, 1-U_1-U_2) \sim
+\operatorname{Dirichlet}(\alpha_1,\alpha_2,\alpha_3+\alpha_4).$$
+
+Define 
 $$
 H(v) = \begin{bmatrix}
   1 & 0 \\ 1 & 1
 \end{bmatrix}v, \text{ for } v \in \R^2.
 $$
-Then $(U_1, X) = H(U_1, U_2)$. By the Change of variables theorem, 
+
+Then $(U_1, X) = H(U_1, U_2)$ and $H(\cdot)$ is bijective and differentiable function. By the Change of Variable Theorem, 
 \begin{equation}
   \begin{split}
     f_{U_1, X}(u_1, x) &= f({H^{-1}(u_1,x)})\bigg|\det\left[\frac{dH^{-1}(v)}{dv}\bigg|_{v=(u_1,x)}\right]\bigg| \\ 
@@ -415,6 +434,7 @@ where $(u_1, x)$ belongs to the triangle defined by the points (0,0),
     &= \frac{1}{B(\alpha_1, \alpha_2, \alpha_3+\alpha_4)}(1-x)^{\alpha_3+\alpha_4-1} \int_{0}^{x} x^{\alpha_1-1} \left(\frac{u_1}{x}\right)^{\alpha_1-1}x^{\alpha_2 - 1}\left(1-\frac{u_1}{x}\right)^{\alpha_2-1} \, du_1. \\
   \end{split}
 \end{equation}
+
 Setting $u = u_1/x$ (if $x = 0, f_X(x) = 0$, then suppose $x > 0$), we have, 
 \begin{equation}
   \begin{split}
@@ -423,41 +443,102 @@ Setting $u = u_1/x$ (if $x = 0, f_X(x) = 0$, then suppose $x > 0$), we have,
     &= \frac{1}{B(\alpha_1 + \alpha_2, \alpha_3+\alpha_4)}(1-x)^{\alpha_3+\alpha_4-1} x^{\alpha_1+\alpha_2-1}\\
   \end{split}
 \end{equation}
-Therefore $X \sim \betadist(\alpha_1+\alpha_2, \alpha_3+\alpha_4)$.
-Equivalently, $Y \sim \betadist(\alpha_1+\alpha_3, \alpha_2 + \alpha_4)$.
-Moreover the joint distribution of $X$ and $Y$ is 
-\begin{equation}
-  f_{X,Y}(x,y) = \frac{1}{B(\boldsymbol{\alpha})}\int_{\Omega} u_1^{\alpha_1 - 1}(x - u_1)^{\alpha_2 -1}(y-u_1)^{\alpha_3-1}(1-x-y+u_1)^{\alpha_4-1} \, du_1,
-\end{equation}
-where 
-$$
-\Omega = (\max(0, x+y-1), \min(x,y)).
-$$
+Therefore $X \sim \betadist(\alpha_1+\alpha_2, \alpha_3+\alpha_4)$. Similarly $Y \sim \betadist(\alpha_1+\alpha_3, \alpha_2 + \alpha_4)$.
 
-Integrating $u_2$ out of equation \eqref{eq:dist-u1-u2}, we obtain that $U_1
-\sim \betadist(\alpha_1, \alpha_2+\alpha_3+\alpha_4)$. Moreover,
-$$U_i \sim \betadist(\alpha_i, \sum_{j\neq i} \alpha_i), i = 1,...,4.$$ 
+\end{proof}
 
-Let $\tilde{a} = \sum_i \alpha_i$. The covariance of $U_i$ and $U_j$ is \cite[]{lin2016dirichlet} 
+\begin{proposition}
+  The joint distribution with respect to the Lebesgue measure of $(X,Y)$ is
+  given by 
+  \begin{equation}
+    f_{X,Y}(x,y) = \frac{1}{B(\boldsymbol{\alpha})}\int_{\Omega} u_1^{\alpha_1 - 1}(x - u_1)^{\alpha_2 -1}(y-u_1)^{\alpha_3-1}(1-x-y+u_1)^{\alpha_4-1} \, du_1,
+  \end{equation}
+  where 
+  $$
+  \Omega = (\max(0, x+y-1), \min(x,y)).
+  $$
+\end{proposition}
+
+\begin{proof}
+  Note that
+  $$
+  \begin{bmatrix}
+    U_1 \\ X \\ Y
+  \end{bmatrix}  = \begin{bmatrix}
+    1 & 0 & 0 \\
+    1 & 1 & 0 \\
+    1 & 0 & 1
+  \end{bmatrix}\begin{bmatrix}
+    U_1 \\ U_2 \\ U_3
+  \end{bmatrix}, 
+  $$
+  where the linear function is bijective and differentiable function, such
+  that the determinant of the derivative is 1. By the Change of Variable
+  Theorem, 
+  \begin{equation}
+    \begin{split}
+      f_{U_1,X,Y}(u_1,x,y) &= f_{U_1,U_2,U_3}(u_1, x - u_1, y - u_2) \\ 
+      &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}(x-u_1)^{\alpha_2-1}(y-u_1 )^{\alpha_3-1}(1-x-y+u_1)^{\alpha_4-1},
+    \end{split}
+  \end{equation}
+  where $0 \le u_1 \le x, u_1 \le y$, and $0 \le 1 - x - y + u_1$.  
+  Hence,
+  \begin{equation}
+      \label{eq:dist-X-Y}
+      f_{X,Y}(x,y) = \frac{1}{B(\boldsymbol{\alpha})}\int_{\Omega} u_1^{\alpha_1-1}(x-u_1)^{\alpha_2-1}(y-u_1)^{\alpha_3-1}(1-x-y+u_1)^{\alpha_4-1} \, du_1,
+  \end{equation}
+  such that $\Omega = \{u_1 : \max(0, x + y -1) < u_1 < \min(x,y)\}$.
+\end{proof}
+
+\begin{proposition}
+  The covariance between $X$ and $Y$ is 
+  $$\operatorname{Cov}(X,Y) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1\alpha_4 - \alpha_2\alpha_3).$$
+\end{proposition}
+
+\begin{proof}
+
+  Let $\tilde{a} = \sum_i \alpha_i$. The covariance between $U_i$ and $U_j$ is \cite[]{lin2016dirichlet} 
 \begin{equation}
   \operatorname{Cov}(U_i, U_j) = - \frac{\alpha_i\alpha_j}{\tilde{\alpha}^2(\tilde{\alpha}+1)}, i,j = 1,...,4, i \neq j
 \end{equation} 
 and the variance of $U_i$ is 
 \begin{equation}
-  \operatorname{Var}(U_i) = \frac{\alpha_i(\tilde{\alpha}-\alpha_i)}{\tilde{\alpha}^2(\tilde{\alpha}+1)}
+  \operatorname{Var}(U_i) = \frac{\alpha_i(\tilde{\alpha}-\alpha_i)}{\tilde{\alpha}^2(\tilde{\alpha}+1)},
 \end{equation}
+since $U_i \sim \operatorname{Beta}(\alpha_i, \tilde{\alpha} -\alpha_i)$.
+Therefore 
+\begin{equation}
+  \operatorname{Cov}(X,Y) = \operatorname{Cov}(U_1+U_2, U_1+U_3) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1\alpha_4 - \alpha_2\alpha_3)
+\end{equation}
+  
+\end{proof}
 
-Hence, 
+The main moments of $X$ and $Y$ are the following 
 \begin{align*}
     \operatorname{E}(X) &= \operatorname{E}(U_1 + U_2) = \frac{\alpha_1+\alpha_2}{\alpha_1+\alpha_2+\alpha_3+\alpha_4} \\
     \operatorname{E}(Y) &= \operatorname{E}(U_1 + U_3) = \frac{\alpha_1+\alpha_3}{\alpha_1+\alpha_2+\alpha_3+\alpha_4} \\
     \operatorname{Var}(X) &= \operatorname{Cov}(U_1+U_2, U_1+U_2) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1+\alpha_2)(\alpha_3 + \alpha_4) \\
-    \operatorname{Var}(Y) &= \operatorname{Cov}(U_1+U_3, U_1+U_3) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1+\alpha_3)(\alpha_2 + \alpha_4)  \\ 
-    \operatorname{Cov}(X,Y) &= \operatorname{Cov}(U_1+U_2, U_1+U_3) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1\alpha_4 - \alpha_2\alpha_3) \\
+    \operatorname{Var}(Y) &= \operatorname{Cov}(U_1+U_3, U_1+U_3) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1+\alpha_3)(\alpha_2 + \alpha_4)  \\  
     \operatorname{Cor}(X,Y) &= \frac{\operatorname{Cov}(X,Y)}{\sqrt{\operatorname{Var}(X)\operatorname{Var}(Y)}} = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\sqrt{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}}
 \end{align*}
 
-The original paper has a mistake in page 6\footnote{\url{https://www.wolframalpha.com/input/?i=simplify+\%28a\%28a\%2B1\%29+\%2B+a*b+\%2B+a*c+\%2B+b*c\%29\%2F\%28\%28a\%2Bb\%2Bc\%2Bd\%29*\%28a\%2Bb\%2Bc\%2Bd\%2B1\%29\%29+-+\%28a+\%2B+b\%29*\%28a\%2Bc\%29\%2F\%28a\%2Bb\%2Bc\%2Bd\%29\%5E2+}}.
+The original paper has a mistake in page
+6\footnote{\url{https://www.wolframalpha.com/input/?i=simplify+\%28a\%28a\%2B1\%29+\%2B+a*b+\%2B+a*c+\%2B+b*c\%29\%2F\%28\%28a\%2Bb\%2Bc\%2Bd\%29*\%28a\%2Bb\%2Bc\%2Bd\%2B1\%29\%29+-+\%28a+\%2B+b\%29*\%28a\%2Bc\%29\%2F\%28a\%2Bb\%2Bc\%2Bd\%29\%5E2+}}.
+
+\subsection{Comments about integration}
+
+There are some problems about the density written in equation
+\eqref{eq:dist-X-Y}. I will describe details in this section. 
+
+Let $0 < \alpha_2 = \alpha_3 = a \le 0.5$ and $x = y$. Denote $l =
+\max(0,x+y-1)$. Then
+\begin{equation*}
+  \begin{split}
+    f_{X,Y}(x,y) &= \frac{1}{B(\boldsymbol{\alpha})}\int_{l}^x u_1^{\alpha_1-1}(x-u_1)^{a-1}(x-u_1)^{a-1}(1-2x+u_1)^{\alpha_4-1} \, du_1 \\
+    &= \frac{1}{B(\boldsymbol{\alpha})}\int_{l}^{(x+l)/2} u_1^{\alpha_1-1}(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1 + \\
+    &~~~+ \frac{1}{B(\boldsymbol{\alpha})}\int_{(x+l)/2}^x u_1^{\alpha_1-1}(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1
+  \end{split}
+\end{equation*}
 
 
 \bibliography{biblio} 
