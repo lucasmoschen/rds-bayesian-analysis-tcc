@@ -45,7 +45,13 @@
 \newcommand{\x}{\boldsymbol{x}}
 \newcommand{\N}{\operatorname{Normal}}
 \newcommand{\betadist}{\operatorname{Beta}}
+\newcommand{\bern}{\operatorname{Bernoulli}}
 \newcommand{\tril}{\operatorname{tril}}
+
+\newcommand{\ev}{\mathbb{E}}
+\newcommand{\var}{\operatorname{Var}}
+\newcommand{\cor}{\operatorname{Cor}}
+\newcommand{\cov}{\operatorname{Cov}}
 
 \newtheorem{theorem}{Theorem}[]
 \newtheorem{proposition}{Proposition}[]
@@ -233,7 +239,7 @@ which means that $\theta_i = p_i$ for all $i$. Therefore it only considers the r
 
 \begin{equation}
   \begin{aligned}
-    T_i &\sim \operatorname{Bernoulli}(\theta_i), \\
+    T_i &\sim \bern(\theta_i), \\
     g(\theta_i) &= g(\theta) + \x_i^T\beta, 
   \end{aligned}  
 \end{equation}
@@ -264,7 +270,7 @@ This model includes the sensitivity and specificity of the diagnostic test.
 
 \begin{equation}
   \begin{aligned}
-    T_i &\sim \operatorname{Bernoulli}(p_i) \\
+    T_i &\sim \bern(p_i) \\
     p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
     g(\theta_i) &= g(\theta) + \x_i^T\beta,  \\
     \beta &\sim \N(\mu, \Sigma), \\ 
@@ -286,7 +292,7 @@ each individual. Conditionally autoregressive (CAR) models in the
 Gaussian case are used. Therefore: 
 \begin{equation}
   \begin{aligned}
-    T_i &\sim \operatorname{Bernoulli}(p_i) \\
+    T_i &\sim \bern(p_i) \\
     p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
     g(\theta_i) &= g(\theta) + \x_i^T\beta + \omega_i,  \\
     \omega_i|\{\omega_j\}_{j\neq i}, \tau &\sim \N\left(\rho\sum_j q_{ij}\omega_j/q_{i+}, \tau^2/q_{i+}\right) \\
@@ -335,7 +341,7 @@ becomes
 
 \begin{equation}
   \begin{aligned}
-    T_i &\sim \operatorname{Bernoulli}(p_i) \\
+    T_i &\sim \bern(p_i) \\
     p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
     g(\theta_i) &= g(\theta) + \x_i^T\beta + \omega_i,  \\
     \omega_i|\{\omega_j\}_{j\neq i}, \tau &\sim \N\left(\rho\sum_j q_{ij}\omega_j/q_{i+}, \tau^2/q_{i+}\right) \\
@@ -492,34 +498,34 @@ Therefore $X \sim \betadist(\alpha_1+\alpha_2, \alpha_3+\alpha_4)$. Similarly $Y
 
 \begin{proposition}
   The covariance between $X$ and $Y$ is 
-  $$\operatorname{Cov}(X,Y) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1\alpha_4 - \alpha_2\alpha_3).$$
+  $$\cov(X,Y) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1\alpha_4 - \alpha_2\alpha_3).$$
 \end{proposition}
 
 \begin{proof}
 
   Let $\tilde{a} = \sum_i \alpha_i$. The covariance between $U_i$ and $U_j$ is \cite[]{lin2016dirichlet} 
 \begin{equation}
-  \operatorname{Cov}(U_i, U_j) = - \frac{\alpha_i\alpha_j}{\tilde{\alpha}^2(\tilde{\alpha}+1)}, i,j = 1,...,4, i \neq j
+  \cov(U_i, U_j) = - \frac{\alpha_i\alpha_j}{\tilde{\alpha}^2(\tilde{\alpha}+1)}, i,j = 1,...,4, i \neq j
 \end{equation} 
 and the variance of $U_i$ is 
 \begin{equation}
-  \operatorname{Var}(U_i) = \frac{\alpha_i(\tilde{\alpha}-\alpha_i)}{\tilde{\alpha}^2(\tilde{\alpha}+1)},
+  \var(U_i) = \frac{\alpha_i(\tilde{\alpha}-\alpha_i)}{\tilde{\alpha}^2(\tilde{\alpha}+1)},
 \end{equation}
 since $U_i \sim \operatorname{Beta}(\alpha_i, \tilde{\alpha} -\alpha_i)$.
 Therefore 
 \begin{equation}
-  \operatorname{Cov}(X,Y) = \operatorname{Cov}(U_1+U_2, U_1+U_3) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1\alpha_4 - \alpha_2\alpha_3)
+  \cov(X,Y) = \cov(U_1+U_2, U_1+U_3) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1\alpha_4 - \alpha_2\alpha_3)
 \end{equation}
   
 \end{proof}
 
 The main moments of $X$ and $Y$ are the following 
 \begin{align*}
-    \operatorname{E}(X) &= \operatorname{E}(U_1 + U_2) = \frac{\alpha_1+\alpha_2}{\alpha_1+\alpha_2+\alpha_3+\alpha_4} \\
-    \operatorname{E}(Y) &= \operatorname{E}(U_1 + U_3) = \frac{\alpha_1+\alpha_3}{\alpha_1+\alpha_2+\alpha_3+\alpha_4} \\
-    \operatorname{Var}(X) &= \operatorname{Cov}(U_1+U_2, U_1+U_2) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1+\alpha_2)(\alpha_3 + \alpha_4) \\
-    \operatorname{Var}(Y) &= \operatorname{Cov}(U_1+U_3, U_1+U_3) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1+\alpha_3)(\alpha_2 + \alpha_4)  \\  
-    \operatorname{Cor}(X,Y) &= \frac{\operatorname{Cov}(X,Y)}{\sqrt{\operatorname{Var}(X)\operatorname{Var}(Y)}} = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\sqrt{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}}
+    \ev(X) &= \ev(U_1 + U_2) = \frac{\alpha_1+\alpha_2}{\alpha_1+\alpha_2+\alpha_3+\alpha_4} \\
+    \ev(Y) &= \ev(U_1 + U_3) = \frac{\alpha_1+\alpha_3}{\alpha_1+\alpha_2+\alpha_3+\alpha_4} \\
+    \var(X) &= \cov(U_1+U_2, U_1+U_2) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1+\alpha_2)(\alpha_3 + \alpha_4) \\
+    \var(Y) &= \cov(U_1+U_3, U_1+U_3) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1+\alpha_3)(\alpha_2 + \alpha_4)  \\  
+    \cor(X,Y) &= \frac{\cov(X,Y)}{\sqrt{\var(X)\var(Y)}} = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\sqrt{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}}
 \end{align*}
 
 The original paper has a mistake in page
@@ -583,6 +589,90 @@ not defined. More generally, $f_{X,Y}(x,y)$ is not defined if
   \item $\alpha_1 + \alpha_4 \le 1$ and $x + y = 1$. 
   \item $\alpha_2 + \alpha_3 \le 1$ and $x = y$. 
 \end{enumerate}
+
+\subsection{Specifying parameters
+\texorpdfstring{$\boldsymbol{\alpha}$}{alpha}}
+
+Suppose that the researcher has knowledge about the main moments oof $X$ and
+$Y$, such that $\ev(X) = m_1 \in (0,1), \ev(Y) = m_2 \in (0,1), \var(X) = v_1
+\in (0,1),$ and $\var(Y) =
+v_2 \in (0,1)$. Note that we will have a non-linear system with four equations and four
+unknown variables. After specifying these quantities, the correlation is
+implied by the solution. Hence, we want to solve the following 
+
+\begin{equation}
+  \begin{cases}
+    m_1 = \dfrac{\alpha_1+\alpha_2}{\tilde{\alpha}} \\
+    m_2 = \dfrac{\alpha_1+\alpha_3}{\tilde{\alpha}} \\ 
+    v_1 = \dfrac{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)}{\tilde{\alpha}^2(\tilde{\alpha}+1)} = m_1\dfrac{\alpha_3+\alpha_4}{\tilde{\alpha}(\tilde{\alpha}+1)} \\
+    v_2 = \dfrac{(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}{\tilde{\alpha}^2(\tilde{\alpha}+1)} = m_2\dfrac{\alpha_2+\alpha_4}{\tilde{\alpha}(\tilde{\alpha}+1)}.
+  \end{cases}
+\end{equation}
+
+Suppose for now that $m_1v_2 \neq m_2v_1$. By the third and fourth equations, we have that 
+
+$$
+\frac{m_1}{v_1}(\alpha_3+\alpha_4) = \frac{m_2}{v_2}(\alpha_2+\alpha_4). 
+$$
+Then, 
+\begin{equation}
+  \label{eq:alpha4-expression}
+  \alpha_4 = \frac{m_1\alpha_3/v_1 - m_2\alpha_2/v_2}{m_2/v_2 - m_1/v_1} = \frac{m_1v_2\alpha_3 - m_2v_1\alpha_2}{m_2v_1 - m_1v_2}.
+\end{equation}
+
+Rearranging the first equation, 
+$$
+(m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\alpha_4 = 0, 
+$$
+which implies with equation \eqref{eq:alpha4-expression},
+\begin{align}
+  (m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\frac{m_1v_2\alpha_3 - m_2v_1\alpha_2}{m_2v_1 - m_1v_2} &= 0 \\
+  (m_1 - 1)\alpha_1 + \left(m_1 - 1 - \frac{m_1m_2v_1}{m_2v_1 - m_1v_2}\right)\alpha_2 + \left(m_1 + \frac{m_1^2v_2}{m_2v_1 - m_1v_2}\right)\alpha_3 &= 0,  
+\end{align}
+and 
+\begin{equation}
+  \label{eq:alpha1-expression}
+  \alpha_1 = \frac{1}{1-m_1}\left(m_1 - 1 - \frac{m_1m_2v_1}{m_2v_1 - m_1v_2}\right)\alpha_2 + \frac{1}{1-m_1}\left(m_1 + \frac{m_1^2v_2}{m_2v_1 - m_1v_2}\right)\alpha_3.
+\end{equation}
+
+Let $a_2$ the coefficient of $\alpha_2$ and $a_3$ the coefficient of
+$\alpha_3$. Then $\alpha_1 = a_2\alpha_2 + a_3\alpha_3$. Rearranging the second equation, 
+$$
+(m_2 - 1)\alpha_1 + m_2\alpha_2 + (m_2-1)\alpha_3 + m_2\alpha_4 = 0, 
+$$
+which implies with equations \eqref{eq:alpha4-expression} and \eqref{eq:alpha1-expression},
+\begin{align}
+  (m_2 - 1)(a_2\alpha_2 + a_3\alpha_3) + m_2\alpha_2 + (m_2 - 1)\alpha_3 + m_2\frac{m_1v_2\alpha_3 - m_2v_1\alpha_2}{m_2v_1 - m_1v_2} &= 0 \\
+  \left((m_2-1)a_2 + m_2 - \frac{m_2^2v_1}{m_2v_1-m_1v_2}\right)\alpha_2 + \left((m_2-1)(a_3+1) + \frac{m_1m_2v_2}{m_2v_1-m_1v_2}\right)\alpha_3 &= 0,  
+\end{align}
+and, then 
+\begin{equation}
+  \label{eq:alpha_3-expression}
+  \alpha_3 = -\frac{\left((m_2-1)a_2 + m_2 - \frac{m_2^2v_1}{m_2v_1-m_1v_2}\right)}{\left((m_2-1)(a_3+1) + \frac{m_1m_2v_2}{m_2v_1-m_1v_2}\right)}\alpha_2 = -b_2\alpha_2.
+\end{equation}
+
+Therefore, we can write all the variables in function of $\alpha_2$:
+
+\begin{align}
+  \alpha_1 &= (a_2 - a_3b_2)\alpha_2 \\
+  \alpha_3 &= - b_2\alpha_2 \\
+  \alpha_4 &= -\frac{m_1v_2b_2 + m_2v_1}{m_2v_1 - m_1v_2}\alpha_2 \\
+  a_2 &= \frac{1}{1-m_1}\left(m_1 - 1 - \frac{m_1m_2v_1}{m_2v_1 - m_1v_2}\right) \\
+  a_3 &= \frac{1}{1-m_1}\left(m_1 + \frac{m_1^2v_2}{m_2v_1 - m_1v_2}\right) \\
+  b_2 &=  \frac{\left((m_2-1)a_2 + m_2 - \frac{m_2^2v_1}{m_2v_1-m_1v_2}\right)}{\left((m_2-1)(a_3+1) + \frac{m_1m_2v_2}{m_2v_1-m_1v_2}\right)}.
+\end{align}
+
+With that expression, it is sufficient to solve 
+
+$$
+\frac{v_1}{m_1} = \frac{\alpha_3+\alpha_4}{\tilde{\alpha}(\tilde{\alpha+1})}.
+$$
+
+Define 
+$$f(\alpha_2) = \frac{v_1}{m_1} -
+\frac{\alpha_3+\alpha_4}{\tilde{\alpha}(\tilde{\alpha+1})}.$$ 
+
+We want to find the root of $f$ such that $\alpha_2 > 0$. 
 
 \bibliography{biblio} 
 
