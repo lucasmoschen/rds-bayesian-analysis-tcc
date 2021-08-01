@@ -593,13 +593,14 @@ not defined. More generally, $f_{X,Y}(x,y)$ is not defined if
 \subsection{Specifying parameters
 \texorpdfstring{$\boldsymbol{\alpha}$}{alpha}}
 
-Suppose that the researcher has knowledge about the main moments oof $X$ and
+Suppose that the researcher has knowledge about the main moments of $X$ and
 $Y$, such that $\ev(X) = m_1 \in (0,1), \ev(Y) = m_2 \in (0,1), \var(X) = v_1
 \in (0,m_1),$ and $\var(Y) =
 v_2 \in (0,m_2)$. Note that we will have a non-linear system with four equations and four
 unknown variables. After specifying these quantities, the correlation is
 implied by the solution. Hence, we want to solve the following 
 \begin{equation}
+  \label{eq:system-moments-alpha}
   \begin{cases}
     m_1 = \dfrac{\alpha_1+\alpha_2}{\tilde{\alpha}} \\
     m_2 = \dfrac{\alpha_1+\alpha_3}{\tilde{\alpha}} \\ 
@@ -608,49 +609,91 @@ implied by the solution. Hence, we want to solve the following
   \end{cases}
 \end{equation}
 
-Suppose for now that $m_1v_2 \neq m_2v_1$. By the third and fourth equations, we have that 
-
-$$
-\frac{m_1}{v_1}(\alpha_3+\alpha_4) = \frac{m_2}{v_2}(\alpha_2+\alpha_4). 
-$$
-
-Then, 
-\begin{equation}
-  \label{eq:alpha4-expression}
-  \alpha_4 = \frac{m_1\alpha_3/v_1 - m_2\alpha_2/v_2}{m_2/v_2 - m_1/v_1} = \frac{m_1v_2\alpha_3 - m_2v_1\alpha_2}{m_2v_1 - m_1v_2}.
-\end{equation}
-
-Rearranging the first equation, 
-$$
-(m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\alpha_4 = 0, 
-$$
-which implies with equation \eqref{eq:alpha4-expression},
+The first two equations of the system \eqref{eq:system-moments-alpha} can be
+rewritten as a linear system:
+\begin{align*}
+  (m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\alpha_4 &= 0 \\
+  (m_2 - 1)\alpha_1 + m_2\alpha_2 + (m_2-1)\alpha_3 + m_2\alpha_4 &= 0,   
+\end{align*}
+which is equivalent to 
+\begin{align*}
+  \alpha_1 + \alpha_2 + \frac{m_1}{m_1-1}\alpha_3 + \frac{m_1}{m_1-1}\alpha_4 &= 0 \\
+  \alpha_2 + \frac{1-m_2}{m_1-1}\alpha_3 + \frac{m_1-m_2}{m_1-1}\alpha_4 &= 0.
+\end{align*}
+Then, we can write $\alpha_1$ and $\alpha_2$ as functions of $\alpha_3$ and
+$\alpha_4$:
 \begin{align}
-  (m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\frac{m_1v_2\alpha_3 - m_2v_1\alpha_2}{m_2v_1 - m_1v_2} &= 0 \\
-  (m_1 - 1)\alpha_1 + \left(m_1 - 1 - \frac{m_1m_2v_1}{m_2v_1 - m_1v_2}\right)\alpha_2 + \left(m_1 + \frac{m_1^2v_2}{m_2v_1 - m_1v_2}\right)\alpha_3 &= 0,  
+  \alpha_1 &= \frac{m_1+m_2-1}{1-m_1}\alpha_3 + \frac{m_2}{1-m_1}\alpha_4 \\
+  \alpha_2 &= \frac{1-m_2}{1-m_1}\alpha_3 + \frac{m_1-m_2}{1-m_1}\alpha_4.
 \end{align}
+With that expression, let $\alpha_1 = a_3\alpha_3 + a_4\alpha_4$ and $\alpha_2
+= b_3\alpha_3 + b_4\alpha_4$. Denote $c_3 = a_3 + b_3 + 1$ and $c_4 = a_4 +
+b_4 + 1$. Then, consider the third equation of the system
+\eqref{eq:system-moments-alpha}, 
+\begin{equation*}
+  \begin{split}
+    &\frac{v_1}{m_1} = \frac{\alpha_3+\alpha_4}{\tilde{\alpha}(\tilde{\alpha} +1)} = \frac{\alpha_3+\alpha_4}{(\alpha_1+\alpha_2+\alpha_3+\alpha_4)^2 + (\alpha_1+\alpha_2+\alpha_3+\alpha_4)} \\
+     &\implies \frac{v_1}{m_1}(\alpha_1 + \alpha_2 + \alpha_3 + \alpha_4)^2 = \alpha_3 + \alpha_4 - \frac{v_1}{m_1}(\alpha_1 + \alpha_2 + \alpha_3 + \alpha_4) \\
+    &\implies \frac{v_1}{m_1}(c_3\alpha_3 + c_4\alpha_4)^2 = \left(1-\frac{v_1}{m_1}c_3\right)\alpha_3 + \left(1-\frac{v_1}{m_1}c_4\right)\alpha_4 \\
+    &\implies \frac{v_1c_3^2}{m_1}\alpha_3^2 + \left(\frac{2v_1c_3c_4\alpha_4+v_1c_3}{m_1} - 1\right)\alpha_3 + \left(\frac{v_1c_4^2\alpha_4^2 + v_1c_4\alpha_4}{m_1} - \alpha_4\right) = 0 \\ 
+    &\implies v_1c_3^2\alpha_3^2 + (2v_1c_3c_4\alpha_4+v_1c_3 - m_1)\alpha_3 + (v_1c_4^2\alpha_4^2 + v_1c_4\alpha_4 - m_1\alpha_4) = 0.
+  \end{split}
+\end{equation*}
+This way, the solutions of the above equation are function of $\alpha_4$.
+Therefore, after solving the equations, we can use the last equation of the
+system \eqref{eq:system-moments-alpha} as a function on of $\alpha_4$. Then, 
+$$
+\Delta = (2v_1c_3c_4\alpha_4+v_1c_3 - m_1)^2 - 4v_1c_3^2(v_1c_4^2\alpha_4^2 + v_1c_4\alpha_4 - m_1\alpha_4), 
+$$
 and 
-\begin{equation}
-  \label{eq:alpha1-expression}
-  \alpha_1 = \frac{1}{1-m_1}\left(m_1 - 1 - \frac{m_1m_2v_1}{m_2v_1 - m_1v_2}\right)\alpha_2 + \frac{1}{1-m_1}\left(m_1 + \frac{m_1^2v_2}{m_2v_1 - m_1v_2}\right)\alpha_3.
-\end{equation}
-
-Let $a_2$ the coefficient of $\alpha_2$ and $a_3$ the coefficient of
-$\alpha_3$. Then $\alpha_1 = a_2\alpha_2 + a_3\alpha_3$. Rearranging the second equation, 
 $$
-(m_2 - 1)\alpha_1 + m_2\alpha_2 + (m_2-1)\alpha_3 + m_2\alpha_4 = 0, 
+\alpha_3 = \frac{1}{2v_1c_3^2}(m_1 - 2v_1c_3c_4\alpha_4+v_1c_3 \pm \sqrt{\Delta}).
 $$
-which implies with equations \eqref{eq:alpha4-expression} and \eqref{eq:alpha1-expression},
-\begin{align}
-  (m_2 - 1)(a_2\alpha_2 + a_3\alpha_3) + m_2\alpha_2 + (m_2 - 1)\alpha_3 + m_2\frac{m_1v_2\alpha_3 - m_2v_1\alpha_2}{m_2v_1 - m_1v_2} &= 0 \\
-  \left((m_2-1)a_2 + m_2 - \frac{m_2^2v_1}{m_2v_1-m_1v_2}\right)\alpha_2 + \left((m_2-1)(a_3+1) + \frac{m_1m_2v_2}{m_2v_1-m_1v_2}\right)\alpha_3 &= 0. 
-\end{align}
-The problem with this expression is that both coefficients are null, which
-means this equation does not bring any new information. 
-
-TO BE FINISHED 
 
 
 \bibliography{biblio} 
 
 \end{document}          
+
+
+% Suppose for now that $m_1v_2 \neq m_2v_1$. By the third and fourth equations, we have that 
+
+% $$
+% \frac{m_1}{v_1}(\alpha_3+\alpha_4) = \frac{m_2}{v_2}(\alpha_2+\alpha_4). 
+% $$
+
+% Then, 
+% \begin{equation}
+%   \label{eq:alpha4-expression}
+%   \alpha_4 = \frac{m_1\alpha_3/v_1 - m_2\alpha_2/v_2}{m_2/v_2 - m_1/v_1} = \frac{m_1v_2\alpha_3 - m_2v_1\alpha_2}{m_2v_1 - m_1v_2}.
+% \end{equation}
+
+% Rearranging the first equation, 
+% $$
+% (m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\alpha_4 = 0, 
+% $$
+% which implies with equation \eqref{eq:alpha4-expression},
+% \begin{align}
+%   (m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\frac{m_1v_2\alpha_3 - m_2v_1\alpha_2}{m_2v_1 - m_1v_2} &= 0 \\
+%   (m_1 - 1)\alpha_1 + \left(m_1 - 1 - \frac{m_1m_2v_1}{m_2v_1 - m_1v_2}\right)\alpha_2 + \left(m_1 + \frac{m_1^2v_2}{m_2v_1 - m_1v_2}\right)\alpha_3 &= 0,  
+% \end{align}
+% and 
+% \begin{equation}
+%   \label{eq:alpha1-expression}
+%   \alpha_1 = \frac{1}{1-m_1}\left(m_1 - 1 - \frac{m_1m_2v_1}{m_2v_1 - m_1v_2}\right)\alpha_2 + \frac{1}{1-m_1}\left(m_1 + \frac{m_1^2v_2}{m_2v_1 - m_1v_2}\right)\alpha_3.
+% \end{equation}
+
+% Let $a_2$ the coefficient of $\alpha_2$ and $a_3$ the coefficient of
+% $\alpha_3$. Then $\alpha_1 = a_2\alpha_2 + a_3\alpha_3$. Rearranging the second equation, 
+% $$
+% (m_2 - 1)\alpha_1 + m_2\alpha_2 + (m_2-1)\alpha_3 + m_2\alpha_4 = 0, 
+% $$
+% which implies with equations \eqref{eq:alpha4-expression} and \eqref{eq:alpha1-expression},
+% \begin{align}
+%   (m_2 - 1)(a_2\alpha_2 + a_3\alpha_3) + m_2\alpha_2 + (m_2 - 1)\alpha_3 + m_2\frac{m_1v_2\alpha_3 - m_2v_1\alpha_2}{m_2v_1 - m_1v_2} &= 0 \\
+%   \left((m_2-1)a_2 + m_2 - \frac{m_2^2v_1}{m_2v_1-m_1v_2}\right)\alpha_2 + \left((m_2-1)(a_3+1) + \frac{m_1m_2v_2}{m_2v_1-m_1v_2}\right)\alpha_3 &= 0. 
+% \end{align}
+% The problem with this expression is that both coefficients are null, which
+% means this equation does not bring any new information. 
+
+% TO BE FINISHED 
