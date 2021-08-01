@@ -595,11 +595,10 @@ not defined. More generally, $f_{X,Y}(x,y)$ is not defined if
 
 Suppose that the researcher has knowledge about the main moments oof $X$ and
 $Y$, such that $\ev(X) = m_1 \in (0,1), \ev(Y) = m_2 \in (0,1), \var(X) = v_1
-\in (0,1),$ and $\var(Y) =
-v_2 \in (0,1)$. Note that we will have a non-linear system with four equations and four
+\in (0,m_1),$ and $\var(Y) =
+v_2 \in (0,m_2)$. Note that we will have a non-linear system with four equations and four
 unknown variables. After specifying these quantities, the correlation is
 implied by the solution. Hence, we want to solve the following 
-
 \begin{equation}
   \begin{cases}
     m_1 = \dfrac{\alpha_1+\alpha_2}{\tilde{\alpha}} \\
@@ -614,6 +613,7 @@ Suppose for now that $m_1v_2 \neq m_2v_1$. By the third and fourth equations, we
 $$
 \frac{m_1}{v_1}(\alpha_3+\alpha_4) = \frac{m_2}{v_2}(\alpha_2+\alpha_4). 
 $$
+
 Then, 
 \begin{equation}
   \label{eq:alpha4-expression}
@@ -643,36 +643,11 @@ $$
 which implies with equations \eqref{eq:alpha4-expression} and \eqref{eq:alpha1-expression},
 \begin{align}
   (m_2 - 1)(a_2\alpha_2 + a_3\alpha_3) + m_2\alpha_2 + (m_2 - 1)\alpha_3 + m_2\frac{m_1v_2\alpha_3 - m_2v_1\alpha_2}{m_2v_1 - m_1v_2} &= 0 \\
-  \left((m_2-1)a_2 + m_2 - \frac{m_2^2v_1}{m_2v_1-m_1v_2}\right)\alpha_2 + \left((m_2-1)(a_3+1) + \frac{m_1m_2v_2}{m_2v_1-m_1v_2}\right)\alpha_3 &= 0,  
+  \left((m_2-1)a_2 + m_2 - \frac{m_2^2v_1}{m_2v_1-m_1v_2}\right)\alpha_2 + \left((m_2-1)(a_3+1) + \frac{m_1m_2v_2}{m_2v_1-m_1v_2}\right)\alpha_3 &= 0. 
 \end{align}
-and, then 
-\begin{equation}
-  \label{eq:alpha_3-expression}
-  \alpha_3 = -\frac{\left((m_2-1)a_2 + m_2 - \frac{m_2^2v_1}{m_2v_1-m_1v_2}\right)}{\left((m_2-1)(a_3+1) + \frac{m_1m_2v_2}{m_2v_1-m_1v_2}\right)}\alpha_2 = -b_2\alpha_2.
-\end{equation}
+The problem with this expression is that both coefficients are null, which
+means this equation does not bring any new information. 
 
-Therefore, we can write all the variables in function of $\alpha_2$:
-
-\begin{align}
-  \alpha_1 &= (a_2 - a_3b_2)\alpha_2 \\
-  \alpha_3 &= - b_2\alpha_2 \\
-  \alpha_4 &= -\frac{m_1v_2b_2 + m_2v_1}{m_2v_1 - m_1v_2}\alpha_2 \\
-  a_2 &= \frac{1}{1-m_1}\left(m_1 - 1 - \frac{m_1m_2v_1}{m_2v_1 - m_1v_2}\right) \\
-  a_3 &= \frac{1}{1-m_1}\left(m_1 + \frac{m_1^2v_2}{m_2v_1 - m_1v_2}\right) \\
-  b_2 &=  \frac{\left((m_2-1)a_2 + m_2 - \frac{m_2^2v_1}{m_2v_1-m_1v_2}\right)}{\left((m_2-1)(a_3+1) + \frac{m_1m_2v_2}{m_2v_1-m_1v_2}\right)}.
-\end{align}
-
-With that expression, it is sufficient to solve 
-
-$$
-\frac{v_1}{m_1} = \frac{\alpha_3+\alpha_4}{\tilde{\alpha}(\tilde{\alpha+1})}.
-$$
-
-Define 
-$$f(\alpha_2) = \frac{v_1}{m_1} -
-\frac{\alpha_3+\alpha_4}{\tilde{\alpha}(\tilde{\alpha+1})}.$$ 
-
-We want to find the root of $f$ such that $\alpha_2 > 0$. 
 
 \bibliography{biblio} 
 
