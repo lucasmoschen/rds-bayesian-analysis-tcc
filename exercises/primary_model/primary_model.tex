@@ -285,31 +285,39 @@ specificity and sensitivity.
 
 \subsection{Imperfect test and respondent-driven sampling}
 
-For now, we consider the network dependence induced by the RDS. Ideally, we 
-should build a model for it and include the associated uncertainty.
-Since it is not possible (for a while), we treat it as a random effect for
+For now, we consider the network dependence induced by the RDS with no
+associated model. Therefore, we treat it as a random effect for
 each individual. Conditionally autoregressive (CAR) models in the
-Gaussian case are used. Therefore: 
+Gaussian case are used. Let $[\tilde{Q}]_{ij} = \tilde{q}_{ij}$ be a fixed matrix which measures the distance between $i$
+and $j$, and $\tilde{q}_{i+} = \sum_{j} \tilde{q}_{ij}$. In general, we use
+$$
+\tilde{q}_{ij} = \begin{cases}
+  1, &\text{if } i \text{ recruited } j \text{ or the contrary} \\
+  0, &\text{otherwise.} 
+\end{cases}
+$$
+Next we define the scaled adjacency matrix $Q = D^{-1}\tilde{Q}$, such that $D$
+is a diagonal matrix with $D_{ii} = \tilde{q}_{i+}$. Finally let $|\rho| < 1$ be a
+parameter to controls the dependence between neighbors. Hence, we specify the
+model as follows:
+
 \begin{equation}
   \begin{aligned}
     T_i &\sim \bern(p_i) \\
     p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
     g(\theta_i) &= g(\theta) + \x_i^T\beta + \omega_i,  \\
-    \omega_i|\{\omega_j\}_{j\neq i}, \tau &\sim \N\left(\rho\sum_j q_{ij}\omega_j/q_{i+}, \tau^2/q_{i+}\right) \\
+    \omega_i|\{\omega_j\}_{j\neq i}, \tau &\sim \N\left(\rho\sum_j q_{ij}\omega_j, \tau^{-1}/\tilde{q}_{i+}\right) \\
     \beta &\sim \N(\mu, \Sigma), \\ 
     \theta &\sim \betadist(a^p, b^p) \\
     \gamma_s &\sim \betadist(a^s, b^s), \\
     \gamma_e &\sim \betadist(a^e, b^e), \\  
-    \tau &\sim \N^+(0,\sigma^2_{\tau}),  
+    \tau &\sim \operatorname{Gamma}(a^{\tau}, b^{\tau}).
   \end{aligned}  
 \end{equation}
-such that $\rho$ is a fixed parameter in order to the distribution be proper, $[Q]_{ij} = q_{ij}$ is a fixed matrix to measure the distance between $i$
-and $j$, and $q_{i+} = \sum_{j} q_{ij}$. For instance,
+By Brook's Lemma \cite[]{brook1964distinction}, the joint distribution of
+$\omega$ can be specified as 
 $$
-q_{ij} = \begin{cases}
-  1, &\text{if } i \text{ recruited } j \text{ or the contrary} \\
-  0, &\text{otherwise.} 
-\end{cases}
+\omega \sim \N\left(0, \left[\tau (D - \rho \tilde{Q})\right]^{-1}\right).
 $$
 
 \subsubsection{Exponential Random Graph Model (ERGM)}
@@ -639,17 +647,26 @@ b_4 + 1$. Then, consider the third equation of the system
     &\implies v_1c_3^2\alpha_3^2 + (2v_1c_3c_4\alpha_4+v_1c_3 - m_1)\alpha_3 + (v_1c_4^2\alpha_4^2 + v_1c_4\alpha_4 - m_1\alpha_4) = 0.
   \end{split}
 \end{equation*}
+Using a Computer Algebra System (CAS) with the Python library SymPy, the above
+expression can be simplified as follows:
+$$
+v_1\alpha_3^2 + \left(v_1(1-m_1) + 2v_1\alpha_4 - m_1(1-m_1)^2\right)\alpha_3 - \alpha_4m_1(1-m_1)^2 + \alpha_4v_1(1 - m_1) + v_1\alpha_4^2 = 0.
+$$
 This way, the solutions of the above equation are function of $\alpha_4$.
 Therefore, after solving the equations, we can use the last equation of the
 system \eqref{eq:system-moments-alpha} as a function on of $\alpha_4$. Then, 
 $$
-\Delta = (2v_1c_3c_4\alpha_4+v_1c_3 - m_1)^2 - 4v_1c_3^2(v_1c_4^2\alpha_4^2 + v_1c_4\alpha_4 - m_1\alpha_4), 
+\Delta = \left(v_1(1-m_1) + 2v_1\alpha_4 - m_1(1-m_1)^2\right)^2 - 4v_1(\alpha_4v_1(1 - m_1) - \alpha_4m_1(1-m_1)^2 + v_1\alpha_4^2), 
 $$
 and 
 $$
-\alpha_3 = \frac{1}{2v_1c_3^2}(m_1 - 2v_1c_3c_4\alpha_4+v_1c_3 \pm \sqrt{\Delta}).
+\alpha_3 = \frac{1}{2v_1}\left(\left(m_1(1-m_1)^2 - v_1(1-m_1) - 2v_1\alpha_4\right) \pm \sqrt{\Delta}\right).
 $$
-
+For now, it is hard to verify if $\alpha_3 > 0$ only when $\sqrt{\Delta}$ is
+summed. Therefore, we need to verify numerically. With these three
+expressions, from $\alpha_1, \alpha_2$, and $\alpha_3$, the last equation from
+the system \eqref{eq:system-moments-alpha} indicates the solution $\alpha_4$.
+Numerically, we reduced the dimension of the problem. 
 
 \bibliography{biblio} 
 
