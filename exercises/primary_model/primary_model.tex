@@ -208,7 +208,7 @@ $p = 0.5$ and there is no information about $\theta$.
   and probit functions.
 \end{definition}}
 
-\section{Prevalence model}
+\section{Model approach for prevalence estimation}
 
 Firstly, we make some assumptions to simplify the modeling:
 
@@ -217,7 +217,7 @@ Firstly, we make some assumptions to simplify the modeling:
 \end{assumption}
 
 \begin{assumption}
-  For each individual, we observe $k$ \improve{regressors} that are possible
+  For each individual, we observe $k$ regressors that are possible
   risk factors represented by the vector $\x_i \in \R^{k}$ of the $i^{th}$
   individual. We assume that the probability $\theta_i$ of the $i^{th}$ individual having been exposed
   to the disease dependes on the prevalence $\theta$ and $\x_i$. The
@@ -283,7 +283,7 @@ where $a^p, a^s, a^e, b^p, b^s, b^e \in \R_{++}$ are fixed hyperparameters.
 This model does not include prior knowledge about the correlation between
 specificity and sensitivity. 
 
-\subsection{Imperfect test and respondent-driven sampling}
+\subsection{Imperfect tests and respondent-driven sampling}
 
 For now, we consider the network dependence induced by the RDS with no
 associated model. Therefore, we treat it as a random effect for
@@ -603,10 +603,14 @@ not defined. More generally, $f_{X,Y}(x,y)$ is not defined if
 
 Suppose that the researcher has knowledge about the main moments of $X$ and
 $Y$, such that $\ev(X) = m_1 \in (0,1), \ev(Y) = m_2 \in (0,1), \var(X) = v_1
-\in (0,m_1),$ and $\var(Y) =
-v_2 \in (0,m_2)$. Note that we will have a non-linear system with four equations and four
-unknown variables. After specifying these quantities, the correlation is
-implied by the solution. Hence, we want to solve the following 
+\in (0, 1),$ and $\var(Y) =
+v_2 \in (0,1)$. Notice that $v_1 + m_1^2 = \var(X_1) + \ev[X_1]^2 = \ev[X_1^2]$ and
+$$
+\ev[X_1^2] - \ev[X_1] = \frac{(\alpha_1 + \alpha_2 + 1)(\alpha_1 + \alpha_2)}{(\tilde{\alpha} + 1)\tilde{\alpha}} - \frac{\alpha_1 + \alpha_2}{\tilde{\alpha}} = -\frac{(\alpha_1 + \alpha_2)(\alpha_3 + \alpha_4)}{\tilde{\alpha}(\tilde{\alpha}+1)} < 0, 
+$$
+that is, $v_1 + m_1^2 - m_1 < 0 \implies v_1 < m_1 - m_1^2$ and similarly,
+$v_2 < m_2 - m_2^2$. After fixing these quantities, we will have a non-linear system with four equations and four
+unknown variables. Hence, we want to solve the following 
 \begin{equation}
   \label{eq:system-moments-alpha}
   \begin{cases}
@@ -616,6 +620,24 @@ implied by the solution. Hence, we want to solve the following
     v_2 = \dfrac{(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}{\tilde{\alpha}^2(\tilde{\alpha}+1)} = m_2\dfrac{\alpha_2+\alpha_4}{\tilde{\alpha}(\tilde{\alpha}+1)}.
   \end{cases}
 \end{equation}
+
+\begin{proposition}
+  System \eqref{eq:system-moments-alpha} has a solution if, and only if, the relation
+  \begin{equation}
+    \label{eq:v2}
+    v_2 = \frac{(1 - m_2)\tilde{\alpha}}{\tilde{\alpha}(\tilde{\alpha}+ 1)} = \frac{1 - m_2}{\frac{m_1 - m_1^2}{v_1}} = \frac{v_1(1 - m_2)}{m_1(1-m_1)},
+  \end{equation}
+  is satisfied. When there is a solution, there will be
+  infinitely many and they all lay in the ray 
+  $$
+\mathcal{L} = \{(1,-1,-1,1)\alpha_4 + k : \alpha_4 > 0\}, 
+$$
+such that $k = \left((m_1 + m_2 - 1)\tilde{\alpha}, (1-m_2)\tilde{\alpha},
+(1-m_1)\tilde{\alpha}, 0\right)$. 
+\end{proposition}
+
+\begin{proof}
+  
 
 The first two equations of the system \eqref{eq:system-moments-alpha} can be
 rewritten as a linear system:
@@ -654,63 +676,84 @@ v_1\alpha_3^2 + \left(v_1(1-m_1) + 2v_1\alpha_4 - m_1(1-m_1)^2\right)\alpha_3 - 
 $$
 This way, the solutions of the above equation are function of $\alpha_4$.
 Therefore, after solving the equations, we can use the last equation of the
-system \eqref{eq:system-moments-alpha} as a function on of $\alpha_4$. Then, 
+system \eqref{eq:system-moments-alpha} as a function on of $\alpha_4$. Let, 
 $$
-\Delta = \left(v_1(1-m_1) + 2v_1\alpha_4 - m_1(1-m_1)^2\right)^2 - 4v_1(\alpha_4v_1(1 - m_1) - \alpha_4m_1(1-m_1)^2 + v_1\alpha_4^2), 
+\Lambda = \left(v_1(1-m_1) + v_1\alpha_4 - m_1(1-m_1)^2\right).
+$$
+Then, 
+\begin{equation*}
+  \begin{split}
+    \Delta &= \left(v_1(1-m_1) + 2v_1\alpha_4 - m_1(1-m_1)^2\right)^2 - 4v_1(\alpha_4v_1(1 - m_1) - \alpha_4m_1(1-m_1)^2 + v_1\alpha_4^2), \\
+    &= \left(\Lambda + v_1\alpha_4\right)^2 - 4v_1\alpha_4\Lambda \\
+    &= \Lambda^2 - 2\Lambda v_1\alpha_4 + (v_1\alpha_4)^2 \\
+    &= (\Lambda - v_1\alpha_4)^2 \\
+    &= \left(v_1(1-m_1) - m_1(1-m_1)^2\right)^2 \\ 
+    &= (1 - m_1)^2(v_1 + m_1^2 - m_1)^2.
+  \end{split}
+\end{equation*}
+Note that $v_1 + m_1^2 = \var(X_1) + \ev[X_1]^2 = \ev[X_1^2]$ and
+$$
+\ev[X_1^2] - \ev[X_1] = \frac{(\alpha_1 + \alpha_2 + 1)(\alpha_1 + \alpha_2)}{(\tilde{\alpha} + 1)\tilde{\alpha}} - \frac{\alpha_1 + \alpha_2}{\tilde{\alpha}} = -\frac{(\alpha_1 + \alpha_2)(\alpha_3 + \alpha_4)}{\tilde{\alpha}(\tilde{\alpha}+1)} < 0.
+$$
+Therefore, 
+$$
+\sqrt{\Delta} = (1-m_1)(m_1 - v_1 - m_1^2)
 $$
 and 
+\begin{equation*}
+  \begin{split}
+    \alpha_3 &= \frac{1}{2v_1}\left(\left(m_1(1-m_1)^2 - v_1(1-m_1) - 2v_1\alpha_4\right) \pm (1-m_1)(m_1 - v_1 - m_1^2)\right) \\
+    &= - \alpha_4 + \frac{(1-m_1)(m_1 - m_1^2 - v_1) \pm (1-m_1)(m_1-v_1-m_1^2)}{2v_1}.
+  \end{split}
+\end{equation*}
+When the sign is negative, we have that $\alpha_3 = - \alpha_4$, an impossible
+solution. Then, 
 $$
-\alpha_3 = \frac{1}{2v_1}\left(\left(m_1(1-m_1)^2 - v_1(1-m_1) - 2v_1\alpha_4\right) \pm \sqrt{\Delta}\right).
+\alpha_3 = \frac{(1-m_1)(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4.
 $$
-For now, it is hard to verify if $\alpha_3 > 0$ only when $\sqrt{\Delta}$ is
-summed. Therefore, we need to verify numerically. With these three
-expressions, from $\alpha_1, \alpha_2$, and $\alpha_3$, the last equation from
-the system \eqref{eq:system-moments-alpha} indicates the solution $\alpha_4$.
-Numerically, we reduced the dimension of the problem. 
+
+We summarize the expressions in function of $\alpha_4$: 
+\begin{align*}
+  \alpha_3 &= \frac{(1-m_1)(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4 \\
+  \alpha_1 &= \frac{m_1+m_2-1}{1-m_1}\alpha_3 + \frac{m_2}{1-m_1}\alpha_4 = \frac{(m_1 + m_2 - 1)(m_1 - m_1^2 - v_1)}{v_1} + \alpha_4 \\
+  \alpha_2 &= \frac{1-m_2}{1-m_1}\alpha_3 + \frac{m_1-m_2}{1-m_1}\alpha_4 = \frac{(1 - m_2)(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4 .
+\end{align*}
+
+From here, one can calculate that
+$$
+\tilde{\alpha} = \frac{m_1 - m_1^2 - v_1}{v_1}.
+$$
+Since $\alpha_2 + \alpha_4 = (1 - m_2)\tilde{\alpha}$, we have that the last
+equation of the system \eqref{eq:system-moments-alpha} is given by
+\eqref{eq:v2}, that is, the system $\eqref{eq:system-moments-alpha}$ has a solution if and
+only if, equation \eqref{eq:v2} is satisfied. If it is, the solution is the ray 
+$$
+\mathcal{L} = \{(1,-1,-1,1)\alpha_4 + k : \alpha_4 > 0\}, 
+$$
+such that $k = \left((m_1 + m_2 - 1)\tilde{\alpha}, (1-m_2)\tilde{\alpha},
+(1-m_1)\tilde{\alpha}, 0\right)$. 
+
+\end{proof}
+
+
+Now change the fourth equation of \eqref{eq:system-moments-alpha} by: 
+$$
+\cor(X,Y) = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\sqrt{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}} = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\tilde{\alpha}^2\sqrt{m_1m_2(1-m_1)(1-m_2)}}
+$$
+
+Supposing the expression for $\alpha_1, \alpha_2$ and $\alpha_3$, that is,
+$m_1, m_2$ and $v_1$ are fixed, and supposing we fix $\rho = \cor(X,Y)$, we
+can simplify the above expression (using a software) as follows: 
+
+$$
+\rho = \frac{1}{\tilde{\alpha}\sqrt{m_1m_2(1-m_1)(1-m_2)}}\alpha_4 - \sqrt{\frac{(1 - m_1)(1 - m_2)}{m_1m_2}},
+$$
+which is linear on $\alpha_4$, that is, for fixed values of
+$m_1, m_2, v_1$ and $\rho$, there is an unique $\alpha_4$, and hence,
+$\alpha_1, \alpha_2$ and $\alpha_3$ that satisfies system
+\eqref{eq:system-moments-alpha} with the fourth equation changed by the
+correlation. 
 
 \bibliography{biblio} 
 
 \end{document}          
-
-
-% Suppose for now that $m_1v_2 \neq m_2v_1$. By the third and fourth equations, we have that 
-
-% $$
-% \frac{m_1}{v_1}(\alpha_3+\alpha_4) = \frac{m_2}{v_2}(\alpha_2+\alpha_4). 
-% $$
-
-% Then, 
-% \begin{equation}
-%   \label{eq:alpha4-expression}
-%   \alpha_4 = \frac{m_1\alpha_3/v_1 - m_2\alpha_2/v_2}{m_2/v_2 - m_1/v_1} = \frac{m_1v_2\alpha_3 - m_2v_1\alpha_2}{m_2v_1 - m_1v_2}.
-% \end{equation}
-
-% Rearranging the first equation, 
-% $$
-% (m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\alpha_4 = 0, 
-% $$
-% which implies with equation \eqref{eq:alpha4-expression},
-% \begin{align}
-%   (m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\frac{m_1v_2\alpha_3 - m_2v_1\alpha_2}{m_2v_1 - m_1v_2} &= 0 \\
-%   (m_1 - 1)\alpha_1 + \left(m_1 - 1 - \frac{m_1m_2v_1}{m_2v_1 - m_1v_2}\right)\alpha_2 + \left(m_1 + \frac{m_1^2v_2}{m_2v_1 - m_1v_2}\right)\alpha_3 &= 0,  
-% \end{align}
-% and 
-% \begin{equation}
-%   \label{eq:alpha1-expression}
-%   \alpha_1 = \frac{1}{1-m_1}\left(m_1 - 1 - \frac{m_1m_2v_1}{m_2v_1 - m_1v_2}\right)\alpha_2 + \frac{1}{1-m_1}\left(m_1 + \frac{m_1^2v_2}{m_2v_1 - m_1v_2}\right)\alpha_3.
-% \end{equation}
-
-% Let $a_2$ the coefficient of $\alpha_2$ and $a_3$ the coefficient of
-% $\alpha_3$. Then $\alpha_1 = a_2\alpha_2 + a_3\alpha_3$. Rearranging the second equation, 
-% $$
-% (m_2 - 1)\alpha_1 + m_2\alpha_2 + (m_2-1)\alpha_3 + m_2\alpha_4 = 0, 
-% $$
-% which implies with equations \eqref{eq:alpha4-expression} and \eqref{eq:alpha1-expression},
-% \begin{align}
-%   (m_2 - 1)(a_2\alpha_2 + a_3\alpha_3) + m_2\alpha_2 + (m_2 - 1)\alpha_3 + m_2\frac{m_1v_2\alpha_3 - m_2v_1\alpha_2}{m_2v_1 - m_1v_2} &= 0 \\
-%   \left((m_2-1)a_2 + m_2 - \frac{m_2^2v_1}{m_2v_1-m_1v_2}\right)\alpha_2 + \left((m_2-1)(a_3+1) + \frac{m_1m_2v_2}{m_2v_1-m_1v_2}\right)\alpha_3 &= 0. 
-% \end{align}
-% The problem with this expression is that both coefficients are null, which
-% means this equation does not bring any new information. 
-
-% TO BE FINISHED 
