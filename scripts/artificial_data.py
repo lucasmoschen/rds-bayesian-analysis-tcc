@@ -38,6 +38,7 @@ class GenerateData:
 
         while len(recruited) < sample_size: 
             for node in seeds:
+                print(node)
                 neighbors = set(graph.neighbors(node)) - recruited
                 s = ro.choice([0,1,2,3], p = probs)
                 if len(neighbors) == 0 or s == 0:
@@ -59,3 +60,12 @@ class GenerateData:
         G.add_edges_from(edges)
 
         return G
+
+if __name__ == '__main__': 
+
+    gen_graph = GenerateData()
+    graph = gen_graph.random_graph(rule = 'erdos-renyi', parameters={'n': 1000, 'p': 0.5, 'seed': 10000})
+    rds_sample = gen_graph.RDS_generator(graph = graph, seed = 20000, 
+                                     n_seeds = 4, sample_size = 10, probs = [1/3,1/6,1/6,1/3])
+                                     
+    

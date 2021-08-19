@@ -16,15 +16,15 @@ data {
     real<lower = 0> alpha_tau; 
     real<lower = 0> beta_tau;
     
-    matrix<lower = 0, upper = 1>[n_samples, n_samples] adj_matrix; 
+    matrix[n_samples, n_samples] adj_matrix; 
     real<lower = 0, upper = 1> rho; 
 }
 transformed data{
   vector[n_samples] zeros;
-  matrix<lower = 0>[n_samples, n_samples] D;
+  matrix[n_samples, n_samples] D;
   
   for (i in 1:n_samples) {
-       D[i,i] = sum(adj_matrix[i, ]);
+       D[i,i] = sum(adj_matrix[i]);
   }
   zeros = rep_vector(0, n_samples);
 }
