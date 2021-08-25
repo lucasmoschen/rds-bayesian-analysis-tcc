@@ -22,11 +22,14 @@ data {
 transformed data{
   vector[n_samples] zeros;
   matrix[n_samples, n_samples] D;
+  matrix[n_samples, n_samples] precision;
   
   for (i in 1:n_samples) {
        D[i,i] = sum(adj_matrix[i]);
   }
   zeros = rep_vector(0, n_samples);
+  
+  precision = D - rho * adj_matrix;
 }
 parameters {
     vector[n_predictors] effects; 
@@ -48,7 +51,7 @@ transformed parameters {
 }
 model {
     tau ~ gamma(alpha_tau, beta_tau); 
-    omega ~ multi_normal_prec(zeros, tau * (D - rho * adj_matrix));
+    omega ~ multi_normal_prec(zeros, tau * precision);
 
     effects ~ multi_normal(mu, Sigma);
     prev ~ beta(alpha_p, beta_p);

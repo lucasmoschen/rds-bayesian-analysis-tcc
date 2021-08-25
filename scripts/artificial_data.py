@@ -38,7 +38,6 @@ class GenerateData:
 
         while len(recruited) < sample_size: 
             for node in seeds:
-                print(node)
                 neighbors = set(graph.neighbors(node)) - recruited
                 s = ro.choice([0,1,2,3], p = probs)
                 if len(neighbors) == 0 or s == 0:
