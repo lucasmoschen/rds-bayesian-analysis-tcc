@@ -17,19 +17,16 @@ data {
     real<lower = 0> beta_tau;
     
     matrix[n_samples, n_samples] adj_matrix; 
+    //matrix[n_samples, n_samples] D;
     real<lower = 0, upper = 1> rho; 
+    matrix[n_samples, n_samples] precision; 
+    
 }
 transformed data{
   vector[n_samples] zeros;
-  matrix[n_samples, n_samples] D;
-  matrix[n_samples, n_samples] precision;
-  
-  for (i in 1:n_samples) {
-       D[i,i] = sum(adj_matrix[i]);
-  }
   zeros = rep_vector(0, n_samples);
   
-  precision = D - rho * adj_matrix;
+  //precision = D - rho * adj_matrix;
 }
 parameters {
     vector[n_predictors] effects; 
