@@ -1,0 +1,185 @@
+\chapter{Introdução}
+
+Hidden or hard-to-reach populations have two main features: no sampling frame
+exists, given that their size and boundaries are unknown, and there are
+privacy concerns because the subjects are stigmatized or have illegal behavior
+\cite{heckathorn1997}. Fear of exposition or prosecution complicates the
+enumeration of the populations and the learning about them. Moreover, if the
+occurrence frequency of the condition is low, there are high logistic costs
+involved. Some examples are heavy drug users, sex workers, homeless people,
+and men who have sex with men. 
+
+Research has been carried out with the development of some methods to reach these
+populations, such as, for example, snowball sampling \cite{goodman1961}, key
+important sampling \cite{deaux-callaghan1985}, 
+and targeted sampling \cite{watters-biernacki1989}. \citeauthor{heckathorn1997} introduced the Respondent-Driven Sampling (RDS) to
+fill some gaps from other methods he depicted in his work. In his proposed
+approach, the researchers select a handful of individuals from the target
+population and give them coupons to recruit their peers. The individuals
+receive a reward for being recruited and for recruiting, which creates a dual
+incentive system. After \cite{heckathorn1997}, several papers studied this
+topic more deeply. 
+
+Following the sampling from the target population, a questionnaire or a
+disease test is conducted. This work considers binary outcomes. For
+instance, asking about smoking status or testing for HIV infections. However,
+the diagnoses are subject to measure error, and regard their accuracy is a
+vital step \cite{reitsma2005bivariate}. One common way to do this is to
+measure jointly {\em sensitivity} and {\em specificity}. The former is the
+ability to detect the condition, while the latter to identify the absence of
+it. 
+
+Nevertheless, because of our lack of knowledge about Nature itself, it is
+necessary to model the uncertainty of this process, and Bayesian Statistics is
+the indicated area of study. In the Bayesian paradigm, the parameters are random
+variables, and the beliefs about them are updated given new data. The idea is
+to propagate uncertainty about the outcome through the network of contacts,
+which has its probability distribution.
+
+This work proposes to study the survey method Respondent-Driven Sampling (RDS), a chain-referral method with the objective of sampling from hard-to-reach populations when necessary to estimate the prevalence of some binary condition from this population. The modeling also accounts for sensibility and sensitivity since the imperfection of the detection tests. We also intend to apply
+this framework efficiently, comparing Monte Carlo algorithms and Laplace approximations.
+
+\section{Respondent-driven sampling}
+
+RDS is commonly used to survey hidden or hard-to-reach populations when
+no sampling frame exists \cite{heckathorn1997}. In this approach, the
+researchers select some individuals, called {\em seeds} from the target
+population, and give them a fixed amount of {\em recruitment coupons} to
+recruit their peers. Each recipient of the coupons reclaims it in the study
+site, is interviewed, and receives more coupons to continue the recruitment.
+This process occurs until it reaches some criteria. The sampling is without
+replacement, so the participants cannot be recruited more than once. Moreover,
+the respondents inform their {\em network degree}.
+
+The subjects receive a reward for being interviewed and for each recruitment
+of their peers which establishes a dual system incentive. The {\em primary incentive} is the
+{\em individual-sanction-based control}, so there is a reward for
+participating. The second one is the {\em group-mediated social control} that
+influences the participants to induce others to comply to get the reward for the recruitment. When social approval is important, recruitment can be even
+more efficient and cheaper, since material incentive can be converted into
+symbolic by the individuals. In summary, accepting to be recruited will have a
+material incentive for both and a symbolic incentive for the recruited, since
+theirs peers also participated.
+
+In a survey, questions about ethnicity, location (not necessarily fixed),
+gender, and religion, create possible (finite) states in which each
+participant is. Using statistical tests, one can verify the association between
+the recruiter and recruited responses. \citeauthor{heckathorn1997} models it
+as a Markov chain where the states are the possible answers, and the links are
+the recruitments. Considering an ergodic chain, an equilibrium mix of recruits
+will be attained when the number of waves goes to infinity, and it approaches
+the equilibrium at a geometric rate. Therefore, we obtain the distribution of
+the states posterior to enough waves. Posterior studies \cite{heckathorn2002}
+explained how to access bias and other statistical considerations. 
+
+Besides considering only the states where the individual is located,
+\cite{crawford2016} analyses the network structure given by RDS with a
+continuous-time model incorporating the recruitment time, the network degree,
+and the pattern of coupon use. This configuration enables the treatment of
+unobserved links and nodes as missing data. Let $G = (V,E)$ be an undirected
+graph representing the hidden population. The {\em recruitment graph} $G_R =
+(V_R, E_R)$ represents the recruited individuals and the recruitment edge.
+Given that each individual can be sampled only once, it is not possible to
+observe the {\em recruitment-induced subgraph}, that is the induced subgraph
+generated by $V_R$. Moreover, the {\em coupon matrix} $C$ defined by $C_{ij} =
+1$ if the i$^{th}$ subject has at least one coupon before the j$^{th}$
+recruitment event, is also observed with the recruitment times. Assuming an
+exponential and independent distribution of the times, the likelihood can be
+written explicitly, and the distribution interpreted as an exponential random graph
+model. 
+
+These models allowed several applications in social sciences, epidemiology,
+and statistics, including hidden populations size estimation
+\cite{crawford2018hidden}, regression \cite{bastos2012binary}, communicable
+disease prevalence estimation \cite{albuquerque2009avaliaccao}, among others. 
+
+\section{Prevalence estimation with imperfect tests}
+
+Consider a population of interest and a known condition, such as, for example,
+a disease or a binary behavior. It is important to understand the proportion
+of individuals in this population exposed at time $t$, called {\em
+prevalence}. Suppose a diagnostic test is done to measure the presence or the
+absence of this condition in the individuals. Mathematically, let $\theta \in
+(0,1)$ be the prevalence (parameter of interest) of the condition and $Y_i$ be an indicator function of the presence of the condition in the i$^{th}$ individual.
+Assuming for simplicity that all tests are performed at time $t$, and the
+sample is $\{y_1, ..., y_n\}$, the maximum likelihood estimator is the
+apparent prevalence: 
+\begin{equation}
+    \label{eq:naive-estimator}
+    \hat{\theta} = \frac{1}{n}\sum_{i=1}^n y_i.
+\end{equation}
+However, this estimator has two problems in this context: it assumes a perfect
+diagnostic test, which is often incorrect, and the samples in RDS are not
+independent by definition (network structure). 
+
+The first problem in \eqref{eq:naive-estimator} was tackled several times in
+the literature, such as \cite{mcinturff2004modelling}. The diagnose accuracy
+can be measured in many ways and the most considered is the joint analysis of
+the {\em sensitivity} ($\gamma_s$) and the {\em specificity}
+($\gamma_e$). 
+
+\begin{definition}[Specificity]
+    It is the probability of a negative test conditioned on the absence of the
+    disease (true negative).
+\end{definition}
+
+\begin{definition}[Sensitivity]
+    It is the probability of a positive test conditioned on the presence of
+    the disease (true positive). 
+\end{definition}
+
+Let $p$ be the probability of a positive test. Then, by Law of Total
+Probability: 
+\begin{equation}
+    p = \theta\gamma_s + (1-\theta)(1-\gamma_e).    
+\end{equation}
+
+Assuming the tests are conditionally independent given the presence or the
+absence of the disease in each individual, the number of positive tests $X$
+has binomial distribution with success probability $p$. In chapter
+XXX we present preliminary model that
+accounts this.  Regression approaches can be also carried with a link function
+in $\theta$. One important additional problem is to consider the
+correlation between $\gamma_s$ and $\gamma_e$. 
+
+
+The second problem was a study object in \cite{heckathorn1997,heckathorn2002} where the estimator was proposed
+based largely on Markov chain theory and social network theory.
+\cite{volz2008probability} improved it with the RDS II estimator considering
+the network degree
+\begin{equation}
+    \hat{\theta}^{RDS II} = \frac{\sum_{i=1}^n y_i \delta_i^{-1}}{\sum_{i=1}^n \delta_i^{-1}},
+\end{equation}
+such that $\delta_i$ is the i$^{th}$ individual's degree. However, this is an
+area of research in progress. 
+
+\section{Bayesian statistics}
+
+There are two more common interpretations of probability and statistics:
+frequentist and Bayesian. While the frequentists define
+probability as the limit of a frequency in a large number of trials, the
+Bayesians represent an individual's degree of belief in a statement that is
+updated given new information. This philosophy allows assigning probabilities
+to any event, even if a random process is not defined \cite{statisticat2016laplacesdemon}. 
+
+In 1761, Reverend Thomas Bayes wrote for the first time the Bayes' formula
+relating the probability of a parameter after observing the data with the
+evidence (written through a likelihood function) and previous information
+about the parameter. Pierre Simon Laplace rediscovered this formula in 1773
+\cite{Robert2007}, and this theory became more common in the 19th century.
+After some criticisms, a modern treatment considering Kolmogorov's axiomatization of the theory of probabilities started after Jeffreys in 1939.
+The recent development of new computational tools brought these ideas again.
+
+Bayesian inference is composed by the following: 
+
+\begin{itemize}
+    \item A distribution for the parameters $\theta$ that quantifies the
+    uncertainty about $\theta$ before data;
+    \item A distribution of the data generation process given the parameter,
+    such that, when it is seen as function of the parameter, is called
+    likelihood function;
+    \item When considering decision theory, a loss function measuring the
+    error in evaluating the parameter;
+    \item Posterior distribution of the parameter conditioned on the data. All
+    inferences are based on this probability distribution.
+\end{itemize} 
