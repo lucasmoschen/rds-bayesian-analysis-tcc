@@ -1,5 +1,16 @@
 format: jb-book
-root: introduction-rds
+root: introduction
 chapters:
-- file: gantt_chart
-- file: hcv_drug_users
+- file: introduction-rds
+- file: model_experiments
+- file: sens_spec
+  sections: 
+  - file: bivariate_beta
+  - file: bivariate_diagnose_analysis
+- file: datasets
+  sections: 
+  - file: hcv_drug_users
+  - file: nsum_curitiba
+- file: appendix
+  sections:
+  - file: gantt_chart
