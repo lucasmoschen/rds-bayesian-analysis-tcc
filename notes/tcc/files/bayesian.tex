@@ -1,0 +1,45 @@
+\chapter{Bayesian statistics}
+
+There are two more common interpretations of probability and statistics:
+frequentist and Bayesian. While the frequentists define
+probability as the limit of a frequency in a large number of trials, the
+Bayesians represent an individual's degree of belief in a statement that is
+updated given new information. This philosophy allows assigning probabilities
+to any event, even if a random process is not defined \cite{statisticat2016laplacesdemon}. 
+
+In 1761, Reverend Thomas Bayes wrote for the first time the Bayes' formula
+relating the probability of a parameter after observing the data with the
+evidence (written through a likelihood function) and previous information
+about the parameter. Pierre Simon Laplace rediscovered this formula in 1773
+\cite{Robert2007}, and this theory became more common in the 19th century.
+After some criticisms, a modern treatment considering Kolmogorov's axiomatization of the theory of probabilities started after Jeffreys in 1939.
+The recent development of new computational tools brought these ideas again.
+
+Bayesian inference is composed by the following: 
+
+\begin{itemize}
+    \item A distribution for the parameters $\theta$ that quantifies the
+    uncertainty about $\theta$ before data;
+    \item A distribution of the data generation process given the parameter,
+    such that, when it is seen as function of the parameter, is called
+    likelihood function;
+    \item When considering decision theory, a loss function measuring the
+    error in evaluating the parameter;
+    \item Posterior distribution of the parameter conditioned on the data. All
+    inferences are based on this probability distribution.
+\end{itemize} 
+
+A key quantity for epidemiologists and public health researchers is the
+proportion of individuals exposed to a disease at time $t$, which is called
+{\em prevalence}. When measured
+periodically, its evolution can identify potential causes of the infection
+and prevention and care methods \cite[]{noordzij2010measures}. The prevalence
+differs from {\em incidence } that measures the proportion of people who
+develop new disease during a specified period of time
+\cite[]{rothman2008modern}. Therefore, prevalence reflects both incidence and the
+duration of disease. 
+
+This report presents the initial models for my bachelor dissertation entitled ``Bayesian analysis of respondent-driven surveys with
+outcome uncertainty'', which proposes to study prevalence when the diagnostic
+tests are imperfect and the population is hidden, that is, there is no
+sampling frame for it \cite[]{heckathorn1997}. 

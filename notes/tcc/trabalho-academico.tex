@@ -9,8 +9,8 @@
 \documentclass[
 	% -- opções da classe memoir --
 	12pt,				% tamanho da fonte
-	openright,			% capítulos começam em página ímpar (insere página vazia caso preciso)
-	twoside,			% para impressão em recto e verso. Oposto a oneside
+	%openright,			% capítulos começam em página ímpar (insere página vazia caso preciso)
+	oneside,			% para impressão em recto e verso. Oposto a oneside
 	a4paper,			% tamanho do papel. 
 	% -- opções da classe abntex2 --
 	%chapter=TITLE,		% títulos de capítulos convertidos em letras maiúsculas
@@ -384,14 +384,13 @@ Advisor: Luiz Max Carvalho}
 
 \input{files/introduction.tex}
 
-% ----------------------------------------------------------
-% PARTE
-% ----------------------------------------------------------
-\part{Matemática}
-% ----------------------------------------------------------
+\input{files/bayesian.tex}
 
-\chapter{Preliminary results}
-\input{files/preliminary_results.tex}
+\input{files/respodent-driven-sampling.tex}
+
+\input{files/specificity_sensitivity.tex}
+
+\input{files/prevalence.tex}
 
 % ----------------------------------------------------------
 % Finaliza a parte no bookmark do PDF
@@ -400,7 +399,7 @@ Advisor: Luiz Max Carvalho}
 % ----------------------------------------------------------
 \phantompart
 
-\chapter{Conclusão}
+\input{files/conclusion.tex}
 
 % ----------------------------------------------------------
 % ELEMENTOS PÓS-TEXTUAIS
