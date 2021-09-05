@@ -1,12 +1,14 @@
 format: jb-book
 root: introduction
 chapters:
-- file: introduction-rds
-- file: model_experiments
+- file: introduction_rds
+- file: prevalence_estimation
 - file: sens_spec
   sections: 
   - file: bivariate_beta
   - file: bivariate_diagnose_analysis
+  - file: unknown_spec_sens
+- file: model_experiments
 - file: datasets
   sections: 
   - file: hcv_drug_users
@@ -14,3 +16,4 @@ chapters:
 - file: appendix
   sections:
   - file: gantt_chart
+- file: bibliography

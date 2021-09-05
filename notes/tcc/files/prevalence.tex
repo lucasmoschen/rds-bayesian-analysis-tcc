@@ -22,37 +22,7 @@ diagnostic test, which is often incorrect, and the samples in RDS are not
 independent by definition (network structure). 
 
 The first problem in \eqref{eq:naive-estimator} was tackled several times in
-the literature, such as \cite{mcinturff2004modelling}. The diagnose accuracy
-can be measured in many ways and the most considered is the joint analysis of
-the {\em sensitivity} ($\gamma_s$) and the {\em specificity}
-($\gamma_e$). 
-
-\begin{definition}[Specificity]
-    It is the probability of a negative test conditioned on the absence of the
-    disease (true negative).
-\end{definition}
-
-\begin{definition}[Sensitivity]
-    It is the probability of a positive test conditioned on the presence of
-    the disease (true positive). 
-\end{definition}
-
-Let $p$ be the probability of a positive test. Then, by Law of Total
-Probability: 
-\begin{equation}
-    p = \theta\gamma_s + (1-\theta)(1-\gamma_e).    
-\end{equation}
-
-Assuming the tests are conditionally independent given the presence or the
-absence of the disease in each individual, the number of positive tests $X$
-has binomial distribution with success probability $p$. In chapter
-XXX we present preliminary model that
-accounts this.  Regression approaches can be also carried with a link function
-in $\theta$. One important additional problem is to consider the
-correlation between $\gamma_s$ and $\gamma_e$. 
-
-
-The second problem was a study object in \cite{heckathorn1997,heckathorn2002} where the estimator was proposed
+the literature, such as \cite{mcinturff2004modelling}. The second problem was a study object in \cite{heckathorn1997,heckathorn2002} where the estimator was proposed
 based largely on Markov chain theory and social network theory.
 \cite{volz2008probability} improved it with the RDS II estimator considering
 the network degree
@@ -61,8 +31,6 @@ the network degree
 \end{equation}
 such that $\delta_i$ is the i$^{th}$ individual's degree. However, this is an
 area of research in progress. 
-
-
 
 Let $I$ be a index set and $Y_i$ be the indicator function of the $i^{th}$ individual's exposure to the disease, and $T_i$
 indicating whether the test of the $i^{th}$ individual is positive at time

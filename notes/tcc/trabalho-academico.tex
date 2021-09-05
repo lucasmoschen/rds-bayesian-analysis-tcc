@@ -214,18 +214,27 @@ Advisor: Luiz Max Carvalho}
 
 \input{files/definitions.tex}
 
+%--------------------------------------------------------------------------
+%-------------------------------- Document --------------------------------
+%--------------------------------------------------------------------------
+
 \begin{document}
+
+\newcounter{num}
+\setcounter{num}{0}
 
 \selectlanguage{english}
 \frenchspacing 
 
-% ----------------------------------------------------------
-% ELEMENTOS PRÉ-TEXTUAIS
-% ----------------------------------------------------------
+%--------------------------------------------------------------------------
+%-------------------------------- Pré-textuais --------------------------------
+%--------------------------------------------------------------------------
 % \pretextual
 
 \imprimircapa
-\imprimirfolhaderosto*
+
+\ifnum\value{num}=1
+{\imprimirfolhaderosto*
 
 % Uncomment if you have the pdf 
 % \begin{fichacatalografica}
@@ -367,6 +376,7 @@ Advisor: Luiz Max Carvalho}
   \item[$ \zeta $] Letra grega minúscula zeta
   \item[$ \in $] Pertence
 \end{simbolos}
+}\else{}
 
 \pdfbookmark[0]{\contentsname}{toc}
 \tableofcontents*
