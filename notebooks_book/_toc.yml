@@ -7,7 +7,8 @@ chapters:
   sections: 
   - file: bivariate_beta
   - file: choosing_alpha
-  - file: bivariate_diagnose_analysis
+  - file: prior_distributions_alpha
+  - file: modeling_sens_spec
   - file: unknown_spec_sens
 - file: model_experiments
 - file: datasets
