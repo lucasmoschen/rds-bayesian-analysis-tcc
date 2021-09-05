@@ -6,6 +6,7 @@ chapters:
 - file: sens_spec
   sections: 
   - file: bivariate_beta
+  - file: choosing_alpha
   - file: bivariate_diagnose_analysis
   - file: unknown_spec_sens
 - file: model_experiments
