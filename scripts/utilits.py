@@ -42,15 +42,41 @@ class ParameterAlpha:
         
         return obj
 
-    def minimizer(self, m1, m2, v1, v2, rho, g = None, x0 = (1,1,1,1)): 
+    def minimizer(self, m1, m2, v1, v2, rho, 
+                  c = [1,1,1,1], 
+                  g = 'quadratic', 
+                  x0 = (1,1,1,1)): 
         """
         Minimized the loss function as function of alpha. 
         """
-        if g is None: 
-            g = self.quadratic_error
+        if g == 'relative_quadratic': 
+            g = self.relative_quadratic_error
+        else: 
+            g = self.quadratic_error      
 
         return minimize(fun = self.loss_function, 
                         x0 = x0, 
-                        args = (m1, m2, v1, v2, rho, g),
+                        args = (m1, m2, v1, v2, rho, g, c),
                         bounds = [(0, np.inf)]*4,
                         method = 'trust-constr')
+
+class BivariateBeta:
+
+    def __init__(self) -> None:
+        pass
+
+    def moments_calculus(self, alpha): 
+        
+        tilde_alpha = alpha[0]+alpha[1]+alpha[2]+alpha[3]
+        
+        E_X = (alpha[0]+alpha[1])/tilde_alpha
+        E_Y = (alpha[0]+alpha[2])/tilde_alpha
+        
+        Var_X = (1/(tilde_alpha*(tilde_alpha+1)))*E_X*(alpha[2] + alpha[3])
+        Var_Y = (1/(tilde_alpha*(tilde_alpha+1)))*E_Y*(alpha[1] + alpha[3])
+        
+        den = np.log(alpha[0] + alpha[1]) + np.log(alpha[2]+alpha[3]) + np.log(alpha[0]+alpha[2]) + np.log(alpha[1]+alpha[3])
+        den = np.exp(-0.5*den)
+        Cor_XY = (alpha[0]*alpha[3] - alpha[1]*alpha[2])*den
+        
+        return (E_X, E_Y, Var_X, Var_Y, Cor_XY)
