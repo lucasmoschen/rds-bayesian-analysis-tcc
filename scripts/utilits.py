@@ -60,6 +60,40 @@ class ParameterAlpha:
                         bounds = [(0, np.inf)]*4,
                         method = 'trust-constr')
 
+    def solve_equations(self, m1, m2, v1, v2, rho):
+        """
+        Let (X,Y) ~ BivariateBeta(a1,a2,a3,a4). This functions aim to solve
+        the system m1 = E[X], m2 = E[Y], v1 = Var(X), rho = Cor(X,Y) nad
+        subject to the induced error on v2. 
+        """
+        # Finds alpha4 as function of rho
+        rho_expression = rho + np.sqrt((1-m1)*(1-m2)/(m1*m2))
+        rho_expression *= np.sqrt(m1*m2*(1-m1)*(1-m2))*(m1 - m1*m1 - v1)
+        alpha4 = rho_expression/v1
+
+        if alpha4 < 0: 
+            raise Exception('This system does not have a solution since alpha_4 < 0')
+     
+        # finds alpha1,alpha2,alpha3 as function of alpha4, m1, m2, and v1
+        C = (m1 - m1*m1 - v1)/v1 
+        alpha1 = (m1 + m2 - 1)*C + alpha4 
+        alpha2 = (1 - m2)*C - alpha4 
+        alpha3 = (1 - m1)*C - alpha4 
+
+        if alpha1 < 0: 
+            raise Exception('This system does not have a solution since alpha_1 < 0')
+        elif alpha2 < 0: 
+            raise Exception('This system does not have a solution since alpha_2 < 0')
+        elif alpha3 < 0: 
+            raise Exception('This system does not have a solution since alpha_3 < 0')
+     
+        # With the estimated alpha, the value of v2_hat. 
+        v2_hat = v1*(1-m2)/(m1*(1-m1))
+
+        err_v2 = abs(v2 - v1*(1-m2)/(m1*(1 - m1)))/v2
+
+        return ((alpha1, alpha2, alpha3, alpha4), v2_hat, err_v2)
+
 class BivariateBeta:
 
     def __init__(self) -> None:
@@ -80,3 +114,6 @@ class BivariateBeta:
         Cor_XY = (alpha[0]*alpha[3] - alpha[1]*alpha[2])*den
         
         return (E_X, E_Y, Var_X, Var_Y, Cor_XY)
+
+
+    

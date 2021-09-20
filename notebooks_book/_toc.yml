@@ -11,6 +11,10 @@ chapters:
   - file: modeling_sens_spec
   - file: unknown_spec_sens
 - file: model_experiments
+  sections:
+  - file: perfect_test
+  - file: imperfect_test
+  - file: imperfect_test_rds
 - file: datasets
   sections: 
   - file: hcv_drug_users
@@ -18,4 +22,5 @@ chapters:
 - file: appendix
   sections:
   - file: gantt_chart
+  - file: rascunho
 - file: bibliography
