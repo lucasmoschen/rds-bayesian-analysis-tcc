@@ -32,6 +32,9 @@ functions {
                     + sum(ldet_terms)
                     - tau * (omegat_D * omega - rho * (omegat_W * omega)));
   }
+  real gumbel_type2_lpdf(real tau, real lambda){
+    return log(lambda) - 3/2 * log(tau) - lambda*tau^(-1/2) - log(2); 
+  }
 } 
 data {
     int<lower = 0> n_samples;
@@ -48,8 +51,7 @@ data {
     real<lower = 0> beta_s;
     real<lower = 0> alpha_e; 
     real<lower = 0> beta_e;
-    real<lower = 0> alpha_tau; 
-    real<lower = 0> beta_tau;
+    real<lower = 0> lambda_tau; 
     
     matrix<lower = 0, upper = 1>[n_samples, n_samples] adj_matrix; 
     int adj_pairs;
@@ -103,7 +105,7 @@ transformed parameters {
     }
 }
 model {
-    tau ~ gamma(alpha_tau, beta_tau); 
+    tau ~ gumbel_type2(lambda_tau); 
     omega ~ sparse_car(tau, rho, adj_sparse, D_sparse, lambda, n_samples, adj_pairs);
 
     effects ~ multi_normal(mu, Sigma);
