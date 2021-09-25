@@ -30,7 +30,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
-\usepackage{microtype} 			% para melhorias de justificação
+\usepackage{microtype} % para melhorias de justificação
 \usepackage{indentfirst}
 
 \renewcommand{\ABNTEXchapterfont}{\fontfamily{ptm}\fontseries{b}\selectfont}
@@ -51,8 +51,8 @@
 
 
 % Citações 
-\usepackage[english,hyperpageref]{backref}	     % Paginas com as citações na bibl
-\usepackage[alf]{abntex2cite}	                 % Citações padrão ABNT
+\usepackage[english,hyperpageref]{backref}
+\usepackage[alf]{abntex2cite}	% Citações padrão ABNT
 
 % \renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
 % % Texto padrão antes do número das páginas
@@ -221,7 +221,7 @@ Advisor: Luiz Max Carvalho}
 \begin{document}
 
 \newcounter{num}
-\setcounter{num}{0}
+\setcounter{num}{1}
 
 \selectlanguage{english}
 \frenchspacing 
@@ -229,7 +229,7 @@ Advisor: Luiz Max Carvalho}
 %--------------------------------------------------------------------------
 %-------------------------------- Pré-textuais --------------------------------
 %--------------------------------------------------------------------------
-% \pretextual
+%\pretextual
 
 \imprimircapa
 
@@ -248,7 +248,7 @@ Advisor: Luiz Max Carvalho}
 	\fbox{\begin{minipage}[c][8cm]{13.5cm}		% Largura
 	\small
 	%\imprimirautor
-	Moschen, Lucas Machado
+	Moschen, Lucas Machado% Paginas com as citações na bibl
 	
 	\hspace{0.5cm} \imprimirtitulo  / \imprimirautor. -- \imprimirdata.
 	
@@ -293,48 +293,51 @@ Advisor: Luiz Max Carvalho}
     \end{center}
     \vspace*{\fill}
     
-    \hspace{.1\textwidth}
-    \begin{minipage}{.8\textwidth}
+    \hfill
+    \begin{minipage}{.7\textwidth}
         Bachelor dissertation presented to the School of Applied Mathematics
         (FGV/EMAp). Study area: Bayesian statistics. \\ \\
-		E aprovado em 21/07/2006 \\
-		Pela comissão organizadora
+		Approved on December 21st, 2021 \\
+		By the organizing committee
     \end{minipage}%
     \vspace*{\fill}
    \end{center}
 
-   \assinatura{\textbf{\imprimirorientador} \\ School of Applied Mathematics} 
-   \assinatura{\textbf{Professor} \\ Convidado 1}
-   \assinatura{\textbf{Professor} \\ Convidado 2}
+   \assinatura{\imprimirorientador \\ School of Applied Mathematics} 
+   \assinatura{Professor \\ Convidado 1}
+   \assinatura{Professor \\ Convidado 2}
    %\assinatura{\textbf{Professor} \\ Convidado 3}
    %\assinatura{\textbf{Professor} \\ Convidado 4}
-      
-
 \end{folhadeaprovacao}
 
 \begin{dedicatoria}
    \vspace*{\fill}
-   \centering
-   \noindent
-   \textit{ Este trabalho é dedicado às crianças adultas que,\\
-   quando pequenas, sonharam em se tornar cientistas.} \vspace*{\fill}
+   %\noindent
+   \hfill
+   \begin{minipage}{.6\textwidth}
+	I dedicate this dissertation to my grandfather	Adenir, who always encouraged me to study, even
+	when he did not understand it.
+   \end{minipage}
 \end{dedicatoria}
 
 \begin{agradecimentos}
-	Agradeço a beleza da natureza.
+	I thanks to my advisor, my family, my colleagues from the course.  
 
 \end{agradecimentos}
 
 \begin{epigrafe}
     \vspace*{\fill}
 	\begin{flushright}
-		\textit{Esta é a vida}
+		\textit{
+			``If your experiment needs a statistician, you need a better
+			experiment.''} \\
+			\textit{Ernest Rutherford}
 	\end{flushright}
 \end{epigrafe}
 
 \setlength{\absparsep}{18pt} % ajusta o espaçamento dos parágrafos do resumo
-\begin{resumo}
- Segundo a \citeonline[3.1-3.2]{NBR6028:2003}, o resumo deve ressaltar o
+\begin{resumo}[Resumo]
+ Segundo a  o resumo deve ressaltar o
  objetivo, o método, os resultados e as conclusões do documento. A ordem e a extensão
  destes itens dependem do tipo de resumo (informativo ou indicativo) e do
  tratamento que cada item recebe no documento original. O resumo deve ser
@@ -346,20 +349,20 @@ Advisor: Luiz Max Carvalho}
  \textbf{Palavras-chave}: latex. abntex. editoração de texto.
 \end{resumo}
 
-% \begin{resumo}[Abstract]
-%  \begin{otherlanguage*}{english}
-%    This is the english abstract.
-%  \end{otherlanguage*}
-% \end{resumo}
+\begin{resumo}[Abstract]
+ \begin{otherlanguage*}{english}
+   This is the english abstract.
+ \end{otherlanguage*}
+\end{resumo}
 
 
 \pdfbookmark[0]{\listfigurename}{lof}
 \listoffigures*
 \cleardoublepage
 
-\pdfbookmark[0]{\listofquadrosname}{loq}
-\listofquadros*
-\cleardoublepage
+% \pdfbookmark[0]{\listofquadrosname}{loq}
+% \listofquadros*
+% \cleardoublepage
 
 \pdfbookmark[0]{\listtablename}{lot}
 \listoftables*
@@ -376,7 +379,8 @@ Advisor: Luiz Max Carvalho}
   \item[$ \zeta $] Letra grega minúscula zeta
   \item[$ \in $] Pertence
 \end{simbolos}
-}\else{}
+
+}\fi
 
 \pdfbookmark[0]{\contentsname}{toc}
 \tableofcontents*
