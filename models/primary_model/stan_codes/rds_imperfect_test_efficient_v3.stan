@@ -40,8 +40,8 @@ data {
   
     int T[n_samples];
     
-    real<lower = 0> alpha_p; 
-    real<lower = 0> beta_p;
+    real mean_mu; 
+    real<lower = 0> std_mu;
     real<lower = 0> alpha_tau;
     real<lower = 0> beta_tau; 
     
@@ -77,16 +77,14 @@ transformed data{
     lambda = eigenvalues_sym(quad_form(adj_matrix, diag_matrix(invsqrtD)));
   }
 }
-parameters {^
-    real<lower = 0, upper = 1> prev;
+parameters {
+    real mu; 
     
     vector[n_samples] omega; 
     real<lower = 0> tau; 
 }
 transformed parameters {
     vector[n_samples] theta;
-    real mu; 
-    mu = logit(prev);
 
     for (i in 1:n_samples) {
         theta[i] = inv_logit(omega[i]);
@@ -94,11 +92,14 @@ transformed parameters {
 }
 model {
     tau ~ gamma(alpha_tau, beta_tau);
-    prev ~ beta(alpha_p, beta_p);
+    mu ~ normal(mean_mu, std_mu);
     
     omega ~ sparse_car(mu, tau, rho, adj_sparse, D_sparse, lambda, n_samples, adj_pairs);
 
     for (i in 1:n_samples) {
        T[i] ~ bernoulli(theta[i]);
     }
+}
+generated quantities {
+    real<lower=0, upper=1> prev = inv_logit(mu);
 }
