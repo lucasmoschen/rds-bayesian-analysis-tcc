@@ -1,11 +1,20 @@
-% ------------------------------------------------------------------------
-% ------------------------------------------------------------------------
+% -----------------------------------
+% -----------------------------------
 % abnTeX2: Normas ABNT NBR 14724:2011 + sugestões FGV/EMAp. 
 
-% Autor: Lucas Machado Moschen 
+% Autor: Lauro César Araujo
+% Adaptações EMAp: Lucas Machado Moschen 
 % Copyright 2012-2018 by abnTeX2 group at http://www.abntex.net.br/ 
-% ------------------------------------------------------------------------
-% ------------------------------------------------------------------------
+
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+% ----------------------------------
+% ----------------------------------
 \documentclass[
 	% -- opções da classe memoir --
 	12pt,				% tamanho da fonte
@@ -22,9 +31,9 @@
 	%brazil				% idioma para português
 	]{abntex2}
 
-%--------------------------------------------------------------------------
-%---------------------- Pacotes necessários -------------------------------
-%--------------------------------------------------------------------------
+%------------------------------------------------
+%-------------- Pacotes necessários -------------
+%------------------------------------------------
 
 % Escrita 
 \usepackage[T1]{fontenc}
@@ -34,7 +43,6 @@
 \usepackage{indentfirst}
 
 \renewcommand{\ABNTEXchapterfont}{\fontfamily{ptm}\fontseries{b}\selectfont}
-
 
 % Gráficos 
 \usepackage{color}
@@ -51,8 +59,10 @@
 
 
 % Citações 
-\usepackage[english,hyperpageref]{backref}
-\usepackage[alf]{abntex2cite}	% Citações padrão ABNT
+%\usepackage[brazilian,hyperpageref]{backref}
+%\usepackage[alf]{abntex2cite}	% Citações padrão ABNT
+\usepackage[style=abnt]{biblatex}
+\addbibresource{biblio.bib}  
 
 % \renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
 % % Texto padrão antes do número das páginas
@@ -68,63 +78,7 @@
 % 	\fi}%
 % ---
 
-%--------------------------------------------------------------------------
-%---------------------- Capa e Folha de Rosto -----------------------------
-%--------------------------------------------------------------------------
-
-\renewcommand{\imprimircapa}{%
-	\begin{capa}%
-	\center
-		\ABNTEXchapterfont\Large \MakeUppercase{\imprimirinstituicao}
-		\\\vspace*{4cm}
-		{\ABNTEXchapterfont\large \MakeUppercase{\imprimirautor}}
-		\vfill
-		\begin{center}
-		\ABNTEXchapterfont\bfseries\large\MakeUppercase{\imprimirtitulo}
-		\end{center}
-		\vfill
-		\normalfont\large\imprimirlocal
-		\\\normalfont\large\imprimirdata
-		\vspace*{1cm}
-	\end{capa}
-}
-
-\makeatletter
-\renewcommand{\folhaderostocontent}{
-  \begin{center}
-
-    %\vspace*{1cm}
-    {\ABNTEXchapterfont\large\MakeUppercase{\imprimirautor}}
-	
-    \vspace*{\fill}\vspace*{\fill}
-    \begin{center}
-      \ABNTEXchapterfont\bfseries\large\MakeUppercase{\imprimirtitulo}
-    \end{center}
-    \vspace*{\fill}
-	
-    \abntex@ifnotempty{\imprimirpreambulo}{%
-      \hspace{.45\textwidth}
-      \begin{minipage}{.5\textwidth}
-      	\SingleSpacing
-         \imprimirpreambulo
-       \end{minipage}%
-       \vspace*{\fill}
-    }%
-
-    % {\large\imprimirorientadorRotulo~\imprimirorientador\par}
-    % \abntex@ifnotempty{\imprimircoorientador}{%
-    %    {\large\imprimircoorientadorRotulo~\imprimircoorientador}%
-    % }%
-    \vspace*{\fill}
-
-    {\large\imprimirlocal}
-    \par
-    {\large\imprimirdata}
-    \vspace*{1cm}
-
-  \end{center}
-}
-\makeatother
+\input{files/capa_folha_rosto.tex}
 
 \titulo{Bayesian analysis of respondent-driven surveys with outcome uncertainty}
 \autor{Lucas Machado Moschen}
@@ -138,14 +92,17 @@
 \tipotrabalho{Bachelor Dissertation (Graduation)}
 
 \preambulo{Bachelor dissertation presented to the School of Applied
-Mathematics (FGV/EMAp). \\ \\ Study area: Bayesian statistics. \\\\
-Advisor: Luiz Max Carvalho}
+Mathematics (FGV/EMAp) to obtain the Bachelor's degree of Applied Mathematics. \\ \\ Study area: Bayesian statistics.}
 
 \orientador{Luiz Max Carvalho}
 
-%--------------------------------------------------------------------------
-%---------------------------------- PDF -----------------------------------
-%--------------------------------------------------------------------------
+% Se o seu texto tem subtítulo. 
+% Se não tiver, altere o arquivo capa_folha_rosto_tex
+%\subtitulo{Este é o subtítulo do meu TCC}
+
+%---------------------------------------------
+%-------------------- PDF --------------------
+%---------------------------------------------
 
 % alterando o aspecto da cor azul
 \definecolor{blue}{RGB}{41,5,195}
@@ -174,9 +131,9 @@ Advisor: Luiz Max Carvalho}
 \setlength{\@fptop}{5pt} % Set distance from top of page to first float
 \makeatother
 
-%--------------------------------------------------------------------------
-%------------------------- Mais configurações -----------------------------
-%--------------------------------------------------------------------------
+%---------------------------------------
+%--------- Mais configurações-----------
+%---------------------------------------
 
 % Possibilita criação de Quadros e Lista de quadros.
 % Ver https://github.com/abntex/abntex2/issues/176
@@ -195,9 +152,17 @@ Advisor: Luiz Max Carvalho}
 
 \setfloatlocations{quadro}{hbtp} % Ver https://github.com/abntex/abntex2/issues/176
 
-%--------------------------------------------------------------------------
-%----------------- Espaçamentos entre linhas e parágrafos -----------------
-%--------------------------------------------------------------------------
+%-----------------------------------------------------
+%--------------------- Margens -----------------------
+%-----------------------------------------------------
+
+\setlrmarginsandblock{3cm}{2cm}{*}
+\setulmarginsandblock{3cm}{2cm}{*}
+\checkandfixthelayout
+
+%-----------------------------------------------------
+%------ Espaçamentos entre linhas e parágrafos -------
+%-----------------------------------------------------
 
 % O tamanho do parágrafo é dado por:
 \setlength{\parindent}{1.3cm}
@@ -208,27 +173,28 @@ Advisor: Luiz Max Carvalho}
 % compila o índice
 \makeindex
 
-%--------------------------------------------------------------------------
-%------------------------------- Definitions ------------------------------
-%--------------------------------------------------------------------------
+%------------------------------------------------------
+%----------- Personal Definitions ---------------------
+%------------------------------------------------------
 
 \input{files/definitions.tex}
 
-%--------------------------------------------------------------------------
-%-------------------------------- Document --------------------------------
-%--------------------------------------------------------------------------
+%-------------------------------------------------
+%----------------- Document ----------------------
+%-------------------------------------------------
 
 \begin{document}
 
 \newcounter{num}
-\setcounter{num}{1}
+% if num != 1, do not print the pre textual 
+\setcounter{num}{0}
 
 \selectlanguage{english}
 \frenchspacing 
 
-%--------------------------------------------------------------------------
-%-------------------------------- Pré-textuais --------------------------------
-%--------------------------------------------------------------------------
+%----------------------------------------------
+%--------------- Pré-textuais -----------------
+%----------------------------------------------
 %\pretextual
 
 \imprimircapa
@@ -236,125 +202,15 @@ Advisor: Luiz Max Carvalho}
 \ifnum\value{num}=1
 {\imprimirfolhaderosto*
 
-% Uncomment if you have the pdf 
-% \begin{fichacatalografica}
-%     \includepdf{fig_ficha_catalografica.pdf}
-% \end{fichacatalografica}
+\input{files/ficha_catalografica.tex}
 
-\begin{fichacatalografica}
-	\sffamily
-	\vspace*{\fill}					% Posição vertical
-	\begin{center}					
-	\fbox{\begin{minipage}[c][8cm]{13.5cm}		% Largura
-	\small
-	%\imprimirautor
-	Moschen, Lucas Machado% Paginas com as citações na bibl
-	
-	\hspace{0.5cm} \imprimirtitulo  / \imprimirautor. -- \imprimirdata.
-	
-	\hspace{0.5cm} \thelastpage f.\\
-		
-	\hspace{0.5cm}
-	\parbox[t]{\textwidth}{\imprimirtipotrabalho~--~School of Applied
-	Mathematics.}\\
-	
-	\hspace{0.5cm} Advisor: \imprimirorientador .
+\input{files/errata.tex}
 
-	\hspace{0.5cm} Includes bibliography.
-	
-	\hspace{0.5cm}
-		1. Bayesian statistics.
-		2. Respondent-driven Sampling.
-		2. Sensitivity and specificity.
-		I. Carvalho, Luiz Max.
-		II. School of Applied Mathematics.
-		III. \imprimirtitulo 			
-	\end{minipage}}
-	\end{center}
-\end{fichacatalografica}
-% ---
+\input{files/folha_aprovacao.tex}
 
-% \begin{errata}
+\input{files/dedicatoria_agradecimentos.tex}
 
-% \end{errata}
-
-% \begin{folhadeaprovacao}
-% \includepdf{folhadeaprovacao_final.pdf}
-% \end{folhadeaprovacao}
-
-\begin{folhadeaprovacao}
-
-  \begin{center}
-    {\ABNTEXchapterfont\large\MakeUppercase{\imprimirautor}}
-
-    \vspace*{\fill}\vspace*{\fill}
-    \begin{center}
-      \ABNTEXchapterfont\bfseries\large\MakeUppercase{\imprimirtitulo}	
-    \end{center}
-    \vspace*{\fill}
-    
-    \hfill
-    \begin{minipage}{.7\textwidth}
-        Bachelor dissertation presented to the School of Applied Mathematics
-        (FGV/EMAp). Study area: Bayesian statistics. \\ \\
-		Approved on December 21st, 2021 \\
-		By the organizing committee
-    \end{minipage}%
-    \vspace*{\fill}
-   \end{center}
-
-   \assinatura{\imprimirorientador \\ School of Applied Mathematics} 
-   \assinatura{Professor \\ Convidado 1}
-   \assinatura{Professor \\ Convidado 2}
-   %\assinatura{\textbf{Professor} \\ Convidado 3}
-   %\assinatura{\textbf{Professor} \\ Convidado 4}
-\end{folhadeaprovacao}
-
-\begin{dedicatoria}
-   \vspace*{\fill}
-   %\noindent
-   \hfill
-   \begin{minipage}{.6\textwidth}
-	I dedicate this dissertation to my grandfather	Adenir, who always encouraged me to study, even
-	when he did not understand it.
-   \end{minipage}
-\end{dedicatoria}
-
-\begin{agradecimentos}
-	I thanks to my advisor, my family, my colleagues from the course.  
-
-\end{agradecimentos}
-
-\begin{epigrafe}
-    \vspace*{\fill}
-	\begin{flushright}
-		\textit{
-			``If your experiment needs a statistician, you need a better
-			experiment.''} \\
-			\textit{Ernest Rutherford}
-	\end{flushright}
-\end{epigrafe}
-
-\setlength{\absparsep}{18pt} % ajusta o espaçamento dos parágrafos do resumo
-\begin{resumo}[Resumo]
- Segundo a  o resumo deve ressaltar o
- objetivo, o método, os resultados e as conclusões do documento. A ordem e a extensão
- destes itens dependem do tipo de resumo (informativo ou indicativo) e do
- tratamento que cada item recebe no documento original. O resumo deve ser
- precedido da referência do documento, com exceção do resumo inserido no
- próprio documento. (\ldots) As palavras-chave devem figurar logo abaixo do
- resumo, antecedidas da expressão Palavras-chave:, separadas entre si por
- ponto e finalizadas também por ponto.
-
- \textbf{Palavras-chave}: latex. abntex. editoração de texto.
-\end{resumo}
-
-\begin{resumo}[Abstract]
- \begin{otherlanguage*}{english}
-   This is the english abstract.
- \end{otherlanguage*}
-\end{resumo}
-
+\input{files/resumo.tex}
 
 \pdfbookmark[0]{\listfigurename}{lof}
 \listoffigures*
@@ -368,17 +224,7 @@ Advisor: Luiz Max Carvalho}
 \listoftables*
 \cleardoublepage
 
-\begin{siglas}
-  \item[ABNT] Associação Brasileira de Normas Técnicas
-  \item[abnTeX] ABsurdas Normas para TeX
-\end{siglas}
-
-\begin{simbolos}
-  \item[$ \Gamma $] Letra grega Gama
-  \item[$ \Lambda $] Lambda
-  \item[$ \zeta $] Letra grega minúscula zeta
-  \item[$ \in $] Pertence
-\end{simbolos}
+\input{files/siglas_simbolos.tex}
 
 }\fi
 
@@ -391,15 +237,7 @@ Advisor: Luiz Max Carvalho}
 % ----------------------------------------------------------
 \textual
 
-\input{files/introduction.tex}
-
-\input{files/bayesian.tex}
-
-\input{files/respodent-driven-sampling.tex}
-
-\input{files/specificity_sensitivity.tex}
-
-\input{files/prevalence.tex}
+\input{files/introducao.tex}
 
 % ----------------------------------------------------------
 % Finaliza a parte no bookmark do PDF
@@ -408,18 +246,19 @@ Advisor: Luiz Max Carvalho}
 % ----------------------------------------------------------
 \phantompart
 
-\input{files/conclusion.tex}
+\input{files/desenvolvimento.tex}
 
-% ----------------------------------------------------------
+\input{files/conclusao.tex}
+
+% -----------------------------------
 % ELEMENTOS PÓS-TEXTUAIS
-% ----------------------------------------------------------
+% -----------------------------------
 \postextual
-% ----------------------------------------------------------
----------------------------------------------------------
-\bibliography{biblio}
+% ----------------------------------
 
-% Consulte o manual da classe abntex2 para orientações sobre o glossário.
-%
+%\bibliography{biblio}
+\printbibliography
+
 %\glossary
 
 % ----------------------------------------------------------
