@@ -77,7 +77,7 @@ transformed data{
     lambda = eigenvalues_sym(quad_form(adj_matrix, diag_matrix(invsqrtD)));
   }
 }
-parameters {^
+parameters {
     real<lower = 0, upper = 1> prev;
     
     vector[n_samples] omega; 
