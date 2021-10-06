@@ -13,7 +13,6 @@ data {
 }
 parameters {
     real<lower = 0, upper = 1> prev;
-
     vector[n_samples] omega_raw;
     real<lower = 0> tau; 
 }

@@ -31,6 +31,9 @@ functions {
       for (i in 1:n) ldet += log1m(rho * lambda[i]);
       return 0.5 * (ldet - (omegat_D * omega - rho * (omegat_W * omega)));
   }
+  real gumbel_type2_lpdf(real tau, real lambda){
+    return -(3/2 * log(tau) + lambda / sqrt(tau)); 
+  }
 } 
 data {
     int<lower = 0> n_samples;
@@ -40,7 +43,8 @@ data {
     real<lower = 0> alpha_p; 
     real<lower = 0> beta_p;
     real<lower = 0> alpha_tau;
-    real<lower = 0> beta_tau; 
+    real<lower = 0> beta_tau;
+    real<lower = 0> lambda_tau; 
     
     matrix<lower = 0, upper = 1>[n_samples, n_samples] adj_matrix; 
     int adj_pairs;
@@ -84,6 +88,7 @@ transformed parameters {
 }
 model {
     tau ~ gamma(alpha_tau, beta_tau);
+    //tau ~ gumbel_type2(lambda_tau);
     
     omega ~ sparse_car(rho, adj_sparse, D_sparse, lambda, n_samples, adj_pairs);
     prev ~ beta(alpha_p, beta_p);
