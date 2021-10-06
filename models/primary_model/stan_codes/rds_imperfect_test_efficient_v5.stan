@@ -18,7 +18,7 @@ functions {
                        int[,] W_sparse, vector D_sparse, vector lambda, int n, int W_n) {
       row_vector[n] omegat_D; // omega' * D
       row_vector[n] omegat_W; // omega' * W
-      real ldet;
+      vector[n] ldet_terms;
     
       omegat_D = (omega .* D_sparse)';
       omegat_W = rep_row_vector(0, n);
@@ -27,9 +27,8 @@ functions {
         omegat_W[W_sparse[i, 2]] = omegat_W[W_sparse[i, 2]] + omega[W_sparse[i, 1]];
       }
     
-      ldet = 0;
-      for (i in 1:n) ldet += log1m(rho * lambda[i]);
-      return 0.5 * (ldet - (omegat_D * omega - rho * (omegat_W * omega)));
+      for (i in 1:n) ldet_terms[i] = log1m(rho * lambda[i]);
+      return 0.5 * (sum(ldet_terms) - (omegat_D * omega - rho * (omegat_W * omega)));
   }
   real gumbel_type2_lpdf(real tau, real lambda){
     return -(3/2 * log(tau) + lambda / sqrt(tau)); 
@@ -78,7 +77,7 @@ transformed data{
     lambda = eigenvalues_sym(quad_form(adj_matrix, diag_matrix(invsqrtD)));
   }
 }
-parameters {
+parameters {point
     real<lower = 0, upper = 1> prev;
     vector[n_samples] omega; 
     real<lower = 0> tau; 
