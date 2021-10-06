@@ -18,21 +18,11 @@ parameters {
     real<lower = 0> tau; 
 }
 transformed parameters {
-    vector[n_samples] theta;
-    vector[n_samples] omega; 
-
-    omega = logit(prev) + (1/tau)^(0.5) * cov_cholesky * omega_raw;
-    
-    for (i in 1:n_samples) {
-        theta[i] = inv_logit(omega[i]);
-    }
 }
 model {
     tau ~ gamma(alpha_tau, beta_tau); 
     omega_raw ~ std_normal();
     prev ~ beta(alpha_p, beta_p);
 
-    for (i in 1:n_samples) {
-       T[i] ~ bernoulli(theta[i]);
-    }
+    T ~ bernoulli_logit(logit(prev) + (1/sqrt(tau)) * cov_cholesky * omega_raw);
 }
