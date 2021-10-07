@@ -31,7 +31,7 @@ functions {
       return 0.5 * (sum(ldet_terms) - (omegat_D * omega - rho * (omegat_W * omega)));
   }
   real gumbel_type2_lpdf(real tau, real lambda){
-    return -(3/2 * log(tau) + lambda / sqrt(tau)); 
+    return -(3.0/2.0 * log(tau) + lambda / sqrt(tau)); 
   }
 } 
 data {
