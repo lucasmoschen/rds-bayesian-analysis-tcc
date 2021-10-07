@@ -24,6 +24,7 @@ chapters:
 - file: appendix
   sections:
   - file: energy
+  - file: gumbel
   - file: gantt_chart
   - file: rascunho
 - file: bibliography

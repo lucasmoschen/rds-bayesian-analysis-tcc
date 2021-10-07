@@ -47,7 +47,9 @@ data {
     
     matrix<lower = 0, upper = 1>[n_samples, n_samples] adj_matrix; 
     int adj_pairs;
-    real<lower = 0, upper = 1> rho;     
+    real<lower = 0, upper = 1> rho;
+
+    int<lower = 0, upper = 1> gumbel_prior;     
 }
 transformed data{
   int adj_sparse[adj_pairs, 2];   // adjacency pairs
@@ -77,7 +79,7 @@ transformed data{
     lambda = eigenvalues_sym(quad_form(adj_matrix, diag_matrix(invsqrtD)));
   }
 }
-parameters {point
+parameters {
     real<lower = 0, upper = 1> prev;
     vector[n_samples] omega; 
     real<lower = 0> tau; 
@@ -86,8 +88,11 @@ transformed parameters {
 
 }
 model {
-    tau ~ gamma(alpha_tau, beta_tau);
-    //tau ~ gumbel_type2(lambda_tau);
+    if (gumbel_prior == 1) {
+       tau ~ gumbel_type2(lambda_tau);
+    } else {
+       tau ~ gamma(alpha_tau, beta_tau);
+    }
     
     omega ~ sparse_car(rho, adj_sparse, D_sparse, lambda, n_samples, adj_pairs);
     prev ~ beta(alpha_p, beta_p);

@@ -42,6 +42,24 @@ class ParameterAlpha:
         
         return obj
 
+    def partial_loss_function(self, alpha34, m1, m2, v1, v2, rho, g, c): 
+
+        alpha3, alpha4 = alpha34[0], alpha34[1]
+        alpha1 = ((m1 + m2 - 1) * alpha3 + m2 * alpha4) / (1 - m1)
+        alpha2 = ((1 - m2) * alpha3 + (m1 - m2) * alpha4) / (1 - m1)
+        alpha_tilde = alpha1 + alpha2 + alpha3 + alpha4
+
+        rho_tilde = (alpha1 * alpha4 - alpha2 * alpha3) / (alpha_tilde * alpha_tilde)
+        rho_tilde /= np.sqrt(m1 * m2 * (1-m1) * (1-m2)) 
+        
+        obj = 0
+        obj += c[0]*g(m1 * (1 - m1) / v1, alpha_tilde)
+        obj += c[1]*g(m2 * (1 - m2) / v2, alpha_tilde)
+        obj += g(rho, rho_tilde)
+        
+        return obj
+
+
     def minimizer(self, m1, m2, v1, v2, rho, 
                   c = [1,1,1,1], 
                   g = 'quadratic', 
@@ -93,6 +111,37 @@ class ParameterAlpha:
         err_v2 = abs(v2 - v1*(1-m2)/(m1*(1 - m1)))/v2
 
         return ((alpha1, alpha2, alpha3, alpha4), v2_hat, err_v2)
+
+    def mix_solver(self, m1, m2, v1, v2, rho, 
+                  c = [1,1], 
+                  g = 'quadratic', 
+                  x0 = (1,1), 
+                  lb = 0): 
+        """
+        It only fixes the means while the others are minimized.
+        """
+        if g == 'relative_quadratic': 
+            g = self.relative_quadratic_error
+        else: 
+            g = self.quadratic_error    
+
+        minimized = minimize(fun = self.partial_loss_function, 
+                             x0 = x0, 
+                             args = (m1, m2, v1, v2, rho, g, c),
+                             bounds = [(lb, np.inf)]*2,
+                             method = 'trust-constr')
+
+        alpha3, alpha4 = minimized.x
+
+        alpha1 = ((m1 + m2 - 1) * alpha3 + m2 * alpha4) / (1 - m1)
+        alpha2 = ((1 - m2) * alpha3 + (m1 - m2) * alpha4) / (1 - m1)
+
+        if alpha1 < 0: 
+            raise Exception('This system does not have a solution since alpha_1 < 0')
+        if alpha2 < 0:
+            raise Exception('This system does not have a solution since alpha_1 < 0')
+            
+        return (alpha1, alpha2, alpha3, alpha4)
 
 class BivariateBeta:
 
