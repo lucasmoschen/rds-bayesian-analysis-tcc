@@ -47,7 +47,7 @@ data {
     
     matrix<lower = 0, upper = 1>[n_samples, n_samples] adj_matrix; 
     int adj_pairs;
-    real<lower = 0, upper = 1> rho;
+    //real<lower = 0, upper = 1> rho;
 
     int<lower = 0, upper = 1> gumbel_prior;     
 }
@@ -83,6 +83,7 @@ parameters {
     real<lower = 0, upper = 1> prev;
     vector[n_samples] omega; 
     real<lower = 0> tau; 
+    real<lower = 0, upper = 1> rho;
 }
 transformed parameters {
 
@@ -93,9 +94,12 @@ model {
     } else {
        tau ~ gamma(alpha_tau, beta_tau);
     }
+
+    rho ~ uniform(0,1);
     
     omega ~ sparse_car(rho, adj_sparse, D_sparse, lambda, n_samples, adj_pairs);
     prev ~ beta(alpha_p, beta_p);
+
 
     T ~ bernoulli_logit(logit(prev) + (1/sqrt(tau)) * omega);
 }
