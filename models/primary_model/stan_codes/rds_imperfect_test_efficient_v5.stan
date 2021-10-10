@@ -33,6 +33,9 @@ functions {
   real gumbel_type2_lpdf(real tau, real lambda){
     return -(3.0/2.0 * log(tau) + lambda / sqrt(tau)); 
   }
+  real inv_gumbel_type2_lpdf(real sigma, real lambda){
+    return -lambda * sigma;
+  }
 } 
 data {
     int<lower = 0> n_samples;
@@ -82,7 +85,8 @@ transformed data{
 parameters {
     real<lower = 0, upper = 1> prev;
     vector[n_samples] omega; 
-    real<lower = 0> tau; 
+    //real<lower = 0> tau; 
+    real<lower = 0> sigma;
     real<lower = 0, upper = 1> rho;
 }
 transformed parameters {
@@ -90,9 +94,10 @@ transformed parameters {
 }
 model {
     if (gumbel_prior == 1) {
-       tau ~ gumbel_type2(lambda_tau);
+       //tau ~ gumbel_type2(lambda_tau);
+       sigma ~ inv_gumbel_type2(lambda_tau);
     } else {
-       tau ~ gamma(alpha_tau, beta_tau);
+       //tau ~ gamma(alpha_tau, beta_tau);
     }
 
     rho ~ uniform(0,1);
@@ -100,10 +105,9 @@ model {
     omega ~ sparse_car(rho, adj_sparse, D_sparse, lambda, n_samples, adj_pairs);
     prev ~ beta(alpha_p, beta_p);
 
-
-    T ~ bernoulli_logit(logit(prev) + (1/sqrt(tau)) * omega);
+    T ~ bernoulli_logit(logit(prev) + sigma * omega);
 }
 generated quantities {
    vector[n_samples] theta; 
-   theta = inv_logit(logit(prev) + (1/sqrt(tau)) * omega);
+   theta = inv_logit(logit(prev) + sigma * omega);
 }

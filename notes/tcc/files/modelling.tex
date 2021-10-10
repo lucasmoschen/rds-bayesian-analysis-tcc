@@ -1,0 +1,632 @@
+\chapter{Modelling}
+
+Firstly, we make some assumptions to simplify the modeling:
+
+\begin{assumption}  
+  For a Bayesian modeling, we assume each model's parameter has a probability distribution that incorporates the researcher's uncertainty about it. 
+\end{assumption}
+
+\begin{assumption}
+  For each individual, we observe $k$ regressors that are possible
+  risk factors represented by the vector $\x_i \in \R^{k}$ of the $i^{th}$
+  individual. We assume that the probability $\theta_i$ of the $i^{th}$ individual having been exposed
+  to the disease dependes on the prevalence $\theta$ and $\x_i$. The
+  probability of positive test in the $i^{th}$ individual is denoted by $p_i$. Therefore, the sequences $\{Y_i\}_{i \in I}$ and $\{T_i\}_{i \in I}$ are not
+  identically distributed anymore.
+\end{assumption}
+
+\begin{assumption}
+  Sensitivity and specificity have the same distribution for all
+  individuals and it only depends on the test used to diagnose. 
+\end{assumption}
+
+From above, we develop three different models.
+
+\section{Perfect tests}
+
+The first model supposes the samples are independent and the test is perfect,
+which means that $\theta_i = p_i$ for all $i$. Therefore it only considers the risk factors $\x_i$. 
+
+\begin{equation}
+  \begin{aligned}
+    T_i &\sim \bern(\theta_i), \\
+    g(\theta_i) &= g(\theta) + \x_i^T\beta, 
+  \end{aligned}  
+\end{equation}
+where $v^T$ denotes the transpose of $v$, and $g(\cdot)$ is a link function.
+The parameter $\beta \in \R^{k}$ is the risk effects. For Bayesian inference, priors on
+$\beta$ and $\theta$ must be included. We use $\beta ~ \sim \N(\mu, \Sigma)$
+and $\theta \sim \betadist(a^{p}, b^p)$, where $\mu
+\in \R^{k}$, $\Sigma \in \R^{k\times k}$ symmetric positive-definite matrix,
+$a^p \in \R_{++}$, and $b^p \in \R_{++}$
+are fixed hyperparameters. 
+
+\begin{remark}
+  If the risk factors are zero, i.e $\x_i = 0$, the probability of the
+  $i^{th}$ having been exposed is the prevalence $\theta$, which means that in
+  a population with no risk effects, the probability of a person has the
+  disease is exactly the proportion in this population. 
+\end{remark}
+
+\subsection{Identifiability}
+
+\subsection{Experiments}
+
+\url{https://github.com/lucasmoschen/rds-bayesian-analysis/blob/main/exercises/primary_model/model_experiments.ipynb}
+
+\section{Imperfect tests}
+
+This model includes the sensitivity and specificity of the diagnostic test. 
+
+\begin{equation}
+  \begin{aligned}
+    T_i &\sim \bern(p_i) \\
+    p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
+    g(\theta_i) &= g(\theta) + \x_i^T\beta,  \\
+    \beta &\sim \N(\mu, \Sigma), \\ 
+    \theta &\sim \betadist(a^p, b^p) \\
+    \gamma_s &\sim \betadist(a^s, b^s), \\
+    \gamma_e &\sim \betadist(a^e, b^e), \\    
+  \end{aligned}  
+\end{equation}
+where $a^p, a^s, a^e, b^p, b^s, b^e \in \R_{++}$ are fixed hyperparameters.
+This model does not include prior knowledge about the correlation between
+specificity and sensitivity. 
+
+\subsection{Experiments}
+
+Consider the following model \cite{gelman2020bayesian}:
+\begin{gather*}
+  y \sim \operatorname{Binomial}(n, p), \\
+  p = \theta\gamma_s + (1- \theta)(1-\gamma_e), 
+\end{gather*}
+such that $y$ is the number of positive tests in a population of size $n$. In
+a Bayesian paradigm, a prior $\pi(\theta, \gamma_e, \gamma_s)$ must be
+specified. For instance, $\pi(\theta, \gamma_e, \gamma_s) =
+\pi(\theta)\pi(\gamma_e, \gamma_s)$ and $\theta \sim
+\operatorname{Beta}(\alpha_{\theta}, \beta_{\theta})$, in which
+$\alpha_{\theta}$ and $\beta_{\theta}$ are positive hyperparameters. Since the
+three parameters $\theta, \gamma_e$, and $\gamma_s$ are not jointly
+identifiable only from $y$, prior information on $\gamma_e$ and $\gamma_s$
+need be added. For this, 
+\begin{gather*}
+  y_{negative} \sim \operatorname{Binomial}(n_{\gamma_e}, \gamma_e), \\
+  y_{positive} \sim \operatorname{Binomial}(n_{\gamma_s}, \gamma_s),
+\end{gather*}
+such that $y_{negative}$ are negative tests on known negative subjects
+(by a gold standard for example) and $y_{positive}$ are positive tests on
+known positive. When considering separated experiments for specificity and
+sensitivity, there is
+no information about their correlation, which is the case for our model. Then we define the the prior distributions
+\begin{gather*}
+  \gamma_e \sim \operatorname{Beta}(a_e, b_e), \\
+  \gamma_s \sim \operatorname{Beta}(a_s, b_s), \\
+  \theta \sim \operatorname{Beta}(a_{\theta}, b_{\theta}).
+\end{gather*} 
+Using data from \cite{bennett2020estimating} about COVID-19 seroprevalence in
+Santa Clara:  
+\begin{align*}
+  y/n &= 50/3330,\\
+y_{negative}/n_{\gamma_e} &= 399/401, \\
+y_{positive}/n_{\gamma_s} &= 103/122, 
+\end{align*}
+we fit the model and obtain the results showed in Figure
+\ref{fig:results-posterior-model1}. All the codes were done in {\em Stan} and
+{\em PyStan}.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{../../images/model1_gelman_figure_english.png}
+  \caption{Scatter plot of posterior simulations of prevalence against
+  specificity and histogram of posterior simulations of the prevalence.}
+  \label{fig:results-posterior-model1}
+\end{figure}
+
+Other approach considers more than one study about specificity and
+sensitivity. A {\em hierarchical partial pooling} model for these studies
+can be done in the following way: 
+\begin{gather*}
+    \operatorname{logit}(\gamma_s^j) \sim \operatorname{Normal}(\mu_{\gamma_s}, \sigma_{\gamma_s}), \\
+    \operatorname{logit}(\gamma_e^j) \sim \operatorname{Normal}(\mu_{\gamma_e}, \sigma_{\gamma_e}), 
+\end{gather*}
+for $1 \le j \le K$ studies, such that the first study is the considered one.
+Partial pooling because the parameters can be sampled from the same
+distribution. Hierarchical because the parameters of this distribution have
+its one prior distributions. For instance, 
+\begin{align*}
+    \mu_{\gamma_s} &\sim N(0, 10), \\ 
+    \mu_{\gamma_e} &\sim N(0, 10), \\
+    \sigma_{\gamma_s} &\sim N^+(0,1), \text{ and } \\
+    \sigma_{\gamma_e} &\sim N^+(0,1),
+\end{align*}
+where $N^+(a,b)$ is the truncated normal distribution in $[0,+\infty)$. All
+the codes available at Github
+repository\footnote{\url{https://github.com/lucasmoschen/rds-bayesian-analysis}}.
+
+Finally, we studied a joint distribution for specificity and sensitivity, a
+possible bivariate beta distribution built in \cite{olkin2015constructions}.
+This distribution is derived from a Dirichlet distribution of order four. Let $U = (U[1],...,U[4]) \sim \operatorname{Dirichlet}(\boldsymbol{\alpha})$, where
+$\boldsymbol{\alpha} \in \mathbb{R}^4_+$. Therefore, defining $X = U[1] +
+U[2]$ and $Y = U[1] + U[3]$, we will have that $(X,Y)$ has a well-defined
+probability distribution in
+$[0,1] \times [0,1]$ such that $X$ and $Y$ have marginally beta distributions,
+and they have correlation in all space. Depending on the definition of
+$\boldsymbol{\alpha}$, the correlation between the variables range from -1 and
+1. Figure \ref{fig:beta-bivariate} shows some examples of this construction. 
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\textwidth]{beta-distributions.png}
+    \caption{Different choices of $\alpha$ and the joint distribution of the variables $X$ and $Y$.}
+    \label{fig:beta-bivariate}
+\end{figure}
+
+\section{Imperfect tests and respondent-driven sampling}
+
+For now, we consider the network dependence induced by the RDS with no
+associated model. Therefore, we treat it as a random effect for
+each individual. Conditionally autoregressive (CAR) models in the
+Gaussian case are used. Let $[\tilde{Q}]_{ij} = \tilde{q}_{ij}$ be a fixed matrix which measures the distance between $i$
+and $j$, and $\tilde{q}_{i+} = \sum_{j} \tilde{q}_{ij}$. In general, we use
+$$
+\tilde{q}_{ij} = \begin{cases}
+  1, &\text{if } i \text{ recruited } j \text{ or the contrary} \\
+  0, &\text{otherwise.} 
+\end{cases}
+$$
+Next we define the scaled adjacency matrix $Q = D^{-1}\tilde{Q}$, such that $D$
+is a diagonal matrix with $D_{ii} = \tilde{q}_{i+}$. Finally let $|\rho| < 1$ be a
+parameter to controls the dependence between neighbors. Hence, we specify the
+model as follows:
+
+\begin{equation}
+  \begin{aligned}
+    T_i &\sim \bern(p_i) \\
+    p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
+    g(\theta_i) &= g(\theta) + \x_i^T\beta + \omega_i,  \\
+    \omega_i|\{\omega_j\}_{j\neq i}, \tau &\sim \N\left(\rho\sum_j q_{ij}\omega_j, \tau^{-1}/\tilde{q}_{i+}\right) \\
+    \beta &\sim \N(\mu, \Sigma), \\ 
+    \theta &\sim \betadist(a^p, b^p) \\
+    \gamma_s &\sim \betadist(a^s, b^s), \\
+    \gamma_e &\sim \betadist(a^e, b^e), \\  
+    \tau &\sim \operatorname{Gamma}(a^{\tau}, b^{\tau}).
+  \end{aligned}  
+\end{equation}
+By Brook's Lemma \cite[]{brook1964distinction}, the joint distribution of
+$\omega$ can be specified as 
+$$
+\omega \sim \N\left(0, \left[\tau (D - \rho \tilde{Q})\right]^{-1}\right).
+$$
+
+\subsection{Exponential Random Graph Model (ERGM)}
+
+RDS has the constraint of being without replacement. For that reason, we do
+not observe all links among the samples \cite[]{crawford2016}. Considering the
+model developed by Crawford, we can model the
+matrix $Q$ as {\em Exponential Random Graph Model} (ERGM). Define the
+following 
+
+\begin{enumerate}
+  \item $\boldsymbol{s} = \tril(QC)^T \boldsymbol{1} + C^Tu$, such that $Q$ is the
+  adjacency matrix of the recruited subjects, $C$ is the {\em Coupon Matrix},
+  $u$ the vector of the number of edge ends belonging to each vertex
+  (in the order of recruitment) that are not connected to any other sampled
+  vertex, and $\tril(M)$ the lower triangle of $M$. 
+
+  \item $T(Q) = -\lambda \boldsymbol{s}$, such that $\lambda$ is the rate of
+  the recruitment time. 
+
+  \item $V(Q) = \sum_{k \text{ is not seed}} \log(\lambda \boldsymbol{s}_k)$
+  
+  \item $w = (0, t_2 - t_1, ..., t_n - t_{n-1})$ is the vector of the waiting times between
+  recruitments.  
+\end{enumerate}
+
+Therefore $\Pr(Q|w) \propto \exp[T(Q)^Tw + V(Q)]$. With that, the model
+becomes 
+
+\begin{equation}
+  \begin{aligned}
+    T_i &\sim \bern(p_i) \\
+    p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
+    g(\theta_i) &= g(\theta) + \x_i^T\beta + \omega_i,  \\
+    \omega_i|\{\omega_j\}_{j\neq i}, \tau &\sim \N\left(\rho\sum_j q_{ij}\omega_j/q_{i+}, \tau^2/q_{i+}\right) \\
+    Q|w &\propto \exp[T(Q)^Tw + V(Q)] \\
+    \lambda &\sim \Gamma(a^{\lambda}, b^{\lambda}), \\ 
+    \beta &\sim \N(\mu, \Sigma), \\ 
+    \theta &\sim \betadist(a^p, b^p) \\
+    \gamma_s &\sim \betadist(a^s, b^s), \\
+    \gamma_e &\sim \betadist(a^e, b^e), \\  
+    \tau &\sim \N^+(0,\sigma^2_{\tau}).
+  \end{aligned}  
+\end{equation}
+The problem with this model is that we are assigning a posterior distribution
+for $Q$.
+
+\section{Sensitivity and specificity}
+
+In this section, we shall describe how to use the Bivariate Beta
+\cite[]{olkin2015constructions} to model the correlation between specificity
+and sensitivity.
+
+\subsection{Bivariate Beta construction}
+
+Let $U = (U_1, U_2, U_3, U_4) \sim
+\operatorname{Dirichlet}(\boldsymbol{\alpha})$, where $\boldsymbol{\alpha} =
+(\alpha_1, \alpha_2, \alpha_3, \alpha_4)$ with $\alpha_i > 0, i = 1,\dots,4$
+and $U_4 = 1 - U_1 + U_2 + U_3$. The joint density of $U$ with respect to the
+Lebesgue measure is given by
+\begin{equation}
+  f_U(u_1, u_2, u_3) = \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}u_3^{\alpha_3-1}(1-u_1-u_2-u_3)^{\alpha_4-1}, 
+\end{equation}
+when $u_i \in [0,1], i = 1,2,3$, $u_1 + u_2 + u_3 \le 1$, and $0$ otherwise.
+The normalizing constant is, for $v \in \R^n$,
+$$B(v) = \frac{\prod_{i=1}^n \Gamma(v_i)}{\Gamma\left(\sum_{i=1}^n v_i\right)}.$$ 
+
+\begin{definition}
+  Let 
+  \begin{equation}
+    X = U_1 + U_2 \text{ and } Y = U_1 + U_3.
+  \end{equation} 
+    The distribution of $(X,Y)$ is {\em Bivariate Beta} with parameters
+    $\boldsymbol{\alpha}$. 
+\end{definition}
+
+\begin{proposition}
+  The marginal distribution of $X$ is Beta with parameters $\alpha_1 +
+  \alpha_2$ and $\alpha_3 + \alpha_4$. Similarly, the marginal distribution of
+  $Y$ is Beta with parameters $\alpha_1 + \alpha_3$ and $\alpha_2 + \alpha_4$.
+\end{proposition}
+
+\begin{proof}
+  First we derive the probability density of $(U_1, U_2)$ with respect to the
+  Lebesgue measure. 
+  \begin{equation}
+    \label{eq:dist-u1-u2}
+    \begin{split}
+      f_{U_1, U_2}(u_1, u_2) &= \int_{-\infty}^{\infty} f_{U}(u_1,u_2,u_3) \, du_3 \\ 
+      &= \frac{1}{B(\boldsymbol{\alpha})}\int_0^1 u_1^{\alpha_1-1}u_2^{\alpha_2-1}u_3^{\alpha_3-1}(1-u_1-u_2-u_3)^{\alpha_4-1} \, du_3 \\
+      &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}\int_0^1 u_3^{\alpha_3-1}(1-u_1-u_2-u_3)^{\alpha_4-1} \, du_3.
+    \end{split}
+  \end{equation}
+  Let $u_3 = (1 - u_1 - u_2)z$. Then,
+  \begin{equation}
+    \begin{split}
+      f_{U_1, U_2}(u_1, u_2) &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}\int_0^1 (1-u_1-u_2)^{\alpha_3-1}z^{\alpha_3-1}(1-u_1-u_2)^{\alpha_4}(1-z)^{\alpha_4-1} \, dz. \\
+      &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}(1-u_1-u_2)^{\alpha_3+\alpha_4-1}\int_0^1 z^{\alpha_3-1}(1-z)^{\alpha_4-1} \, dz. \\
+      &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}(1-u_1-u_2)^{\alpha_3+\alpha_4-1}\frac{\Gamma(\alpha_3)\Gamma(\alpha_4)}{\Gamma(\alpha_3 + \alpha_4)} \\
+      &= \frac{1}{B(\alpha_1, \alpha_2, \alpha_3+\alpha_4)}u_1^{\alpha_1-1}u_2^{\alpha_2-1}(1-u_1-u_2)^{\alpha_3+\alpha_4-1}.
+    \end{split}
+  \end{equation}
+
+We conclude that
+$$(U_1, U_2, 1-U_1-U_2) \sim
+\operatorname{Dirichlet}(\alpha_1,\alpha_2,\alpha_3+\alpha_4).$$
+
+Define 
+$$
+H(v) = \begin{bmatrix}
+  1 & 0 \\ 1 & 1
+\end{bmatrix}v, \text{ for } v \in \R^2.
+$$
+
+Then $(U_1, X) = H(U_1, U_2)$ and $H(\cdot)$ is bijective and differentiable function. By the Change of Variable Formula, 
+\begin{equation}
+  \begin{split}
+    f_{U_1, X}(u_1, x) &= f({H^{-1}(u_1,x)})\bigg|\det\left[\frac{dH^{-1}(v)}{dv}\bigg|_{v=(u_1,x)}\right]\bigg| \\ 
+    &= f(u_1, x - u_1) = \frac{1}{B(\alpha_1, \alpha_2, \alpha_3+\alpha_4)}u_1^{\alpha_1-1}(x-u_1)^{\alpha_2-1}(1-x)^{\alpha_3+\alpha_4-1}, 
+  \end{split}
+\end{equation}
+where $(u_1, x)$ belongs to the triangle defined by the points (0,0),
+(0,1), and (1,1). The distribution of $X$ for $x \in [0,1]$ is
+\begin{equation}
+  \begin{split}
+    f_X(x) &= \frac{1}{B(\alpha_1, \alpha_2, \alpha_3+\alpha_4)}\int_{0}^{x} u_1^{\alpha_1-1}(x-u_1)^{\alpha_2-1}(1-x)^{\alpha_3+\alpha_4-1} \, du_1 \\
+    &= \frac{1}{B(\alpha_1, \alpha_2, \alpha_3+\alpha_4)}(1-x)^{\alpha_3+\alpha_4-1} \int_{0}^{x} u_1^{\alpha_1-1}(x-u_1)^{\alpha_2-1} \, du_1. \\
+    &= \frac{1}{B(\alpha_1, \alpha_2, \alpha_3+\alpha_4)}(1-x)^{\alpha_3+\alpha_4-1} \int_{0}^{x} x^{\alpha_1-1} \left(\frac{u_1}{x}\right)^{\alpha_1-1}x^{\alpha_2 - 1}\left(1-\frac{u_1}{x}\right)^{\alpha_2-1} \, du_1. \\
+  \end{split}
+\end{equation}
+
+Setting $u = u_1/x$ (if $x = 0, f_X(x) = 0$, then suppose $x > 0$), we have, 
+\begin{equation}
+  \begin{split}
+    f_X(x) &= \frac{1}{B(\alpha_1, \alpha_2, \alpha_3+\alpha_4)}(1-x)^{\alpha_3+\alpha_4-1} x^{\alpha_1+\alpha_2-1} \int_{0}^{1} u^{\alpha_1-1}(1-u)^{\alpha_2-1} \, du. \\
+    &= \frac{1}{B(\alpha_1, \alpha_2, \alpha_3+\alpha_4)}(1-x)^{\alpha_3+\alpha_4-1} x^{\alpha_1+\alpha_2-1} B(\alpha_1, \alpha_2)\\
+    &= \frac{1}{B(\alpha_1 + \alpha_2, \alpha_3+\alpha_4)}(1-x)^{\alpha_3+\alpha_4-1} x^{\alpha_1+\alpha_2-1}\\
+  \end{split}
+\end{equation}
+Therefore $X \sim \betadist(\alpha_1+\alpha_2, \alpha_3+\alpha_4)$. Similarly $Y \sim \betadist(\alpha_1+\alpha_3, \alpha_2 + \alpha_4)$.
+
+\end{proof}
+
+\begin{proposition}
+  The joint density of $(X,Y)$ with respect to the Lebesgue measure is
+  given by 
+  \begin{equation}
+    f_{X,Y}(x,y) = \frac{1}{B(\boldsymbol{\alpha})}\int_{\Omega} u_1^{\alpha_1 - 1}(x - u_1)^{\alpha_2 -1}(y-u_1)^{\alpha_3-1}(1-x-y+u_1)^{\alpha_4-1} \, du_1,
+  \end{equation}
+  where 
+  $$
+  \Omega = (\max(0, x+y-1), \min(x,y)).
+  $$
+\end{proposition}
+
+\begin{proof}
+  Note that
+  $$
+  \begin{bmatrix}
+    U_1 \\ X \\ Y
+  \end{bmatrix}  = \begin{bmatrix}
+    1 & 0 & 0 \\
+    1 & 1 & 0 \\
+    1 & 0 & 1
+  \end{bmatrix}\begin{bmatrix}
+    U_1 \\ U_2 \\ U_3
+  \end{bmatrix}, 
+  $$
+  where the linear function is bijective and differentiable function, such
+  that the determinant of the derivative is 1. By the Change of Variable
+  Formula, 
+  \begin{equation}
+    \begin{split}
+      f_{U_1,X,Y}(u_1,x,y) &= f_{U_1,U_2,U_3}(u_1, x - u_1, y - u_2) \\ 
+      &= \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}(x-u_1)^{\alpha_2-1}(y-u_1 )^{\alpha_3-1}(1-x-y+u_1)^{\alpha_4-1},
+    \end{split}
+  \end{equation}
+  where $0 \le u_1 \le x, u_1 \le y$, and $0 \le 1 - x - y + u_1$.  
+  Hence,
+  \begin{equation}
+      \label{eq:dist-X-Y}
+      f_{X,Y}(x,y) = \frac{1}{B(\boldsymbol{\alpha})}\int_{\Omega} u_1^{\alpha_1-1}(x-u_1)^{\alpha_2-1}(y-u_1)^{\alpha_3-1}(1-x-y+u_1)^{\alpha_4-1} \, du_1,
+  \end{equation}
+  such that $\Omega = \{u_1 : \max(0, x + y -1) < u_1 < \min(x,y)\}$.
+\end{proof}
+
+\begin{proposition}
+  The covariance between $X$ and $Y$ is 
+  $$\cov(X,Y) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1\alpha_4 - \alpha_2\alpha_3).$$
+\end{proposition}
+
+\begin{proof}
+
+  Let $\tilde{a} = \sum_i \alpha_i$. The covariance between $U_i$ and $U_j$ is \cite[]{lin2016dirichlet} 
+\begin{equation}
+  \cov(U_i, U_j) = - \frac{\alpha_i\alpha_j}{\tilde{\alpha}^2(\tilde{\alpha}+1)}, i,j = 1,...,4, i \neq j
+\end{equation} 
+and the variance of $U_i$ is 
+\begin{equation}
+  \var(U_i) = \frac{\alpha_i(\tilde{\alpha}-\alpha_i)}{\tilde{\alpha}^2(\tilde{\alpha}+1)},
+\end{equation}
+since $U_i \sim \operatorname{Beta}(\alpha_i, \tilde{\alpha} -\alpha_i)$.
+Therefore 
+\begin{equation}
+  \cov(X,Y) = \cov(U_1+U_2, U_1+U_3) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1\alpha_4 - \alpha_2\alpha_3)
+\end{equation}
+  
+\end{proof}
+
+The main moments of $X$ and $Y$ are the following 
+\begin{align*}
+    \ev(X) &= \ev(U_1 + U_2) = \frac{\alpha_1+\alpha_2}{\alpha_1+\alpha_2+\alpha_3+\alpha_4} \\
+    \ev(Y) &= \ev(U_1 + U_3) = \frac{\alpha_1+\alpha_3}{\alpha_1+\alpha_2+\alpha_3+\alpha_4} \\
+    \var(X) &= \cov(U_1+U_2, U_1+U_2) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1+\alpha_2)(\alpha_3 + \alpha_4) \\
+    \var(Y) &= \cov(U_1+U_3, U_1+U_3) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1+\alpha_3)(\alpha_2 + \alpha_4)  \\  
+    \cor(X,Y) &= \frac{\cov(X,Y)}{\sqrt{\var(X)\var(Y)}} = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\sqrt{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}}
+\end{align*}
+
+The original paper has a mistake in page
+6\footnote{\url{https://www.wolframalpha.com/input/?i=simplify+\%28a\%28a\%2B1\%29+\%2B+a*b+\%2B+a*c+\%2B+b*c\%29\%2F\%28\%28a\%2Bb\%2Bc\%2Bd\%29*\%28a\%2Bb\%2Bc\%2Bd\%2B1\%29\%29+-+\%28a+\%2B+b\%29*\%28a\%2Bc\%29\%2F\%28a\%2Bb\%2Bc\%2Bd\%29\%5E2+}}.
+
+\subsection{Comments about integration}
+
+The density of $(X,Y)$ with respect to the Lebesgue measure is $f_{X,Y}(x,y)$
+as in equation \eqref{eq:dist-X-Y}. Therefore it can be undefined in sets of
+null Lebesgue measure in $\R^2$. This section
+aims to find them to help writing the function properly. If $\alpha_i \ge 1,
+\, i = 1,...,4$, the integral is clearly well defined for every $x,y \in [0,1]$. Let $0 < \alpha_2 = \alpha_3 = a \le 0.5$ and $x = y < 0.5$. Then
+\begin{equation*}
+  \begin{split}
+    f_{X,Y}(x,y) &= \frac{1}{B(\boldsymbol{\alpha})}\int_{0}^x u_1^{\alpha_1-1}(x-u_1)^{a-1}(x-u_1)^{a-1}(1-2x+u_1)^{\alpha_4-1} \, du_1 \\
+    &= \frac{1}{B(\boldsymbol{\alpha})}\int_{0}^{x/2} u_1^{\alpha_1-1}(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1 + \\
+    &~~~+ \frac{1}{B(\boldsymbol{\alpha})}\int_{x/2}^x u_1^{\alpha_1-1}(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1
+  \end{split}
+\end{equation*}
+
+Note that the first integral is well defined and non-negative. If $\alpha_1 \ge 1$, 
+\begin{equation*}
+  \begin{split}
+    \int_{0}^{x/2} u_1^{\alpha_1-1}&(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1 \\
+    &\le \int_{0}^{x/2} \frac{x}{2}^{\alpha_1-1}\left(\frac{x}{2}\right)^{2a-2}\max\left(\left(1-\frac{3}{2}x\right)^{\alpha_4-1}, (1-2x)^{\alpha_4-1}\right) \, du_1 < +\infty.
+  \end{split}
+\end{equation*}
+
+If $0 < \alpha_1 < 1$, 
+\begin{equation*}
+  \begin{split}
+    \int_{0}^{x/2} u_1^{\alpha_1-1}&(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1 \\
+    &= \lim_{t\to 0^+}\int_{t}^{x/2} u_1^{\alpha_1-1}\left(\frac{x}{2}\right)^{2a-2}\max\left(\left(1-\frac{3}{2}x\right)^{\alpha_4-1}, (1-2x)^{\alpha_4-1}\right) \, du_1 \\ 
+    &= K(x)\lim_{t\to 0^+}\int_{t}^{x/2} u_1^{\alpha_1-1}\, du_1 \\ 
+    &= \frac{K(x)}{\alpha_1}\lim_{t\to 0^+} \, \left[\left(\frac{x}{2}\right)^{\alpha_1} - t^{\alpha_1}\right] < +\infty .\\ 
+  \end{split}
+\end{equation*}
+where $K(x)$ is a function of $x$. Moreover, since the integrand is non-negative, so is the integral. On the
+other hand, the second integral is not defined: 
+\begin{equation*}
+  \begin{split}
+    \int_{x/2}^{x} u_1^{\alpha_1-1}&(x-u_1)^{2a-2}(1-2x+u_1)^{\alpha_4-1} \, du_1 \\
+    &\ge \int_{x/2}^x \min\left(\left(\frac{x}{2}\right)^{\alpha_1-1}, x^{\alpha_1-1}\right)(x-u_1)^{2a-2}\min\left(\left(1-\frac{3}{2}x\right)^{\alpha_4-1}, (1-x)^{\alpha_4-1}\right) \, du_1 \\
+    &= K'(x) \int_{0}^{x/2} v^{2a-2} \, dv \\ 
+    &= \begin{cases}
+      \dfrac{K'(x)}{2a-1} \lim_{t \to 0^+} \left[(x/2)^{2a-1} - t^{2a-1}\right] &\text{ if } a < 0.5 \\ 
+      K'(x) \lim_{t \to 0^+} \left[\log(x/2) - \log(t)\right] &\text{ if } a = 0.5
+    \end{cases} \\
+    &\to +\infty.
+  \end{split}
+\end{equation*}
+
+Based on this divergence, we conclude that if $0 < \alpha_2 = \alpha_3 \le 0.5$
+and $x = y < 0.5$, $f_{X,Y}(x,y)$ is not defined. Note that if $x = y \ge
+0.5$, divergence problems still happens, since the problems appear when $u_1$
+converges to $x$. Similar calculations show
+that if $x + y = 1$ and $0 < \alpha_1 = \alpha_4 \le 0.5$, the density is also
+not defined. More generally, $f_{X,Y}(x,y)$ is not defined if 
+
+\begin{enumerate}
+  \item $\alpha_1 + \alpha_4 \le 1$ and $x + y = 1$. 
+  \item $\alpha_2 + \alpha_3 \le 1$ and $x = y$. 
+\end{enumerate}
+
+\subsection{Specifying parameters
+\texorpdfstring{$\boldsymbol{\alpha}$}{alpha}}
+
+Suppose that the researcher has knowledge about the main moments of $X$ and
+$Y$, such that $\ev(X) = m_1 \in (0,1), \ev(Y) = m_2 \in (0,1), \var(X) = v_1
+\in (0, 1),$ and $\var(Y) =
+v_2 \in (0,1)$. Notice that $v_1 + m_1^2 = \var(X_1) + \ev[X_1]^2 = \ev[X_1^2]$ and
+$$
+\ev[X_1^2] - \ev[X_1] = \frac{(\alpha_1 + \alpha_2 + 1)(\alpha_1 + \alpha_2)}{(\tilde{\alpha} + 1)\tilde{\alpha}} - \frac{\alpha_1 + \alpha_2}{\tilde{\alpha}} = -\frac{(\alpha_1 + \alpha_2)(\alpha_3 + \alpha_4)}{\tilde{\alpha}(\tilde{\alpha}+1)} < 0, 
+$$
+that is, $v_1 + m_1^2 - m_1 < 0 \implies v_1 < m_1 - m_1^2$ and similarly,
+$v_2 < m_2 - m_2^2$. After fixing these quantities, we will have a non-linear system with four equations and four
+unknown variables. Hence, we want to solve the following 
+\begin{equation}
+  \label{eq:system-moments-alpha}
+  \begin{cases}
+    m_1 = \dfrac{\alpha_1+\alpha_2}{\tilde{\alpha}} \\
+    m_2 = \dfrac{\alpha_1+\alpha_3}{\tilde{\alpha}} \\ 
+    v_1 = \dfrac{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)}{\tilde{\alpha}^2(\tilde{\alpha}+1)} = m_1\dfrac{\alpha_3+\alpha_4}{\tilde{\alpha}(\tilde{\alpha}+1)} \\
+    v_2 = \dfrac{(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}{\tilde{\alpha}^2(\tilde{\alpha}+1)} = m_2\dfrac{\alpha_2+\alpha_4}{\tilde{\alpha}(\tilde{\alpha}+1)}.
+  \end{cases}
+\end{equation}
+
+\begin{proposition}
+  System \eqref{eq:system-moments-alpha} has a solution if, and only if, the relation
+  \begin{equation}
+    \label{eq:v2}
+    v_2 = \frac{(1 - m_2)\tilde{\alpha}}{\tilde{\alpha}(\tilde{\alpha}+ 1)} = \frac{1 - m_2}{\frac{m_1 - m_1^2}{v_1}} = \frac{v_1(1 - m_2)}{m_1(1-m_1)},
+  \end{equation}
+  is satisfied. When there is a solution, there will be
+  infinitely many and they all lay in the ray 
+  $$
+\mathcal{L} = \{(1,-1,-1,1)\alpha_4 + k : \alpha_4 > 0\}, 
+$$
+such that $k = \left((m_1 + m_2 - 1)\tilde{\alpha}, (1-m_2)\tilde{\alpha},
+(1-m_1)\tilde{\alpha}, 0\right)$. 
+\end{proposition}
+
+\begin{proof}
+
+The first two equations of the system \eqref{eq:system-moments-alpha} can be
+rewritten as a linear system:
+\begin{align*}
+  (m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\alpha_4 &= 0 \\
+  (m_2 - 1)\alpha_1 + m_2\alpha_2 + (m_2-1)\alpha_3 + m_2\alpha_4 &= 0,   
+\end{align*}
+which is equivalent to 
+\begin{align*}
+  \alpha_1 + \alpha_2 + \frac{m_1}{m_1-1}\alpha_3 + \frac{m_1}{m_1-1}\alpha_4 &= 0 \\
+  \alpha_2 + \frac{1-m_2}{m_1-1}\alpha_3 + \frac{m_1-m_2}{m_1-1}\alpha_4 &= 0.
+\end{align*}
+Then, we can write $\alpha_1$ and $\alpha_2$ as functions of $\alpha_3$ and
+$\alpha_4$:
+\begin{align}
+  \alpha_1 &= \frac{m_1+m_2-1}{1-m_1}\alpha_3 + \frac{m_2}{1-m_1}\alpha_4 \\
+  \alpha_2 &= \frac{1-m_2}{1-m_1}\alpha_3 + \frac{m_1-m_2}{1-m_1}\alpha_4.
+\end{align}
+With that expression, let $\alpha_1 = a_3\alpha_3 + a_4\alpha_4$ and $\alpha_2
+= b_3\alpha_3 + b_4\alpha_4$. Denote $c_3 = a_3 + b_3 + 1$ and $c_4 = a_4 +
+b_4 + 1$. Then, consider the third equation of the system
+\eqref{eq:system-moments-alpha}, 
+\begin{equation*}
+  \begin{split}
+    &\frac{v_1}{m_1} = \frac{\alpha_3+\alpha_4}{\tilde{\alpha}(\tilde{\alpha} +1)} = \frac{\alpha_3+\alpha_4}{(\alpha_1+\alpha_2+\alpha_3+\alpha_4)^2 + (\alpha_1+\alpha_2+\alpha_3+\alpha_4)} \\
+     &\implies \frac{v_1}{m_1}(\alpha_1 + \alpha_2 + \alpha_3 + \alpha_4)^2 = \alpha_3 + \alpha_4 - \frac{v_1}{m_1}(\alpha_1 + \alpha_2 + \alpha_3 + \alpha_4) \\
+    &\implies \frac{v_1}{m_1}(c_3\alpha_3 + c_4\alpha_4)^2 = \left(1-\frac{v_1}{m_1}c_3\right)\alpha_3 + \left(1-\frac{v_1}{m_1}c_4\right)\alpha_4 \\
+    &\implies \frac{v_1c_3^2}{m_1}\alpha_3^2 + \left(\frac{2v_1c_3c_4\alpha_4+v_1c_3}{m_1} - 1\right)\alpha_3 + \left(\frac{v_1c_4^2\alpha_4^2 + v_1c_4\alpha_4}{m_1} - \alpha_4\right) = 0 \\ 
+    &\implies v_1c_3^2\alpha_3^2 + (2v_1c_3c_4\alpha_4+v_1c_3 - m_1)\alpha_3 + (v_1c_4^2\alpha_4^2 + v_1c_4\alpha_4 - m_1\alpha_4) = 0.
+  \end{split}
+\end{equation*}
+Using a Computer Algebra System (CAS) with the Python library SymPy, the above
+expression can be simplified as follows:
+$$
+v_1\alpha_3^2 + \left(v_1(1-m_1) + 2v_1\alpha_4 - m_1(1-m_1)^2\right)\alpha_3 - \alpha_4m_1(1-m_1)^2 + \alpha_4v_1(1 - m_1) + v_1\alpha_4^2 = 0.
+$$
+This way, the solutions of the above equation are function of $\alpha_4$.
+Therefore, after solving the equations, we can use the last equation of the
+system \eqref{eq:system-moments-alpha} as a function on of $\alpha_4$. Let, 
+$$
+\Lambda = \left(v_1(1-m_1) + v_1\alpha_4 - m_1(1-m_1)^2\right).
+$$
+Then, 
+\begin{equation*}
+  \begin{split}
+    \Delta &= \left(v_1(1-m_1) + 2v_1\alpha_4 - m_1(1-m_1)^2\right)^2 - 4v_1(\alpha_4v_1(1 - m_1) - \alpha_4m_1(1-m_1)^2 + v_1\alpha_4^2), \\
+    &= \left(\Lambda + v_1\alpha_4\right)^2 - 4v_1\alpha_4\Lambda \\
+    &= \Lambda^2 - 2\Lambda v_1\alpha_4 + (v_1\alpha_4)^2 \\
+    &= (\Lambda - v_1\alpha_4)^2 \\
+    &= \left(v_1(1-m_1) - m_1(1-m_1)^2\right)^2 \\ 
+    &= (1 - m_1)^2(v_1 + m_1^2 - m_1)^2.
+  \end{split}
+\end{equation*}
+Note that $v_1 + m_1^2 = \var(X_1) + \ev[X_1]^2 = \ev[X_1^2]$ and
+$$
+\ev[X_1^2] - \ev[X_1] = \frac{(\alpha_1 + \alpha_2 + 1)(\alpha_1 + \alpha_2)}{(\tilde{\alpha} + 1)\tilde{\alpha}} - \frac{\alpha_1 + \alpha_2}{\tilde{\alpha}} = -\frac{(\alpha_1 + \alpha_2)(\alpha_3 + \alpha_4)}{\tilde{\alpha}(\tilde{\alpha}+1)} < 0.
+$$
+Therefore, 
+$$
+\sqrt{\Delta} = (1-m_1)(m_1 - v_1 - m_1^2)
+$$
+and 
+\begin{equation*}
+  \begin{split}
+    \alpha_3 &= \frac{1}{2v_1}\left(\left(m_1(1-m_1)^2 - v_1(1-m_1) - 2v_1\alpha_4\right) \pm (1-m_1)(m_1 - v_1 - m_1^2)\right) \\
+    &= - \alpha_4 + \frac{(1-m_1)(m_1 - m_1^2 - v_1) \pm (1-m_1)(m_1-v_1-m_1^2)}{2v_1}.
+  \end{split}
+\end{equation*}
+When the sign is negative, we have that $\alpha_3 = - \alpha_4$, an impossible
+solution. Then, 
+$$
+\alpha_3 = \frac{(1-m_1)(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4.
+$$
+
+We summarize the expressions in function of $\alpha_4$: 
+\begin{align*}
+  \alpha_3 &= \frac{(1-m_1)(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4 \\
+  \alpha_1 &= \frac{m_1+m_2-1}{1-m_1}\alpha_3 + \frac{m_2}{1-m_1}\alpha_4 = \frac{(m_1 + m_2 - 1)(m_1 - m_1^2 - v_1)}{v_1} + \alpha_4 \\
+  \alpha_2 &= \frac{1-m_2}{1-m_1}\alpha_3 + \frac{m_1-m_2}{1-m_1}\alpha_4 = \frac{(1 - m_2)(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4 .
+\end{align*}
+
+From here, one can calculate that
+$$
+\tilde{\alpha} = \frac{m_1 - m_1^2 - v_1}{v_1}.
+$$
+Since $\alpha_2 + \alpha_4 = (1 - m_2)\tilde{\alpha}$, we have that the last
+equation of the system \eqref{eq:system-moments-alpha} is given by
+\eqref{eq:v2}, that is, the system $\eqref{eq:system-moments-alpha}$ has a solution if and
+only if, equation \eqref{eq:v2} is satisfied. If it is, the solution is the ray 
+$$
+\mathcal{L} = \{(1,-1,-1,1)\alpha_4 + k : \alpha_4 > 0\}, 
+$$
+such that $k = \left((m_1 + m_2 - 1)\tilde{\alpha}, (1-m_2)\tilde{\alpha},
+(1-m_1)\tilde{\alpha}, 0\right)$. 
+
+\end{proof}
+
+
+Now change the fourth equation of \eqref{eq:system-moments-alpha} by: 
+$$
+\cor(X,Y) = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\sqrt{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}} = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\tilde{\alpha}^2\sqrt{m_1m_2(1-m_1)(1-m_2)}}
+$$
+
+Supposing the expression for $\alpha_1, \alpha_2$ and $\alpha_3$, that is,
+$m_1, m_2$ and $v_1$ are fixed, and supposing we fix $\rho = \cor(X,Y)$, we
+can simplify the above expression (using a software) as follows: 
+
+$$
+\rho = \frac{1}{\tilde{\alpha}\sqrt{m_1m_2(1-m_1)(1-m_2)}}\alpha_4 - \sqrt{\frac{(1 - m_1)(1 - m_2)}{m_1m_2}},
+$$
+which is linear on $\alpha_4$, that is, for fixed values of
+$m_1, m_2, v_1$ and $\rho$, there is an unique $\alpha_4$, and hence,
+$\alpha_1, \alpha_2$ and $\alpha_3$ that satisfies system
+\eqref{eq:system-moments-alpha} with the fourth equation changed by the
+correlation. 
