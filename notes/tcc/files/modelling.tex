@@ -76,14 +76,39 @@ are fixed hyperparameters.
 
 \section{Sensitivity and specificity}
 
-For this, 
+In this section, we describe a model to infer about sensitivity 
+and specificity separately from the final model for prevalence 
+estimation. This is interesting 
+to experiment and analyse different prior specification approaches. 
+The model is the following: suppose having a gold standard 
+test for a disease and we want to estimate the sensitivity and 
+specificity of another simpler and faster test. In a population, 
+with the gold standard, it's impossible to differentiate the true 
+negatives from the true positives - in this scenario, ``true'' means 
+the decision of the gold standard. However not all diseases have a 
+perfect gold standard. Therefore, we denote 
 \begin{gather*}
   y_{negative} \sim \operatorname{Binomial}(n_{\gamma_e}, \gamma_e), \\
   y_{positive} \sim \operatorname{Binomial}(n_{\gamma_s}, \gamma_s),
 \end{gather*}
-such that $y_{negative}$ are negative tests on known negative subjects
-(by a gold standard for example) and $y_{positive}$ are positive tests on
-known positive. When considering separated experiments for specificity and
+such that $y_{negative}$ are negative tests on known negative 
+subjects and $y_{positive}$ are positive tests on
+known positive. In a classic Bayesian analysis, we have to define a 
+prior distribution for the parameters $(\gamma_e, \gamma_s) \sim \pi(\gamma_e,
+\gamma_s)$. 
+
+For this, we consider three different approaches: 
+
+\begin{enumerate}
+  \item Treating each parameter as independent with a beta distribution 
+  with pre-specified hyperparameters. 
+  \item Hierarchical partial pooling, when dealing with more studies. 
+  \item A Bivariate Beta (see Appendix
+  \ref{appendix:bivariate-beta-distribution}) 
+  distribution.
+\end{enumerate}
+
+When considering separated experiments for specificity and
 sensitivity, there is
 no information about their correlation, which is the case for our model. Then we define the the prior distributions
 \begin{gather*}
