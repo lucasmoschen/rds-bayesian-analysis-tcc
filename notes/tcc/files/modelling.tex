@@ -408,6 +408,29 @@ $$
 
 \subsection{Toy example}
 
+\begin{enumerate}
+  \item Between the model with the log odds of prevalence having a Gaussian prior
+  distribution and the other with the prevalence having a Beta prior
+  distribution, 
+  the latter was usually faster and without divergences. Therefore the 
+  preferable model is with the prevalence. 
+
+  \item Non-centered distributions are really worst. 
+  \item Comparison between parametrization of sigma and tau showed that
+  they are similar in sight of time of execution, energy and divergences,
+  among others diagnostics. However, the mean estimate of sigma is more
+  controlled. The median estimate is very similar. This happens because there
+  are a few very high samples for $\tau$ that will have high weight in the
+  final result. Small samples for $\sigma$ have less impact, despite having
+  some. 
+  \item I observed that the RDS structure worsens the funil aspect of the
+  scatter plot. Although the sparsity may cause divergence problems, which
+  makes sense, sparsity and tree structure appears to be a bad feature for the
+  model. Apparently there is no connection with the number of connected
+  components. Test with one and five had similar results (actually they were
+  better in the five case, but the difference can be random noise).
+\end{enumerate}
+
 \subsection{Exponential Random Graph Model (ERGM)}
 
 RDS has the constraint of being without replacement. For that reason, we do

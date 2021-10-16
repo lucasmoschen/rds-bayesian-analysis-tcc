@@ -85,7 +85,6 @@ transformed data{
 parameters {
     real<lower = 0, upper = 1> prev;
     vector[n_samples] omega; 
-    //real<lower = 0> tau; 
     real<lower = 0> sigma;
     real<lower = 0, upper = 1> rho;
 }
