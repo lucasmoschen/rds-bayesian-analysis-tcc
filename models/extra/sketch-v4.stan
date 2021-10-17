@@ -40,7 +40,7 @@ functions {
 data {
   int<lower = 1> n;
   int<lower = 1> p;
-  int<lower = 0, upper = 1> y[n];
+  int<lower = 0> y[n];
   vector[n] log_offset;
   matrix<lower = 0, upper = 1>[n, n] W; // adjacency matrix
   int W_n;                // number of adjacent region pairs

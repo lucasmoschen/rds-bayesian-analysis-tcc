@@ -423,12 +423,12 @@ $$
   are a few very high samples for $\tau$ that will have high weight in the
   final result. Small samples for $\sigma$ have less impact, despite having
   some. 
-  \item I observed that the RDS structure worsens the funil aspect of the
-  scatter plot. Although the sparsity may cause divergence problems, which
-  makes sense, sparsity and tree structure appears to be a bad feature for the
-  model. Apparently there is no connection with the number of connected
-  components. Test with one and five had similar results (actually they were
-  better in the five case, but the difference can be random noise).
+  \item More sparse matrices (RDS data is very sparse) is generating the funil
+  we do not want to see. This is not connected to the number of connected
+  components. In order to see that, a simple example with the Erdos-Renyi
+  Random Graph can answer to us. In the sparse case, the number of edges is
+  $O(n)$ with $p=1/n$. If $p=1$, the number of edges is $O(n^2)$ and the funil
+  disappears. This problem does not appear in the poisson model. 
 \end{enumerate}
 
 \subsection{Exponential Random Graph Model (ERGM)}

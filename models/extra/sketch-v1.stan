@@ -83,9 +83,12 @@ transformed data {
 parameters {
   vector[n] phi;
   real<lower = 0> tau;
-  //real<lower = 0, upper = 1> prev;
-  real log_odds_prev;
-  real<lower = 0, upper = 1> alpha;
+  real normal_std;
+  real<lower = 0, upper = 0.95> alpha;
+}
+transformed parameters {
+  real log_odds_prev; 
+  log_odds_prev = mu_prev + sigma_prev * normal_std;
 }
 model {
   if (gumbel_prior == 1) {
@@ -96,8 +99,7 @@ model {
   
   phi ~ sparse_car(alpha, W_sparse, D_sparse, lambda, n, W_n);
   
-  //prev ~ beta(alpha_prev, beta_prev);
-  log_odds_prev ~ normal(mu_prev, sigma_prev);
+  normal_std ~ std_normal();
   
   if (poisson_model == 1){
       y ~ poisson_log(log_odds_prev + (1/sqrt(tau)) * phi + log_offset);
