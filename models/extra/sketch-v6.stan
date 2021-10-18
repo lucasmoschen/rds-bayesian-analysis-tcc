@@ -91,7 +91,7 @@ parameters {
   real<lower = 0> sigma;
   real<lower = 0, upper = 1> prev;
   vector[p+1] normal_raw; 
-  real<lower = 0, upper = 1> alpha;
+  real<lower = 0, upper = 1/max(lambda)> alpha;
 }
 transformed parameters {
    vector[p+1] beta; 

@@ -94,7 +94,7 @@ parameters {
   real<lower = 0> sigma;
   real<lower = 0, upper = 1> prev;
   vector[p] normal_raw; 
-  real<lower = 0, upper = 1> alpha;
+  real<lower = 0, upper = 0.9> alpha;
 }
 transformed parameters {
    vector[p] beta; 
@@ -106,7 +106,7 @@ model {
   } else {
      sigma ~ gamma(alpha_tau, beta_tau);
   }
-  
+    
   phi ~ sparse_car(alpha, W_sparse, D_sparse, lambda, n, W_n);
   normal_raw ~ std_normal();   
   prev ~ beta(alpha_prev, beta_prev);
