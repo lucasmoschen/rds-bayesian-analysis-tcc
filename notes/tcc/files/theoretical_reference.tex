@@ -32,24 +32,47 @@ The recent development of new computational tools brought these ideas again.
 Therefore, Bayesian inference is the process of inductive learning using
 Bayes' rule, where inductive means that characteristics of a population are 
 learned from a subset of this population. We generally
-express numerical characteristics of the population as parameters which are
-indirectly observed through numerical descriptions of the population. Both are
+express numerical characteristics of the population as a parameter $\theta$ which is
+indirectly observed through numerical descriptions $y$ of the population. Both are
 uncertain until the observation of a sample, when its information can decrease
-our uncertainty about the population characteristics \cite{hoff2009first}.
+our uncertainty about the population characteristics \cite[p. 1-2]{hoff2009first}.
 
-Bayesian inference is composed by the following: 
+The set of all possible outcomes $y$ forms the {\em sample space}
+$\mathcal{Y}$, while the set of all possible parameters forms the {\em
+parameter space} $\Theta$. Bayesian inference is composed by the following: 
 
-\begin{itemize}
-    \item A distribution for the parameters $\theta$ that quantifies the
-    uncertainty about $\theta$ before data;
-    \item A distribution of the data generation process given the parameter,
-    such that, when it is seen as function of the parameter, is called
-    likelihood function;
-    \item When considering decision theory, a loss function measuring the
-    error in evaluating the parameter;
-    \item Posterior distribution of the parameter conditioned on the data. All
+\begin{enumerate}[label=(\alph*)]
+    \item {\em Prior distribution:} A probability distribution defined over 
+    $\Theta$ that quantifies our beliefs about $\theta$ before observing the data;
+    \item {\em Sampling model: } A probability distribution of the data generation process
+    that express our belief that $y \in \mathcal{Y}$ is the outcome when
+    $\theta \in \Theta$ is true. When it is seen as function of the parameter,
+    it is called {\em likelihood function};
+    \item {\em Loss function:} Only in a decision theory framework, it
+    measures the error of a estimative $\delta \in \Theta$ in comparison to
+    $\theta$. 
+    \item {\em Posterior distribution:} Once we get the data $y$, it
+    represents our updated beliefs out the parameter conditioned All
     inferences are based on this probability distribution.
-\end{itemize} 
+\end{enumerate} 
+
+Bayes' theorem establishes that when the sampling model is absolutely
+continuous with respect to some measure $\nu$ with conditional density
+$f_{Y\mid \theta}(y\mid\theta)$ and the prior distribution is a
+well defined probability measure $\mu_{\theta}$, the posterior distribution
+$\mu_{\theta|Y}(\cdot\mid y)$ is
+absolutely continuous with respect to $\mu_{\theta}$ almost surely and its
+Radon-Nikodym derivative is \cite[p. 16]{schervish2012theory}
+\begin{equation}
+  \label{eq:bayes-update-measure}
+  \frac{d\mu_{\theta\mid Y}}{d\mu_{\theta}}(\theta|y) = \frac{f_{Y\mid \theta}(y\mid \theta)}{\int_{\Theta} f_{Y\mid\theta}(y|t)d\mu_{\theta}(t)}.  
+\end{equation}
+
+When the prior distribution is absolutely continuous with respect to the
+Lebesgue measure, equation \eqref{eq:bayes-update-measure} resumes to 
+\begin{equation}
+  p(y|\theta) \frac{f(y\mid \theta)\pi(\theta)}{\int_{\Theta} f(y\mid t)\pi(t) \, dt}.  
+\end{equation}
 
 \section{Prevalence estimation problem}
 \label{sec:prevalence_estimation_problem}
