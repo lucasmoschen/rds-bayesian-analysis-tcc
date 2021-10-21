@@ -2,9 +2,8 @@
 
 \textcite[p. 311]{fisher1922mathematical} stated that the objective of
 statistics is to reduce the data since its volume is impossible 
-to comprehend. In that sense, few quantities, generally parameters, 
-should represent the whole phenomenon catching the most relevant information. 
-Years later, Newman studied the theory of modelling which chan be divided 
+to comprehend by the researchers. In that sense, few parameters should represent the whole phenomenon catching the most relevant information. 
+Years later, Newman studied the theory of modelling which can be divided 
 in three aspects \cite[p. 161]{lehmann2012model}: 
 
 \begin{enumerate}
@@ -76,17 +75,16 @@ are fixed hyperparameters.
 
 \section{Sensitivity and specificity}
 
-In this section, we describe a model to infer about sensitivity 
-and specificity separately from the final model for prevalence 
-estimation. This is interesting 
-to experiment and analyse different prior specification approaches. 
-The model is the following: suppose having a gold standard 
-test for a disease and we want to estimate the sensitivity and 
-specificity of another simpler and faster test. In a population, 
-with the gold standard, it's impossible to differentiate the true 
-negatives from the true positives - in this scenario, ``true'' means 
-the decision of the gold standard. However not all diseases have a 
-perfect gold standard. Therefore, we denote 
+In this section, we describe a model for estimating the sensitivity and
+specificity of a diagnostic test separately from the final model for
+estimating prevalence. This model is relevant to analyze and experiment with
+different prior specification approaches. Suppose having a {\em gold standard
+test} that is the best available test \cite{versi1992gold}, and also another
+test (for instance a simpler, a faster, or a less invasive one) which we want
+to estimate the accuracy by the sensitivity and specificity. In this scenario,
+a true positive / negative individual means they have been tested positive by
+the gold standard. Therefore, in a population with $n_{\gamma_e}$ true
+positives and  $n_{\gamma_s}$ true negatives, we denote 
 \begin{gather*}
   y_{negative} \sim \operatorname{Binomial}(n_{\gamma_e}, \gamma_e), \\
   y_{positive} \sim \operatorname{Binomial}(n_{\gamma_s}, \gamma_s),
@@ -100,13 +98,15 @@ prior distribution for the parameters $(\gamma_e, \gamma_s) \sim \pi(\gamma_e,
 For this, we consider three different approaches: 
 
 \begin{enumerate}
-  \item Treating each parameter as independent with a beta distribution 
-  with pre-specified hyperparameters. 
-  \item Hierarchical partial pooling, when dealing with more studies. 
+  \item The parameters are independent a priori and each one has a beta
+  distribution with pre-specified hyperparameters.
+  \item \improve{Hierarchical partial pooling, when dealing with more studies.}
   \item A Bivariate Beta (see Appendix
   \ref{appendix:bivariate-beta-distribution}) 
   distribution.
 \end{enumerate}
+
+\subsection{Independent beta distribution priors}
 
 When considering separated experiments for specificity and
 sensitivity, there is
@@ -116,7 +116,8 @@ no information about their correlation, which is the case for our model. Then we
   \gamma_s \sim \operatorname{Beta}(a_s, b_s), \\
   \theta \sim \operatorname{Beta}(a_{\theta}, b_{\theta}).
 \end{gather*} 
-Using data from \cite{bennett2020estimating} about COVID-19 seroprevalence in
+Using data from \cite{bennett2020estimating} about COVIDPrior information of these quantities lead to a bivariate analysis {cite:t}`guo2017bayesian`. As we have already mentioned, the definitions of *sensitivity* and
+*specificity* can be expressed as below: -19 seroprevalence in
 Santa Clara:  
 \begin{align*}
   y/n &= 50/3330,\\
@@ -135,6 +136,8 @@ we fit the model and obtain the results showed in Figure
   \label{fig:results-posterior-model1}
 \end{figure}
 
+\subsection{Hierarchical partial pooling prior}
+
 Other approach considers more than one study about specificity and
 sensitivity. A {\em hierarchical partial pooling} model for these studies
 can be done in the following way: 
@@ -152,9 +155,9 @@ its one prior distributions. For instance,
     \sigma_{\gamma_s} &\sim N^+(0,1), \text{ and } \\
     \sigma_{\gamma_e} &\sim N^+(0,1),
 \end{align*}
-where $N^+(a,b)$ is the truncated normal distribution in $[0,+\infty)$. All
-the codes available at Github
-repository\footnote{\url{https://github.com/lucasmoschen/rds-bayesian-analysis}}.
+where $N^+(a,b)$ is the truncated normal distribution in $[0,+\infty)$.
+
+\subsection{Bivariate Beta prior}
 
 Finally, we studied a joint distribution for specificity and sensitivity, a
 possible bivariate beta distribution built in \cite{olkin2015constructions}.
@@ -177,161 +180,6 @@ $\boldsymbol{\alpha}$, the correlation between the variables range from -1 and
 In this section, we shall describe how to use the Bivariate Beta (see Appendix
 \ref{appendix:bivariate-beta-distribution}) to model the correlation between
 specificity and sensitivity.
-
-\subsection{Specifying parameters
-\texorpdfstring{$\boldsymbol{\alpha}$}{alpha}}
-
-Suppose that the researcher has knowledge about the main moments of $X$ and
-$Y$, such that $\ev(X) = m_1 \in (0,1), \ev(Y) = m_2 \in (0,1), \var(X) = v_1
-\in (0, 1),$ and $\var(Y) =
-v_2 \in (0,1)$. Notice that $v_1 + m_1^2 = \var(X_1) + \ev[X_1]^2 = \ev[X_1^2]$ and
-$$
-\ev[X_1^2] - \ev[X_1] = \frac{(\alpha_1 + \alpha_2 + 1)(\alpha_1 + \alpha_2)}{(\tilde{\alpha} + 1)\tilde{\alpha}} - \frac{\alpha_1 + \alpha_2}{\tilde{\alpha}} = -\frac{(\alpha_1 + \alpha_2)(\alpha_3 + \alpha_4)}{\tilde{\alpha}(\tilde{\alpha}+1)} < 0, 
-$$
-that is, $v_1 + m_1^2 - m_1 < 0 \implies v_1 < m_1 - m_1^2$ and similarly,
-$v_2 < m_2 - m_2^2$. After fixing these quantities, we will have a non-linear system with four equations and four
-unknown variables. Hence, we want to solve the following 
-\begin{equation}
-  \label{eq:system-moments-alpha}
-  \begin{cases}
-    m_1 = \dfrac{\alpha_1+\alpha_2}{\tilde{\alpha}} \\
-    m_2 = \dfrac{\alpha_1+\alpha_3}{\tilde{\alpha}} \\ 
-    v_1 = \dfrac{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)}{\tilde{\alpha}^2(\tilde{\alpha}+1)} = m_1\dfrac{\alpha_3+\alpha_4}{\tilde{\alpha}(\tilde{\alpha}+1)} \\
-    v_2 = \dfrac{(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}{\tilde{\alpha}^2(\tilde{\alpha}+1)} = m_2\dfrac{\alpha_2+\alpha_4}{\tilde{\alpha}(\tilde{\alpha}+1)}.
-  \end{cases}
-\end{equation}
-
-\begin{proposition}
-  System \eqref{eq:system-moments-alpha} has a solution if, and only if, the relation
-  \begin{equation}
-    \label{eq:v2}
-    v_2 = \frac{(1 - m_2)\tilde{\alpha}}{\tilde{\alpha}(\tilde{\alpha}+ 1)} = \frac{1 - m_2}{\frac{m_1 - m_1^2}{v_1}} = \frac{v_1(1 - m_2)}{m_1(1-m_1)},
-  \end{equation}
-  is satisfied. When there is a solution, there will be
-  infinitely many and they all lay in the ray 
-  $$
-\mathcal{L} = \{(1,-1,-1,1)\alpha_4 + k : \alpha_4 > 0\}, 
-$$
-such that $k = \left((m_1 + m_2 - 1)\tilde{\alpha}, (1-m_2)\tilde{\alpha},
-(1-m_1)\tilde{\alpha}, 0\right)$. 
-\end{proposition}
-
-\begin{proof}
-
-The first two equations of the system \eqref{eq:system-moments-alpha} can be
-rewritten as a linear system:
-\begin{align*}
-  (m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\alpha_4 &= 0 \\
-  (m_2 - 1)\alpha_1 + m_2\alpha_2 + (m_2-1)\alpha_3 + m_2\alpha_4 &= 0,   
-\end{align*}
-which is equivalent to 
-\begin{align*}
-  \alpha_1 + \alpha_2 + \frac{m_1}{m_1-1}\alpha_3 + \frac{m_1}{m_1-1}\alpha_4 &= 0 \\
-  \alpha_2 + \frac{1-m_2}{m_1-1}\alpha_3 + \frac{m_1-m_2}{m_1-1}\alpha_4 &= 0.
-\end{align*}
-Then, we can write $\alpha_1$ and $\alpha_2$ as functions of $\alpha_3$ and
-$\alpha_4$:
-\begin{align}
-  \alpha_1 &= \frac{m_1+m_2-1}{1-m_1}\alpha_3 + \frac{m_2}{1-m_1}\alpha_4 \\
-  \alpha_2 &= \frac{1-m_2}{1-m_1}\alpha_3 + \frac{m_1-m_2}{1-m_1}\alpha_4.
-\end{align}
-With that expression, let $\alpha_1 = a_3\alpha_3 + a_4\alpha_4$ and $\alpha_2
-= b_3\alpha_3 + b_4\alpha_4$. Denote $c_3 = a_3 + b_3 + 1$ and $c_4 = a_4 +
-b_4 + 1$. Then, consider the third equation of the system
-\eqref{eq:system-moments-alpha}, 
-\begin{equation*}
-  \begin{split}
-    &\frac{v_1}{m_1} = \frac{\alpha_3+\alpha_4}{\tilde{\alpha}(\tilde{\alpha} +1)} = \frac{\alpha_3+\alpha_4}{(\alpha_1+\alpha_2+\alpha_3+\alpha_4)^2 + (\alpha_1+\alpha_2+\alpha_3+\alpha_4)} \\
-     &\implies \frac{v_1}{m_1}(\alpha_1 + \alpha_2 + \alpha_3 + \alpha_4)^2 = \alpha_3 + \alpha_4 - \frac{v_1}{m_1}(\alpha_1 + \alpha_2 + \alpha_3 + \alpha_4) \\
-    &\implies \frac{v_1}{m_1}(c_3\alpha_3 + c_4\alpha_4)^2 = \left(1-\frac{v_1}{m_1}c_3\right)\alpha_3 + \left(1-\frac{v_1}{m_1}c_4\right)\alpha_4 \\
-    &\implies \frac{v_1c_3^2}{m_1}\alpha_3^2 + \left(\frac{2v_1c_3c_4\alpha_4+v_1c_3}{m_1} - 1\right)\alpha_3 + \left(\frac{v_1c_4^2\alpha_4^2 + v_1c_4\alpha_4}{m_1} - \alpha_4\right) = 0 \\ 
-    &\implies v_1c_3^2\alpha_3^2 + (2v_1c_3c_4\alpha_4+v_1c_3 - m_1)\alpha_3 + (v_1c_4^2\alpha_4^2 + v_1c_4\alpha_4 - m_1\alpha_4) = 0.
-  \end{split}
-\end{equation*}
-Using a Computer Algebra System (CAS) with the Python library SymPy, the above
-expression can be simplified as follows:
-$$
-v_1\alpha_3^2 + \left(v_1(1-m_1) + 2v_1\alpha_4 - m_1(1-m_1)^2\right)\alpha_3 - \alpha_4m_1(1-m_1)^2 + \alpha_4v_1(1 - m_1) + v_1\alpha_4^2 = 0.
-$$
-This way, the solutions of the above equation are function of $\alpha_4$.
-Therefore, after solving the equations, we can use the last equation of the
-system \eqref{eq:system-moments-alpha} as a function on of $\alpha_4$. Let, 
-$$
-\Lambda = \left(v_1(1-m_1) + v_1\alpha_4 - m_1(1-m_1)^2\right).
-$$
-Then, 
-\begin{equation*}
-  \begin{split}
-    \Delta &= \left(v_1(1-m_1) + 2v_1\alpha_4 - m_1(1-m_1)^2\right)^2 - 4v_1(\alpha_4v_1(1 - m_1) - \alpha_4m_1(1-m_1)^2 + v_1\alpha_4^2), \\
-    &= \left(\Lambda + v_1\alpha_4\right)^2 - 4v_1\alpha_4\Lambda \\
-    &= \Lambda^2 - 2\Lambda v_1\alpha_4 + (v_1\alpha_4)^2 \\
-    &= (\Lambda - v_1\alpha_4)^2 \\
-    &= \left(v_1(1-m_1) - m_1(1-m_1)^2\right)^2 \\ 
-    &= (1 - m_1)^2(v_1 + m_1^2 - m_1)^2.
-  \end{split}
-\end{equation*}
-Note that $v_1 + m_1^2 = \var(X_1) + \ev[X_1]^2 = \ev[X_1^2]$ and
-$$
-\ev[X_1^2] - \ev[X_1] = \frac{(\alpha_1 + \alpha_2 + 1)(\alpha_1 + \alpha_2)}{(\tilde{\alpha} + 1)\tilde{\alpha}} - \frac{\alpha_1 + \alpha_2}{\tilde{\alpha}} = -\frac{(\alpha_1 + \alpha_2)(\alpha_3 + \alpha_4)}{\tilde{\alpha}(\tilde{\alpha}+1)} < 0.
-$$
-Therefore, 
-$$
-\sqrt{\Delta} = (1-m_1)(m_1 - v_1 - m_1^2)
-$$
-and 
-\begin{equation*}
-  \begin{split}
-    \alpha_3 &= \frac{1}{2v_1}\left(\left(m_1(1-m_1)^2 - v_1(1-m_1) - 2v_1\alpha_4\right) \pm (1-m_1)(m_1 - v_1 - m_1^2)\right) \\
-    &= - \alpha_4 + \frac{(1-m_1)(m_1 - m_1^2 - v_1) \pm (1-m_1)(m_1-v_1-m_1^2)}{2v_1}.
-  \end{split}
-\end{equation*}
-When the sign is negative, we have that $\alpha_3 = - \alpha_4$, an impossible
-solution. Then, 
-$$
-\alpha_3 = \frac{(1-m_1)(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4.
-$$
-
-We summarize the expressions in function of $\alpha_4$: 
-\begin{align*}
-  \alpha_3 &= \frac{(1-m_1)(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4 \\
-  \alpha_1 &= \frac{m_1+m_2-1}{1-m_1}\alpha_3 + \frac{m_2}{1-m_1}\alpha_4 = \frac{(m_1 + m_2 - 1)(m_1 - m_1^2 - v_1)}{v_1} + \alpha_4 \\
-  \alpha_2 &= \frac{1-m_2}{1-m_1}\alpha_3 + \frac{m_1-m_2}{1-m_1}\alpha_4 = \frac{(1 - m_2)(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4 .
-\end{align*}
-
-From here, one can calculate that
-$$
-\tilde{\alpha} = \frac{m_1 - m_1^2 - v_1}{v_1}.
-$$
-Since $\alpha_2 + \alpha_4 = (1 - m_2)\tilde{\alpha}$, we have that the last
-equation of the system \eqref{eq:system-moments-alpha} is given by
-\eqref{eq:v2}, that is, the system $\eqref{eq:system-moments-alpha}$ has a solution if and
-only if, equation \eqref{eq:v2} is satisfied. If it is, the solution is the ray 
-$$
-\mathcal{L} = \{(1,-1,-1,1)\alpha_4 + k : \alpha_4 > 0\}, 
-$$
-such that $k = \left((m_1 + m_2 - 1)\tilde{\alpha}, (1-m_2)\tilde{\alpha},
-(1-m_1)\tilde{\alpha}, 0\right)$. 
-
-\end{proof}
-
-
-Now change the fourth equation of \eqref{eq:system-moments-alpha} by: 
-$$
-\cor(X,Y) = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\sqrt{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}} = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\tilde{\alpha}^2\sqrt{m_1m_2(1-m_1)(1-m_2)}}
-$$
-
-Supposing the expression for $\alpha_1, \alpha_2$ and $\alpha_3$, that is,
-$m_1, m_2$ and $v_1$ are fixed, and supposing we fix $\rho = \cor(X,Y)$, we
-can simplify the above expression (using a software) as follows: 
-
-$$
-\rho = \frac{1}{\tilde{\alpha}\sqrt{m_1m_2(1-m_1)(1-m_2)}}\alpha_4 - \sqrt{\frac{(1 - m_1)(1 - m_2)}{m_1m_2}},
-$$
-which is linear on $\alpha_4$, that is, for fixed values of
-$m_1, m_2, v_1$ and $\rho$, there is an unique $\alpha_4$, and hence,
-$\alpha_1, \alpha_2$ and $\alpha_3$ that satisfies system
-\eqref{eq:system-moments-alpha} with the fourth equation changed by the
-correlation. 
 
 \section{Imperfect tests}
 
