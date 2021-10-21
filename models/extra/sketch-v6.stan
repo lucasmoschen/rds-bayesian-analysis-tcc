@@ -89,7 +89,6 @@ transformed data {
 parameters {
   vector[n] phi;
   real<lower = 0> sigma;
-  real<lower = 0, upper = 1> prev;
   vector[p+1] normal_raw; 
   real<lower = 0, upper = 1/max(lambda)> alpha;
 }
