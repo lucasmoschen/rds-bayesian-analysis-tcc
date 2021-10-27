@@ -57,7 +57,8 @@
 
 % Outros 
 \usepackage{lipsum}
-
+\usepackage[textsize=tiny, textwidth=15mm]{todonotes}
+\usepackage{multirow}
 
 % Citações 
 %\usepackage[brazilian,hyperpageref]{backref}
@@ -157,8 +158,8 @@ Mathematics (FGV/EMAp) to obtain the Bachelor's degree of Applied Mathematics. \
 %--------------------- Margens -----------------------
 %-----------------------------------------------------
 
-\setlrmarginsandblock{3cm}{2cm}{*}
-\setulmarginsandblock{3cm}{2cm}{*}
+\setlrmarginsandblock{3cm}{3cm}{*} % The correct is 3/2
+\setulmarginsandblock{3cm}{3cm}{*}
 \checkandfixthelayout
 
 %-----------------------------------------------------
@@ -237,6 +238,8 @@ Mathematics (FGV/EMAp) to obtain the Bachelor's degree of Applied Mathematics. \
 % ELEMENTOS TEXTUAIS
 % ----------------------------------------------------------
 \textual
+
+\input{files/todonotes.tex}
 
 \input{files/introducao.tex}
 

@@ -7,114 +7,120 @@ Bayesian statistics (Section \ref{sec:bayesian_statistics}), the prevalence
 estimation problem (Section \ref{sec:prevalence_estimation_problem}), 
 Respondent-driven sampling (Section \ref{sec:respodent_driven_sampling}), 
 and computational methods (Section
-\ref{sec:computational_methods}) used in our research. 
-
-\section{Bayesian statistics}
-\label{sec:bayesian_statistics}
-
-We can represent our beliefs and information about unknown quantities 
-through probabilities. There are two more common interpretations: 
-frequentist and Bayesian. While the frequentists define
-probability as the limit of a frequency in a large number of trials, the
-Bayesians represent an individual's degree of belief in a statement that is
-updated given new information. This philosophy allows assigning probabilities
-to any event, even if a random process is not defined \cite{statisticat2016laplacesdemon}. 
-
-In 1761, Reverend Thomas Bayes wrote for the first time the Bayes' formula
-relating the probability of a parameter after observing the data with the
-evidence (written through a likelihood function) and previous information
-about the parameter. Pierre Simon Laplace rediscovered this formula in 1773
-\cite{Robert2007}, and this theory became more common in the 19th century.
-After some criticisms, a modern treatment considering Kolmogorov's
-axiomatization of the theory of probabilities started after Jeffreys in 1939.
-The recent development of new computational tools brought these ideas again.
-
-Therefore, Bayesian inference is the process of inductive learning using
-Bayes' rule, where inductive means that characteristics of a population are 
-learned from a subset of this population. We generally
-express numerical characteristics of the population as a parameter $\theta$ which is
-indirectly observed through numerical descriptions $y$ of the population. Both are
-uncertain until the observation of a sample, when its information can decrease
-our uncertainty about the population characteristics \cite[p. 1-2]{hoff2009first}.
-
-The set of all possible outcomes $y$ forms the {\em sample space}
-$\mathcal{Y}$, while the set of all possible parameters forms the {\em
-parameter space} $\Theta$. Bayesian inference is composed by the following: 
-
-\begin{enumerate}[label=(\alph*)]
-    \item {\em Prior distribution:} A probability distribution defined over 
-    $\Theta$ that quantifies our beliefs about $\theta$ before observing the data;
-    \item {\em Sampling model: } A probability distribution of the data generation process
-    that express our belief that $y \in \mathcal{Y}$ is the outcome when
-    $\theta \in \Theta$ is true. When it is seen as function of the parameter,
-    it is called {\em likelihood function};
-    \item {\em Loss function:} Only in a decision theory framework, it
-    measures the error of a estimative $\delta \in \Theta$ in comparison to
-    $\theta$. 
-    \item {\em Posterior distribution:} Once we get the data $y$, it
-    represents our updated beliefs out the parameter conditioned All
-    inferences are based on this probability distribution.
-\end{enumerate} 
-
-Bayes' theorem establishes that when the sampling model is absolutely
-continuous with respect to some measure $\nu$ with conditional density
-$f_{Y\mid \theta}(y\mid\theta)$ and the prior distribution is a
-well defined probability measure $\mu_{\theta}$, the posterior distribution
-$\mu_{\theta|Y}(\cdot\mid y)$ is
-absolutely continuous with respect to $\mu_{\theta}$ almost surely and its
-Radon-Nikodym derivative is \cite[p. 16]{schervish2012theory}
-\begin{equation}
-  \label{eq:bayes-update-measure}
-  \frac{d\mu_{\theta\mid Y}}{d\mu_{\theta}}(\theta|y) = \frac{f_{Y\mid \theta}(y\mid \theta)}{\int_{\Theta} f_{Y\mid\theta}(y|t)d\mu_{\theta}(t)}.  
-\end{equation}
-
-When the prior distribution is absolutely continuous with respect to the
-Lebesgue measure, equation \eqref{eq:bayes-update-measure} resumes to 
-\begin{equation}
-  p(y|\theta) \frac{f(y\mid \theta)\pi(\theta)}{\int_{\Theta} f(y\mid t)\pi(t) \, dt}.  
-\end{equation}
+\ref{sec:computational_methods}) used in our research. \todo{Fix order after.}
 
 \section{Prevalence estimation problem}
 \label{sec:prevalence_estimation_problem}
 
-A key quantity for epidemiologists and public health researchers is the
-proportion of individuals exposed to a disease at time $t$, which is called
-{\em prevalence}. When measured
-periodically, its evolution can identify potential causes of the infection
-and prevention and care methods \cite[]{noordzij2010measures}. The prevalence
-differs from {\em incidence } that measures the proportion of people who
-develop new disease during a specified period of time
-\cite[]{rothman2008modern}. Therefore, prevalence reflects both incidence and the
-duration of disease. 
+The study of how health-related conditions are distributed among populations
+is known as {\em Epidemiology} \cite[p. 32]{rothman2008modern}, which aims to derive valid estimates for
+potential causes from diseases that affect people. It is a fundamental
+research area in policy formulation, implementation of prevention programs,
+and development of laws. In order to accomplish these goals, the
+epidemiologists use some {\em measures of disease frequency}, including {\em
+incidence} and {\em prevalence}. The former is related to the proportion of
+new cases of a disease in a period of time, while the latter is the proportion
+of individuals exposed at time $t$ and it is the object of
+study of this section. An interesting point is the following:
 
-Consider a population of interest and a known condition, such as, for example,
-a disease or a binary behavior. It is important to understand the proportion
-of individuals in this population exposed at time $t$, called {\em
-prevalence}. Suppose a diagnostic test is done to measure the presence or the
-absence of this condition in the individuals. Mathematically, let $\theta \in
-(0,1)$ be the prevalence (parameter of interest) of the condition and $Y_i$ be an indicator function of the presence of the condition in the i$^{th}$ individual.
-Assuming for simplicity that all tests are performed at time $t$, and the
-sample is $\{y_1, ..., y_n\}$, the maximum likelihood estimator is the
-apparent prevalence: 
+\begin{citacao}
+  Diseases with high incidence rates may have low prevalence if they are rapidly fatal or quickly cured. Conversely, diseases with very low incidence
+  rates may have substantial prevalence if they are nonfatal but incurable.
+  \cite[p. 46]{rothman2008modern}
+\end{citacao}
+
+Therefore, prevalence reflects both incidence and the duration of disease
+simultaneously. \textcite[p. c18]{noordzij2010measures} highlights that
+prevalence reveals the burden of a disease in respect to its effects on
+society, such as, monetary costs, quality of live, and morbidity. They also
+comment that when measured periodically, its evolution can identify potential
+causes of the infection and prevention and care methods. \todo{Should I
+mention more reasons to study prevalence?}
+
+Consider a population of interest and a known condition, such as, for instance,
+a disease or a binary behavior. A diagnostic test is done in the individuals
+to measure the presence or the absence of this condition, such as serological
+tests.\todo{It might be nice to add examples.} Mathematically, we denote
+$\theta \in (0,1)$ the prevalence of the condition, which is the parameter of
+interest. Let $I$ be a index set for the individuals. We also denote $Y^{\mathrm{true}}_i$ the indicator function of the presence of the
+condition in the i$^{th}$ individual, that is, 
+$$Y^{\mathrm{true}}_i = \begin{cases}
+  1, &\text{if individual } i \text{ has the condition.} \\
+  0, &\text{otherwise.}
+\end{cases}$$
+
+Assume for simplicity that all tests are performed at time $t$. Assume that
+$Y_i$ indicates the result of the test, then 
+$$Y_i = \begin{cases}
+  1, &\text{if test was positive in individual } i. \\
+  0, &\text{otherwise.}
+\end{cases}$$
+
+Since it is not usually feasible to test everyone in the population, random
+selection of individuals from the population is necessary. On that point,
+other sampling approaches may be better options, such as stratified random
+sampling, systematic sampling, and two-stage cluster sampling. From that
+experiment, we get a sample $\{y_1, ..., y_n\}$. Based on that outcomes the Maximum Likelihood Estimator is the following expression 
 \begin{equation}
     \label{eq:naive-estimator}
-    \hat{\theta} = \frac{1}{n}\sum_{i=1}^n y_i.
+    \hat{\theta} = \frac{1}{n}\sum_{i=1}^n y_i, 
 \end{equation}
-However, this estimator has two problems in this context: it assumes a perfect
-diagnostic test, which is often incorrect, and the samples in RDS are not
-independent by definition (network structure). 
+which is an estimator for the {\em apparent prevalence}, that is, the
+probability of a positive outcome. 
 
-The first problem in \eqref{eq:naive-estimator} was tackled several times in
-the literature, such as \cite{mcinturff2004modelling}. The second problem was a study object in \cite{heckathorn1997,heckathorn2002} where the estimator was proposed
-based largely on Markov chain theory and social network theory.
-\cite{volz2008probability} improved it with the RDS II estimator considering
-the network degree
-\begin{equation}
-    \hat{\theta}^{RDS II} = \frac{\sum_{i=1}^n y_i \delta_i^{-1}}{\sum_{i=1}^n \delta_i^{-1}},
-\end{equation}
-such that $\delta_i$ is the i$^{th}$ individual's degree. However, this is an
-area of research in progress. 
+However, this estimator assumes that the diagnostic test used is perfect,
+which is often incorrect \todo{Provide some reference}. It is also not
+interesting when the samples are not randomly selected (See Section
+\ref{sec:respodent_driven_sampling}). From that point, it is crucial to regard
+the evaluation of the diagnostic procedure by some measurement. \textcite[p.
+2]{vsimundic2009measures} presents several options with different aspects,
+such as the {\em likelihood ratio}, {\em sensitivity and specificity}, and
+{\em the area under the ROC curve}. In this work, we consider the sensitivity
+and specificity of the test. \todo{It may be good to justify this choice.}
 
+A perfect test would discriminate every sick individual from the non-sick ones.
+Given that there is not such thing, we have a {\em gold standard
+test} that is the best available test \cite{versi1992gold} to diagnose a
+particular disease. Its result is a proxy for the real $Y^{\mathrm{true}}_i$ and 
+
+\begin{citacao}
+  In the context of infectious diseases, a gold standard can be a very precise
+  molecular test that detects the presence of the pathogen’s genetic material,
+  polymerase chain reaction (PCR) for instance. \cite{bastos2021modelling}
+\end{citacao}
+
+From the gold standard, we can evaluate a second test, typically faster or
+cheaper. The possible results upon comparing these tests are presented in
+table \ref{table:two-by-two}. The definitions for each initials in the table
+are the following: 
+
+\begin{alineas}
+  \item True positive (TP): when both tests agree that the individual has the
+  disease. 
+  \item True negative (TN): when both tests agree that the individual does not
+  have the disease.
+  \item False positive (FP): when the test under evaluation has a positive
+  diagnose, despite the golden standard being negative. 
+  \item False negative (FN): when the test under evaluation has a negative
+  diagnose, despite the golden standard being positive.
+\end{alineas}
+
+\begin{table}[!ht]
+  \centering
+  \begin{tabular}{c|c|c|}
+  \cline{2-3}
+                                               & $Y = 0$ & $Y = 1$ \\ \hline
+  \multicolumn{1}{|c|}{$Y^{\mathrm{true}}= 0$} & TN    & FP    \\ \hline
+  \multicolumn{1}{|c|}{$Y^{\mathrm{true}}= 1$} & FN    & TP    \\ \hline
+  \end{tabular}
+  \caption{Two-by-two table that compares the result from the gold standard to
+  the test under evaluation.}
+  \label{table:two-by-two}
+\end{table}
+
+For now, we drop the index $i$ in the observations $Y_i$. 
+
+ 
 Let $I$ be a index set and $Y_i$ be the indicator function of the $i^{th}$ individual's exposure to the disease, and $T_i$
 indicating whether the test of the $i^{th}$ individual is positive at time
 $t$. Suppose that $\{Y_i\}_{i \in I}$ and $\{T_i\}_{i \in I}$ are two independent and identically distributed
@@ -214,7 +220,19 @@ model \cite[]{crawford2016}.
 These models allowed several applications in social sciences, epidemiology,
 and statistics, including hidden populations size estimation
 \cite[]{crawford2018hidden}, regression \cite[]{bastos2012binary}, communicable
-disease prevalence estimation \cite[]{albuquerque2009avaliaccao}, among others.
+disease prevalence estimation \cite[]{albuquerque2009avaliaccao}, among
+others.
+
+% The first problem in \eqref{eq:naive-estimator} was tackled several times in
+% the literature, such as \cite{mcinturff2004modelling}. The second problem was a study object in \cite{heckathorn1997,heckathorn2002} where the estimator was proposed
+% based largely on Markov chain theory and social network theory.
+% \cite{volz2008probability} improved it with the RDS II estimator considering
+% the network degree
+% \begin{equation}
+%     \hat{\theta}^{RDS II} = \frac{\sum_{i=1}^n y_i \delta_i^{-1}}{\sum_{i=1}^n \delta_i^{-1}},
+% \end{equation}
+% such that $\delta_i$ is the i$^{th}$ individual's degree. However, this is an
+% area of research in progress. 
 
 \section{Generalized linear models}
 \label{sec:glm}
@@ -247,6 +265,72 @@ parameter $0 < \mu < 1$ are
   is the Normal cumulative distribution function; 
   \item \textit{complementary log-log}: $\eta = \log(-\log(1 - \mu))$.
 \end{enumerate}
+
+
+\section{Bayesian statistics}
+\label{sec:bayesian_statistics}
+
+We can represent our beliefs and information about unknown quantities 
+through probabilities. There are two more common interpretations: 
+frequentist and Bayesian. While the frequentists define
+probability as the limit of a frequency in a large number of trials, the
+Bayesians represent an individual's degree of belief in a statement that is
+updated given new information. This philosophy allows assigning probabilities
+to any event, even if a random process is not defined \cite{statisticat2016laplacesdemon}. 
+
+In 1761, Reverend Thomas Bayes wrote for the first time the Bayes' formula
+relating the probability of a parameter after observing the data with the
+evidence (written through a likelihood function) and previous information
+about the parameter. Pierre Simon Laplace rediscovered this formula in 1773
+\cite{Robert2007}, and this theory became more common in the 19th century.
+After some criticisms, a modern treatment considering Kolmogorov's
+axiomatization of the theory of probabilities started after Jeffreys in 1939.
+The recent development of new computational tools brought these ideas again.
+
+Therefore, Bayesian inference is the process of inductive learning using
+Bayes' rule, where inductive means that characteristics of a population are 
+learned from a subset of this population. We generally
+express numerical characteristics of the population as a parameter $\theta$ which is
+indirectly observed through numerical descriptions $y$ of the population. Both are
+uncertain until the observation of a sample, when its information can decrease
+our uncertainty about the population characteristics \cite[p. 1-2]{hoff2009first}.
+
+The set of all possible outcomes $y$ forms the {\em sample space}
+$\mathcal{Y}$, while the set of all possible parameters forms the {\em
+parameter space} $\Theta$. Bayesian inference is composed by the following: 
+
+\begin{enumerate}[label=(\alph*)]
+    \item {\em Prior distribution:} A probability distribution defined over 
+    $\Theta$ that quantifies our beliefs about $\theta$ before observing the data;
+    \item {\em Sampling model: } A probability distribution of the data generation process
+    that express our belief that $y \in \mathcal{Y}$ is the outcome when
+    $\theta \in \Theta$ is true. When it is seen as function of the parameter,
+    it is called {\em likelihood function};
+    \item {\em Loss function:} Only in a decision theory framework, it
+    measures the error of a estimative $\delta \in \Theta$ in comparison to
+    $\theta$. 
+    \item {\em Posterior distribution:} Once we get the data $y$, it
+    represents our updated beliefs out the parameter conditioned All
+    inferences are based on this probability distribution.
+\end{enumerate} 
+
+Bayes' theorem establishes that when the sampling model is absolutely
+continuous with respect to some measure $\nu$ with conditional density
+$f_{Y\mid \theta}(y\mid\theta)$ and the prior distribution is a
+well defined probability measure $\mu_{\theta}$, the posterior distribution
+$\mu_{\theta|Y}(\cdot\mid y)$ is
+absolutely continuous with respect to $\mu_{\theta}$ almost surely and its
+Radon-Nikodym derivative is \cite[p. 16]{schervish2012theory}
+\begin{equation}
+  \label{eq:bayes-update-measure}
+  \frac{d\mu_{\theta\mid Y}}{d\mu_{\theta}}(\theta|y) = \frac{f_{Y\mid \theta}(y\mid \theta)}{\int_{\Theta} f_{Y\mid\theta}(y|t)d\mu_{\theta}(t)}.  
+\end{equation}
+
+When the prior distribution is absolutely continuous with respect to the
+Lebesgue measure, equation \eqref{eq:bayes-update-measure} resumes to 
+\begin{equation}
+  p(y|\theta) \frac{f(y\mid \theta)\pi(\theta)}{\int_{\Theta} f(y\mid t)\pi(t) \, dt}.  
+\end{equation}
 
 \section{Computational methods}
 \label{sec:computational_methods}
