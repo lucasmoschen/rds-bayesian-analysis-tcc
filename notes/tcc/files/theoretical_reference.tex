@@ -63,7 +63,7 @@ sampling, systematic sampling, and two-stage cluster sampling. From that
 experiment, we get a sample $\{y_1, ..., y_n\}$. Based on that outcomes the Maximum Likelihood Estimator is the following expression 
 \begin{equation}
     \label{eq:naive-estimator}
-    \hat{\theta} = \frac{1}{n}\sum_{i=1}^n y_i, 
+    \hat{p} = \frac{1}{n}\sum_{i=1}^n y_i, 
 \end{equation}
 which is an estimator for the {\em apparent prevalence}, that is, the
 probability of a positive outcome. 
@@ -79,8 +79,8 @@ such as the {\em likelihood ratio}, {\em sensitivity and specificity}, and
 and specificity of the test. \todo{It may be good to justify this choice.}
 
 A perfect test would discriminate every sick individual from the non-sick ones.
-Given that there is not such thing, we have a {\em gold standard
-test} that is the best available test \cite{versi1992gold} to diagnose a
+Given that there is not such thing, we suppose having a {\em gold standard
+test}\todo{Should I cite when this not true? Cite Rutjes (2007)} that is the best available test \cite{versi1992gold} to diagnose a
 particular disease. Its result is a proxy for the real $Y^{\mathrm{true}}_i$ and 
 
 \begin{citacao}
@@ -118,39 +118,36 @@ are the following:
   \label{table:two-by-two}
 \end{table}
 
-For now, we drop the index $i$ in the observations $Y_i$. 
-
- 
-Let $I$ be a index set and $Y_i$ be the indicator function of the $i^{th}$ individual's exposure to the disease, and $T_i$
-indicating whether the test of the $i^{th}$ individual is positive at time
-$t$. Suppose that $\{Y_i\}_{i \in I}$ and $\{T_i\}_{i \in I}$ are two independent and identically distributed
-random variables with $\Pr(X = 1) = \theta$ and $\Pr(T = 1) = p$. We say that
-$\theta$ is the prevalence and $p$ is the apparent prevalence in the
-population. 
-
-If the test is perfect, then for every $i$, $T_i = Y_i$, and
-$\theta = p$ (with probability one when they are random variables).
-Unfortunately, this is not true in the real world, what makes important to
-regard the evaluation of the diagnostic, and the following definitions are used:
-
-\begin{definition}[Specificity]
-  Probability of a negative test correctly identified. In mathematical terms,
-  conditioned on $Y = 0$, the {\em specificity} $\gamma_e$ is the probability of $T = 0$: 
-  \begin{equation}
-    \gamma_e = \Pr(T = 0|Y = 0). 
-  \end{equation} 
-\end{definition}
+For now, we drop the index $i$ in the random variables $Y_i$ and
+$Y_i^{\mathrm{true}}$. Let $p = \Pr(Y = 1)$ be the probability of a positive test.
+We call $p$ the {\em apparent prevalence} since it is what the researchers 
+observe. Equation \eqref{eq:naive-estimator} is an estimator for it. 
+We also have that $\Pr(Y^{\mathrm{true}} = 1) = \theta$. Notice that $p$
+depends on the used test, while $\theta$ does not. In prevalence estimates, we 
+will only have $\theta = p$ if the test is perfect or the test is the 
+gold standard itself. Define the following: 
 
 \begin{definition}[Sensitivity]
   Probability of a positive test correctly identified. In mathematical terms,
-  conditioned on $Y = 1$, the {\em sensitivity} $\gamma_s$ is the probability of $T = 1$: 
+  conditioned on $Y^{\mathrm{true}} = 1$, the {\em sensitivity} $\gamma_s$ is 
+  the probability of $Y = 1$: 
   \begin{equation}
-    \gamma_s = \Pr(T = 1|Y = 1). 
+    \gamma_s = \Pr(Y = 1|Y^{\mathrm{true}} = 1). 
+  \end{equation} 
+\end{definition}
+
+\begin{definition}[Specificity]
+  Probability of a negative test correctly identified. In mathematical terms,
+  conditioned on $Y^{\mathrm{true}} = 0$, the {\em specificity} $\gamma_e$ is 
+  the probability of $Y = 0$: 
+  \begin{equation}
+    \gamma_e = \Pr(Y = 0|Y^{\mathrm{true}} = 0). 
   \end{equation} 
 \end{definition}
 
 \begin{theorem}[Relation between prevalence and apparent prevalence] These quantities are related by the following equation:
   \begin{equation}
+    \label{eq:apparent-true-prevalence}
     p = \gamma_s\theta + (1-\gamma_e)(1-\theta).
   \end{equation}
   
@@ -161,9 +158,10 @@ regard the evaluation of the diagnostic, and the following definitions are used:
   and the countable additivity axiom of Probability:
   \begin{equation*}
     \begin{split}
-      p &= \Pr(T = 1) = \Pr(T = 1, Y = 1) + \Pr(T = 1, Y = 0) \\
-      &= \Pr(T=1|Y=1)\Pr(Y=1) + \Pr(T=1|Y=0)\Pr(Y=0) \\
-      &= \Pr(T=1|Y=1)\Pr(Y=1) + (1 - \Pr(T=0|Y=0))(1-\Pr(Y=1)) \\
+      p &= \Pr(Y = 1) = \Pr(Y = 1, Y^{\mathrm{true}} = 1) + \Pr(Y = 1, Y^{\mathrm{true}} = 0) \\
+      &= \Pr(Y=1|Y^{\mathrm{true}}=1)\Pr(Y^{\mathrm{true}}=1) + \Pr(Y=1|Y^{\mathrm{true}}=0)\Pr(Y^{\mathrm{true}}=0) \\
+      &= \Pr(Y=1|Y^{\mathrm{true}}=1)\Pr(Y^{\mathrm{true}}=1) \\ 
+      &+ (1 - \Pr(Y=0|Y^{\mathrm{true}}=0))(1-\Pr(Y^{\mathrm{true}}=1)) \\
       &= \gamma_s\theta + (1 - \gamma_e)(1-\theta).
     \end{split}
   \end{equation*} 
@@ -171,15 +169,42 @@ regard the evaluation of the diagnostic, and the following definitions are used:
 
 The intuition behind this equation is pretty simple: the proportion
 of positive test counts the correct identified exposed individuals and the
-incorrect identified not exposed. Observe that if $\gamma_s = \gamma_e = 1$, we have the trivial case $p =
-\theta$. Moreover, if $\gamma_s = \gamma_e = 0.5$, we have that
+incorrect identified not exposed. Equation \eqref{eq:apparent-true-prevalence}
+also reveals that if $\gamma_s = \gamma_e = 1$, we have the trivial 
+case $p = \theta$. Moreover, if $\gamma_s = \gamma_e = 0.5$, we have that
 $p = 0.5$ and there is no information about $\theta$. 
 
 \begin{remark}
-  Actually, we are interested in the prevalence at time $t$. When it is 
+  We are interested in the prevalence at time $t$. When it is 
   impossible to test every individual at the same time, we assume that all
   individuals remain exposed to the disease at time of the last tested individual. 
 \end{remark}
+
+A frequentist approach assumes that $\theta$ is fixed and unknown. Its
+inference is based on the point 
+estimate for the apparent prevalence $\hat{p}$ given in Equation
+\eqref{eq:naive-estimator}, along with a Confidence Interval, such as the Wald
+Confidence Interval built with a normal approximation. In order to provide a 
+point estimate for $\hat{\theta}$, \textcite[p. 73]{rogan1978estimating} propose
+$$\hat{\theta}^{RG} = \frac{\hat{p} - (1-\gamma_e)}{\gamma_s + \gamma_e -
+1}.$$ 
+If $\theta = 0.01$, we would have that $p \approx 1 - \gamma_e$ by 
+equation \eqref{eq:apparent-true-prevalence}. In that situation, given the 
+randomness, it is possible to hat $\hat{p} < 1 - \gamma_e$, giving a 
+useless estimative for $\theta$. Besides that, Confidence Intervals for that 
+expression does not include uncertainty about $\gamma_e$ and $\gamma_s$. On the other side, a Bayesian approach let $\theta$ be a random variable,
+allowing the researcher to incorporate their uncertainty on the prior
+distribution, which is more explained in Section
+\ref{sec:bayesian_statistics}. According to \textcite[p.
+1]{branscum2005estimation}:
+\begin{citacao}
+  Diagnostic-test evaluation is particularly suited to the
+  Bayesian framework because prior scientific information about the
+  sensitivities and specificities of the tests and prior information about the prevalences of the sampled
+  populations can be incorporated.
+\end{citacao}
+
+Therefore, this work focus on the Bayesian paradigm. 
 
 \section{Respondent-driven sampling}
 \label{sec:respodent_driven_sampling}
@@ -329,7 +354,7 @@ Radon-Nikodym derivative is \cite[p. 16]{schervish2012theory}
 When the prior distribution is absolutely continuous with respect to the
 Lebesgue measure, equation \eqref{eq:bayes-update-measure} resumes to 
 \begin{equation}
-  p(y|\theta) \frac{f(y\mid \theta)\pi(\theta)}{\int_{\Theta} f(y\mid t)\pi(t) \, dt}.  
+  p(y|\theta) = \frac{f(y\mid \theta)\pi(\theta)}{\int_{\Theta} f(y\mid t)\pi(t) \, dt}.  
 \end{equation}
 
 \section{Computational methods}
