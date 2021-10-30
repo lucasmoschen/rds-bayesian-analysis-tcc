@@ -19,7 +19,7 @@ research area in policy formulation, implementation of prevention programs,
 and development of laws. In order to accomplish these goals, the
 epidemiologists use some {\em measures of disease frequency}, including {\em
 incidence} and {\em prevalence}. The former is related to the proportion of
-new cases of a disease in a period of time, while the latter is the proportion
+new cases of a disease given a period of time, while the latter is the proportion
 of individuals exposed at time $t$ and it is the object of
 study of this section. An interesting point is the following:
 
@@ -29,13 +29,14 @@ study of this section. An interesting point is the following:
   \cite[p. 46]{rothman2008modern}
 \end{citacao}
 
-Therefore, prevalence reflects both incidence and the duration of disease
-simultaneously. \textcite[p. c18]{noordzij2010measures} highlights that
+As a result, prevalence represents both incidence and the duration of disease. \textcite[p. c18]{noordzij2010measures} highlights that
 prevalence reveals the burden of a disease in respect to its effects on
 society, such as, monetary costs, quality of live, and morbidity. They also
 comment that when measured periodically, its evolution can identify potential
 causes of the infection and prevention and care methods. \todo{Should I
-mention more reasons to study prevalence?}
+mention more reasons to study prevalence?} We remark that when it is impossible to test every individual at the same
+time, we assume that all individuals remain exposed to the disease at time of
+the last tested individual.
 
 Consider a population of interest and a known condition, such as, for instance,
 a disease or a binary behavior. A diagnostic test is done in the individuals
@@ -56,8 +57,8 @@ $$Y_i = \begin{cases}
   0, &\text{otherwise.}
 \end{cases}$$
 
-Since it is not usually feasible to test everyone in the population, random
-selection of individuals from the population is necessary. On that point,
+Since it is not usually feasible to test everyone in the population, it is
+necessary to random select individuals from the population. On that point,
 other sampling approaches may be better options, such as stratified random
 sampling, systematic sampling, and two-stage cluster sampling. From that
 experiment, we get a sample $\{y_1, ..., y_n\}$. Based on that outcomes the Maximum Likelihood Estimator is the following expression 
@@ -174,12 +175,6 @@ also reveals that if $\gamma_s = \gamma_e = 1$, we have the trivial
 case $p = \theta$. Moreover, if $\gamma_s = \gamma_e = 0.5$, we have that
 $p = 0.5$ and there is no information about $\theta$. 
 
-\begin{remark}
-  We are interested in the prevalence at time $t$. When it is 
-  impossible to test every individual at the same time, we assume that all
-  individuals remain exposed to the disease at time of the last tested individual. 
-\end{remark}
-
 A frequentist approach assumes that $\theta$ is fixed and unknown. Its
 inference is based on the point 
 estimate for the apparent prevalence $\hat{p}$ given in Equation
@@ -277,7 +272,7 @@ The main generalization of this aspect is the introduction of the
 such that $\eta_i = g(\mu_i)$ and $\eta = X\beta$. Therefore the link 
 function relates the linear predictor $\eta$ to the expected value $\mu$. 
 The distribution of $Y$ 
-may also come from another exponential family distribution \improve{Maybe 
+may also come from another exponential family distribution \todo{Maybe 
 explain or cite what is this?}
 
 Classical link functions when $Y_i$ has Binomial distribution with 
@@ -314,7 +309,7 @@ The recent development of new computational tools brought these ideas again.
 
 Therefore, Bayesian inference is the process of inductive learning using
 Bayes' rule, where inductive means that characteristics of a population are 
-learned from a subset of this population. We generally
+learned from a subset of it. We generally
 express numerical characteristics of the population as a parameter $\theta$ which is
 indirectly observed through numerical descriptions $y$ of the population. Both are
 uncertain until the observation of a sample, when its information can decrease
