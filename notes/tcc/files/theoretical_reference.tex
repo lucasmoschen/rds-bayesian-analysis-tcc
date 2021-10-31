@@ -26,7 +26,7 @@ study of this section. An interesting point is the following:
 \begin{citacao}
   Diseases with high incidence rates may have low prevalence if they are rapidly fatal or quickly cured. Conversely, diseases with very low incidence
   rates may have substantial prevalence if they are nonfatal but incurable.
-  \cite[p. 46]{rothman2008modern}
+  \cite[p. 46]{rothman2008modern}.
 \end{citacao}
 
 As a result, prevalence represents both incidence and the duration of disease. \textcite[p. c18]{noordzij2010measures} highlights that
@@ -87,7 +87,7 @@ particular disease. Its result is a proxy for the real $Y^{\mathrm{true}}_i$ and
 \begin{citacao}
   In the context of infectious diseases, a gold standard can be a very precise
   molecular test that detects the presence of the pathogen’s genetic material,
-  polymerase chain reaction (PCR) for instance. \cite{bastos2021modelling}
+  polymerase chain reaction (PCR) for instance. \cite[p. 125]{bastos2021modelling}.
 \end{citacao}
 
 From the gold standard, we can evaluate a second test, typically faster or
@@ -192,13 +192,12 @@ the other side, a Bayesian approach let $\theta$ be a random variable,
 allowing the researcher to incorporate their uncertainty on the prior
 distribution, which is explained in Section
 \ref{sec:bayesian_statistics}. It also allows to include uncertainty in
-sensitivity and specificity of the test. According to \textcite[p.
-1]{branscum2005estimation}:
+sensitivity and specificity of the test. According to \textcite{branscum2005estimation}:
 \begin{citacao}
   Diagnostic-test evaluation is particularly suited to the
   Bayesian framework because prior scientific information about the
   sensitivities and specificities of the tests and prior information about the prevalences of the sampled
-  populations can be incorporated.
+  populations can be incorporated. \cite[p. 1]{branscum2005estimation}.
 \end{citacao}
 
 Therefore, this work focus on the Bayesian paradigm.
@@ -246,15 +245,15 @@ individuals with more links may be oversampled. RDS offers a solution with a
 \ref{sec:sampling-procedure}. 
 
 Since the creation of the method by Heckathorn, several papers have been
-published as \autoref{fig:chart-research-rds} presents. The figure was
-produced searching publications with the term ``Respondent driven sampling''.
-These works generally aim to give basis to public health policies. Good
-examples in Brazil are \cite{damacena2019application}, which applies RDS
-method to carry out a biological and behavioral surveillance in FSW
-populations from twelve cities in Brazil; \cite{mota2012respondent},
-which proposes to apply RDS method in MSM populations from ten cites in Brazil,
-and \cite{bastos2018hiv}, which studies several sexual transmitted infection
-among transgender women from twelve brazilian cities. 
+published, as \autoref{fig:chart-research-rds} presents. The figure was produced searching
+publications with the term ``Respondent-driven sampling.'' These works generally
+aim to give basis to public health policies. Good examples in Brazil are
+\cite{damacena2019application}, \cite{mota2012respondent}, and
+\cite{bastos2018hiv}. \textcite{damacena2019application} apply the RDS method
+to carry out biological and behavioral surveillance in FSW populations from twelve cities
+in Brazil. \textcite{mota2012respondent} proposes the RDS method in MSM populations from ten cities in
+Brazil. \textcite{bastos2018hiv} study several sexually transmitted infections among
+transgender women from twelve Brazilian cities.  
 
 \begin{figure}
   \centering  
@@ -272,25 +271,40 @@ introducing a way to correct {\em homophily} biases that is the tendency for
 individuals to connect to others similar to them, and {\em personal network size} or
 {\em degree} that is the number of connections of an individual within the
 target population. It also presented a bootstrapping procedure to quantify
-uncertainty about inferences. The procedure was slightly modified by
-\textcite{salganik2004sampling} with a proof that under some regularity
-conditions, RDS estimators were asymptotically unbiased. Examples of questions
-about personal degree are the following: 
+uncertainty about inferences. \textcite{salganik2004sampling} slightly modified the
+RDS procedure and introduced proof that under some regularity conditions, RDS
+estimators were asymptotically unbiased. \textcite{world2013introduction}
+is a reference to know how to execute an RDS survey. According to it 
 
-How seeds are selected and explain the number of coupons. Why is it fixed? Why
-is it three? "This number is chosen to strike a balance between the inferential
-desire to limit the branching of the sample and the practical necessity of guarding against the early
-termination of the sample trees". 
+\begin{citacao}
+  Seeds are non-randomly selected members of the survey population who initiate the RDS
+  recruitment process. From each seed, a recruitment chain is expected to grow. Seeds play
+  an extremely important role in conducting an RDS survey. \cite[p. 70]{world2013introduction}.
+\end{citacao}
 
-The subjects receive a reward for being interviewed and for each recruitment
-of their peers which establishes a dual incentive system. The {\em primary incentive} is the
-{\em individual-sanction-based control}, so there is a reward for
-participating. The second one is the {\em group-mediated social control} that
-influences the participants to induce others to comply to get the reward for the recruitment. When social approval is important, recruitment can be even
-more efficient and cheaper, since material incentive can be converted into
-symbolic by the individuals. In summary, accepting to be recruited will have a
-material incentive for both and a symbolic incentive for the recruited, since
-theirs peers also participated.
+No rule was established on the number of seeds to start the sampling. It
+typically varies from 2 to 32, with the mean being 10 \cite[p. 70]{world2013introduction}. The number can not be
+small since unsuccessful recruitments are common. A diverse choice among the
+target population may accelerate the convergence to equilibrium. It also
+allows the access to isolate and subpopulations. After this selection, three
+coupons are distributed to each participant. The coupons musta have
+information about survey site location, an unique identification code,
+telephone number, and opening hours. \textcite[p. 67]{gile2018methods}
+highlights that ``this number is chosen to strike a balance between the
+inferencial desire [...] and the practical necessity of guarding against early
+termination of the sample trees.'' Figure XXX illustrates an RDS process in
+XXX.
+
+Subjects receive a reward for being interviewed and recruiting their peers
+within the target population, which establishes a dual incentive system. The
+{\em primary incentive} is the {\em individual-sanction-based control}, so there is a
+reward for participating in the survey. The second one is the {\em
+group-mediated social control} that influences the participants to induce
+others to comply to get the remuneration for the recruitment. When social
+approval is relevant for the members, recruitment can be more efficient and
+cheaper. It happens because material incentives are converted into peer-based symbolic since there is
+social influence involved. In conclusion, consenting to be recruited provide
+material and symbolic motivation to both recruiter and participant. 
 
 \subsection{Assumptions and statistical properties}
 
