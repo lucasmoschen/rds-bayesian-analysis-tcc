@@ -183,14 +183,16 @@ Confidence Interval built with a normal approximation. In order to provide a
 point estimate for $\hat{\theta}$, \textcite[p. 73]{rogan1978estimating} propose
 $$\hat{\theta}^{RG} = \frac{\hat{p} - (1-\gamma_e)}{\gamma_s + \gamma_e -
 1}.$$ 
-If $\theta = 0.01$, we would have that $p \approx 1 - \gamma_e$ by 
-equation \eqref{eq:apparent-true-prevalence}. In that situation, given the 
-randomness, it is possible to hat $\hat{p} < 1 - \gamma_e$, giving a 
-useless estimative for $\theta$. Besides that, Confidence Intervals for that 
-expression does not include uncertainty about $\gamma_e$ and $\gamma_s$. On the other side, a Bayesian approach let $\theta$ be a random variable,
+Suppose a disease with prevalence $\theta = 0.01$. In this case, we would have
+that $p \approx 1 - \gamma_e$ by equation \eqref{eq:apparent-true-prevalence}.
+Given the randomness, it is possible to have $\hat{p} < 1 - \gamma_e$, which
+would define a useless estimative for $\theta$. Besides that, Confidence Intervals for that 
+expression does not include uncertainty about $\gamma_e$ and $\gamma_s$. On
+the other side, a Bayesian approach let $\theta$ be a random variable,
 allowing the researcher to incorporate their uncertainty on the prior
-distribution, which is more explained in Section
-\ref{sec:bayesian_statistics}. According to \textcite[p.
+distribution, which is explained in Section
+\ref{sec:bayesian_statistics}. It also allows to include uncertainty in
+sensitivity and specificity of the test. According to \textcite[p.
 1]{branscum2005estimation}:
 \begin{citacao}
   Diagnostic-test evaluation is particularly suited to the
@@ -199,21 +201,80 @@ distribution, which is more explained in Section
   populations can be incorporated.
 \end{citacao}
 
-Therefore, this work focus on the Bayesian paradigm. 
+Therefore, this work focus on the Bayesian paradigm.
 
 \section{Respondent-driven sampling}
 \label{sec:respodent_driven_sampling}
 
-Respondent-driven sampling (RDS) is commonly used to survey hidden or hard-to-reach populations when
-no sampling frame exists \cite[]{heckathorn1997}, which means there is no
-enumeration of the population, since size and boundaries are unknown. In this approach, the
-researchers select some individuals, called {\em seeds} from the target
-population, and give them a fixed amount of {\em recruitment coupons} to
-recruit their peers. Each recipient of the coupons reclaims it in the study
-site, is interviewed, and receives more coupons to continue the recruitment.
-This process occurs until some criteria is reached. The sampling is without
-replacement, so the participants cannot be recruited more than once. Moreover,
-the respondents inform how many subjects from the population they know.
+Respondent-driven sampling (RDS) is a procedure developed by Heckathorn
+\cite[]{heckathorn1997} to survey {\em hidden} or {\em hard-to-reach
+populations}, whose main characteristic is the absence of a sampling frame,
+i.e.,it is not possible to enumerate its individuals since size and boundaries
+are unknown. The second characteristic of these populations is the
+confidentiality concerns, given that membership is stigmatized or illegal.
+With that aspect, traditional sampling methods which produce probability
+samples are infeasible. To overcome this, Snowball Sampling \cite[]{goodman1961}
+is the most common method, and it relies on the respondents to nominate more 
+subjects within the population as a snowball. Examples of studied groups
+include people who inject drugs (PWID), men who have sex with men (MSM), and
+female sex workers (FSW) \cite[p. 66]{gile2018methods}. 
+
+Heckathorn's proposal \citeyear{heckathorn1997} was to specialize this method without the need of
+nominating peers. In this approach, the researchers select some individuals,
+called {\em seeds} from the target population, and give them a fixed amount of
+{\em recruitment coupons} to recruit their peers. Each recipient of the coupons
+reclaims it in the study site, is interviewed, and receives more coupons to
+continue the recruitment. This process occurs until it reaches some stopping
+criteria, such as the sample size achieving some desired number. The sampling
+is without replacement, so the participants cannot be recruited more than
+once. Moreover, the respondents inform how many subjects from the population
+they know. Other less usual methods include Key Important Sampling \cite{deaux-callaghan1985}, 
+and Targeted Sampling \cite{watters-biernacki1989}, both are convenience
+sampling methods. 
+
+According to \textcite[p. 66]{gile2018methods}, there are two main advantages
+of RDS over other snowball samplings. First, the fixed number of recruitment
+coupons enforces the network gets deeper and distant from the seeds, which
+reduces the dependence of the final sample from the initial chosen by
+researchers. Second, since the recruited subjects do not have to name their
+peers, confidentiality is maintained until the recruitment is completed.
+Other problems cited by \textcite[p. 175]{heckathorn1997} include biases
+towards individuals who are more cooperative, biases by masking when the
+participants do not name friends for the next wave to protect them, and
+individuals with more links may be oversampled. RDS offers a solution with a
+{\em dual incentive system}, explained in Subsection
+\ref{sec:sampling-procedure}. 
+
+Since the creation of the method by Heckathorn, several papers have been
+published as \autoref{fig:chart-research-rds} presents. The figure was
+produced searching publications with the term ``Respondent driven sampling''.
+These works generally aim to give basis to public health policies. Good
+examples in Brazil are \cite{damacena2019application}, which applies RDS
+method to carry out a biological and behavioral surveillance in FSW
+populations from twelve cities in Brazil; \cite{mota2012respondent},
+which proposes to apply RDS method in MSM populations from ten cites in Brazil,
+and \cite{bastos2018hiv}, which studies several sexual transmitted infection
+among transgender women from twelve brazilian cities. 
+
+\begin{figure}
+  \centering  
+  \caption{\label{fig:chart-research-rds}Publications by year with the term
+  ``Respondent driven sampling''}
+  \includegraphics[width=14cm]{chart_research_growing_rds.pdf}
+  \fonte{htpps://app.dimensions.ai. Exported on October 31, 2021.}
+\end{figure}
+
+\subsection{Details about the sampling procedure}
+\label{sec:sampling-procedure}
+
+The procedure was slightly modified (XXX: REF, Heckathorn 2004) with some implementation
+considerations (XXX: REF, Johnston 2013A). Question about size of personal
+network or {\em degree}
+
+How seeds are selected and explain the number of coupons. Why is it fixed? Why
+is it three? "This number is chosen to strike a balance between the inferential
+desire to limit the branching of the sample and the practical necessity of guarding against the early
+termination of the sample trees". 
 
 The subjects receive a reward for being interviewed and for each recruitment
 of their peers which establishes a dual incentive system. The {\em primary incentive} is the
@@ -224,6 +285,27 @@ more efficient and cheaper, since material incentive can be converted into
 symbolic by the individuals. In summary, accepting to be recruited will have a
 material incentive for both and a symbolic incentive for the recruited, since
 theirs peers also participated.
+
+\subsection{Assumptions and statistical properties}
+
+Clustering and homophily: extent to which people have connections with
+‘like’ people (27); Hx = 2pi(1 - pi)R - 1
+
+\subsection{Models for the RDS Process}
+
+Although regression analysis of RDS data is frequently undertaken, the best method for accommodating
+  correlation between participants (clustering) and the non-random sampling of
+  recruits remains unknown."
+
+\subsubsection{Markov process}
+
+Describe as a Markov process \cite{heckathorn1997}
+
+\subsubsection{Random walk}
+
+\cite{heckathorn2002} Actually if was 2004. 
+
+\subsubsection{Graphical model}
 
 Let $G = (V,E)$ be an undirected graph representing the hidden population. The {\em recruitment graph} $G_R =
 (V_R, E_R)$ represents the recruited individuals and the recruitment edges,
@@ -243,16 +325,25 @@ and statistics, including hidden populations size estimation
 disease prevalence estimation \cite[]{albuquerque2009avaliaccao}, among
 others.
 
-% The first problem in \eqref{eq:naive-estimator} was tackled several times in
-% the literature, such as \cite{mcinturff2004modelling}. The second problem was a study object in \cite{heckathorn1997,heckathorn2002} where the estimator was proposed
-% based largely on Markov chain theory and social network theory.
-% \cite{volz2008probability} improved it with the RDS II estimator considering
-% the network degree
-% \begin{equation}
-%     \hat{\theta}^{RDS II} = \frac{\sum_{i=1}^n y_i \delta_i^{-1}}{\sum_{i=1}^n \delta_i^{-1}},
-% \end{equation}
-% such that $\delta_i$ is the i$^{th}$ individual's degree. However, this is an
-% area of research in progress. 
+\subsubsection{New model}
+
+Present the non-read-yet model. 
+
+\subsection{Prevalence estimators}
+
+Review of RDS prevalence estimators: naive estimator; RDS-I estimator;
+RDS-II; Gile SS; HCG estimator;
+
+weighting of those with more connections; 
+
+GLM procedures cited!
+
+\subsection{Regression methods}
+
+"A search of PubMed for the terms ‘respondent driven sampling’ and
+‘regression’"
+
+Regression techniques that already exist: weighted regression (33-37);
 
 \section{Generalized linear models}
 \label{sec:glm}
