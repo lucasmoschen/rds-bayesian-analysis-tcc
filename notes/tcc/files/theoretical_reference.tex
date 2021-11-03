@@ -616,7 +616,7 @@ difficult, despite being apparently very nice. \cite{mclaughlin2021bayesian}
 
 \subsection{Prevalence estimators}
 
-In this subsection, we outline five very common RDS proportion estimators presented in the
+In this subsection, we outline four very common RDS proportion estimators presented in the
 literature based on the modelling from Subsection
 \ref{sec:models-rds-process}. They are apparent prevalence estimators and can
 be used for prevalence estimate through equation
@@ -629,7 +629,7 @@ be used for prevalence estimate through equation
   \end{equation*} 
   as in equation \eqref{eq:apparent-true-prevalence}; 
 
-  \item {\em Salganik-Heckathorn RDS
+  \item {\em Salganik-Heckathorn (SH) RDS
   estimator}: Considering the Random Walk
   approximation, \textcite{salganik2004sampling} built this estimation
   regarding the sampling weights. Let $N_T = \sum_{i \neq j} A_{ij}y_i(1-
@@ -664,13 +664,26 @@ be used for prevalence estimate through equation
   \ref{sec:first-order-markov-process}, and are summarized in \cite[Table
   1][p. 71]{gile2018methods}. 
   
-  \item {\em Successive sampling estimator:} Under the successive sampling
-  approximation for RDS, \cite{gile2011improved} 
-  
-  \item {\em HCG estimator:} 
+  \item {\em Successive sampling (SS) estimator:} Under the successive sampling
+  approximation for RDS, \textcite[p. 137-138]{gile2011improved} derives an
+  estimate considering the without replacement assumption. It is of the form 
+  \begin{equation}
+    \label{eq:successive-sampling-estimator}
+    \hat{\theta}_{\mathrm{SS}} = \frac{\sum_{i=1}^n y_i w_i}{\sum_{i=1}^n w_i}, 
+  \end{equation}
+  where $w_i$ is calculated algorithmically, taking account the finite
+  population effect. If the sampling fraction is small, this estimator is
+  similar to VH estimator. Otherwise, when it grows, VH is biased. The
+  limitation of SS estimator is that $N$ is assumed to be known, which is
+  rarely the case. \textcite[p. 140]{gile2011improved} did a sensitivity
+  analysis on population size estimate. 
 \end{alineas}
 
-Besides these estimators, \textcite{avery2021statistical} suggested binary logistic
+\textcite{ott2019reduced} and \textcite{fellows2019respondent} extended these
+estimators. The former presented
+a similar estimator to SH estimador, yet more robust. The latter introduced
+homophily into the model. Besides these estimators,
+\textcite{avery2021statistical} suggested binary logistic
 regression methods and other extensions through Generalized Linear Models (see
 Section \ref{sec:glm}). 
 
