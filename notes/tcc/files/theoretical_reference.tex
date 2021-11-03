@@ -689,52 +689,70 @@ Section \ref{sec:glm}).
 
 \subsection{Regression methods}
 
-\cite{bastos2012binary}, \cite{avery2021statistical}, \cite{yauck2021general}.
-
-Although regression analysis of RDS data is frequently undertaken, the best method for accommodating
-  correlation between participants (clustering) and the non-random sampling of
-  recruits remains unknown."
-
-"A search of PubMed for the terms ‘respondent driven sampling’ and
-‘regression’"
-
-Regression techniques that already exist: weighted regression (33-37);
+According to \textcite{gile2011improved}, ``RDS suffers from two particular challenges for multivariate modeling: unknown sampling weights
+and unknown dependence structure.'' These two problems led to different
+approaches in the literature. \textcite[p.
+13-15]{avery2021statistical} has a good review on the
+topic. \textcite{spiller2009regression} suggests to model dependence as mixed
+effects. \textcite{bastos2012binary} performs a binary regression to
+prevalence estimation through a hierarchical model where correlation structure
+was modelled as a Conditionally autoregressive (CAR) model (see Section XXX).
+\textcite{yauck2021general} includes homophily in a similar model, but with a
+Simultaneous Autoregressive (SAR) model (CITATION) for correlation. 
 
 \subsection{Bootstrap methods for uncertainty quantification}
 
+\cite{baraff2016estimating}, \cite{salganik2006variance}. 
+
 \subsection{Diagnosis of RDS}
+
+\cite{gile2015diagnostics}
 
 \section{Generalized linear models}
 \label{sec:glm}
 
-Generalized linear models are an extension of classical linear models. 
-Let $y \in \R^{n}$ be a realization of a random variable 
-$Y : \Omega \to \mathbb{R}^n$ associated with a phenomena such that each 
-component $Y_i$ is independent of the others. The systematic process in 
-modelling is the specification of the vector $\mu = \ev[Y]$ through a small 
-number of parameters $\beta_1, \dots, \beta_p$. The classical linear model 
-assumes that $Y_i \overset{iid}{\sim} \N(\mu_i, \sigma^2)$ and $\mu = X\beta$,
-where $X \in \R^{n \times p}$ is the data, where $X_{ij}$ is the measure 
-of the $j$-th covariate in the $i$-th individual. 
+Let $\boldsymbol{y} \in \R^n$ be a realization of a random variable $Y :
+\Omega \to \mathbb{R}^n$ associated with a phenomena such that each component
+$Y_i$ is independent of the others. Set $\mu = \ev[Y]$. The classical linear
+model assumes that $Y_i \overset{iid}{\sim} \N(\mu_i, \sigma^2)$ and $\mu =
+\boldsymbol{X}\beta$, such that $\beta \in \mathbb{R}^p$ is an unknown parameter vector and
+$\boldsymbol{X} \in \R^{n \times p}$ is the data, where $\boldsymbol{X}_{ij}$
+is the measure of the $j$-th covariate in the $i$-th individual. Non constant
+variance for each $Y_i$ is a possible variation for this model. 
 
-The main generalization of this aspect is the introduction of the 
-\textit{link function}. This is a monotonic differentiable function $g$ 
-such that $\eta_i = g(\mu_i)$ and $\eta = X\beta$. Therefore the link 
-function relates the linear predictor $\eta$ to the expected value $\mu$. 
-The distribution of $Y$ 
-may also come from another exponential family distribution \todo{Maybe 
-explain or cite what is this?}
+Generalized linear models (GLM) extend the above model. In order to understand
+this extension, we follow \textcite[p. 27]{mccullagh2019generalized} setting 
+\begin{equation*}
+  \eta = \boldsymbol{X}\beta \quad \text{ and } \quad \eta_i = g(\mu_i), i = 1, \dots, n,
+\end{equation*}
+such that $g(\cdot)$ is a monotonic differentiable function and is named {\em
+link function}. Therefore, ``the link function relates the linear predictor
+$\eta$ to the expected value $\mu$ \cite[p. 31]{mccullagh2019generalized}.
+Notice that in the classical linear model, $g$ is the identity function, but
+it can be generalized. Another possible generalization is the distribution of
+$Y$, which may be any from the Exponential Family distribution \cite[p.
+115]{Robert2007}. 
 
-Classical link functions when $Y_i$ has Binomial distribution with 
-parameter $0 < \mu < 1$ are 
+When $Y_i$ has Bernoulli distribution with probability of success $\mu \in
+(0,1)$, the link function must have its image over the open interval $(0,1)$
+and domain in the real line. The classical are the following:  
 
-\begin{enumerate}
+\begin{alineas}
   \item \textit{logit}: $\eta = \log(\mu / (1 - \mu))$ that represents 
-  the log odds of $Y_i = 1$. 
+  the log odds of $Y_i = 1$;
   \item \textit{probit}: $\eta = \Phi^{-1}(\mu)$ where the $\Phi(\cdot)$ 
   is the Normal cumulative distribution function; 
   \item \textit{complementary log-log}: $\eta = \log(-\log(1 - \mu))$.
-\end{enumerate}
+\end{alineas}
+
+This work focus on Logistic regression, which is the most common inferencial
+procedure for binary response, such as having or not a disease. 
+
+\section{Conditionally autoregressive models}
+\label{sec:car-models}
+
+This construction follows the Gaussian case \cite[Section
+3.3.1]{banerjee2003hierarchical}. 
 
 
 \section{Bayesian statistics}
@@ -839,3 +857,7 @@ The importance of diagnosing. The potential problems that it can show.
   \item Low effective samples sizes; 
   \item $\hat{R} \not \in (0.95, 1.05)$.   
 \end{itemize}
+
+\subsection{Metropolis-within-Gibbs}
+
+If this method is used. 
