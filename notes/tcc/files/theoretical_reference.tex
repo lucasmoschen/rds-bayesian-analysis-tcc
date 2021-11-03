@@ -398,7 +398,11 @@ the graph $G$. The choice of an undirected model for the hidden population is ve
 but not obliged. The degree of a person is, therefore, $d_i = \sum_{j=1}^N
 A_{ij}$.\todo{Include notation of RDS used posteriorly.} 
 
+\improve{Besides the following models, \cite{goel2009respondent} presents RDS
+as a MCMC}. 
+
 \subsubsection{First-order Markov process}
+\label{sec:first-order-markov-process}
 
 This approximation was the first model proposed by \textcite{heckathorn1997}. 
 He argues RDS recruitment has the characteristic that ``any subject's recruits are
@@ -616,21 +620,53 @@ In this subsection, we outline five very common RDS proportion estimators presen
 literature based on the modelling from Subsection
 \ref{sec:models-rds-process}. They are apparent prevalence estimators and can
 be used for prevalence estimate through equation
-\eqref{eq:rogan-estimate-prevalence} in a frequentist approach. Then,  
+\eqref{eq:rogan-estimate-prevalence} in a frequentist approach. Then:
 
 \begin{alineas}
   \item {\em naive estimator}: it is the sample proportion 
   \begin{equation*}
     \hat{\theta}_{\mathrm{naive}} = \frac{1}{n}\sum_{i=1}^n y_i,
   \end{equation*} 
-  as in equation \eqref{eq:apparent-true-prevalence}. 
+  as in equation \eqref{eq:apparent-true-prevalence}; 
 
-  \item {\em RDS-I estimator}: Assuming the Random Walk approximation for RDS
-  process, \textcite{salganik2004sampling} built this estimation regarding the
-  sampling weights.  
+  \item {\em Salganik-Heckathorn RDS
+  estimator}: Considering the Random Walk
+  approximation, \textcite{salganik2004sampling} built this estimation
+  regarding the sampling weights. Let $N_T = \sum_{i \neq j} A_{ij}y_i(1-
+  y_j)$ be the number of connections between individuals with and without the
+  disease, $\bar{d}_1 = \frac{\sum_{i=1}^N \sum_{j \neq i}
+  A_{ij}y_i}{\sum_{i=1}^N y_i}$ the mean degree of ill individuals,
+  $\bar{d}_0$ the mean degree of not ill individuals with a similar formula,
+  and $N_1 = N\theta$. \textcite[p. 218]{salganik2004sampling} derives that 
+  \begin{equation*}
+    \theta = \frac{\bar{d}_0 c_{01}}{\bar{d}_0 c_{01} + \bar{d}_1 c_{10}},
+  \end{equation*}
+  where 
+  \begin{equation*}
+    c_{01} = \frac{N_T}{(N - N_1)\bar{d}_0} \text{ and } c_{10} = \frac{N_T}{N_1\bar{d}_1},
+  \end{equation*}
+  and that 
+  \begin{equation}
+    \label{eq:salganik-estimator}
+    \hat{\theta}_{\mathrm{SH}} = \frac{\widehat{d}_0 \hat{c}_{01}}{\widehat{d}_0 \hat{c}_{01} + \widehat{d}_1 \hat{c}_{10}},
+  \end{equation}
+  is the prevalence estimator, such that $\widehat{d}_0, \widehat{d}_1,
+  \hat{c}_{01},$ and $\hat{c}_{10}$ are estimated for these quantities. 
+
+  \item {\em Volz-Heckathorn RDS (VH) estimator}: With similar assumptions to the
+  previous one, \textcite[p. 85]{volz2008probability} shows that the inclusion
+   probability of individual $i$ in the sample is $\pi_i \propto
+  d_i$ and the corresponding proportion estimator is  
+  \begin{equation}
+    \hat{\theta}_{\mathrm{VH}} = \frac{\sum_{i=1}^n y_i d_i^{-1}}{\sum_{i=1}^n d_i^{-1}}.
+  \end{equation}
+  The assumptions for $\hat{\theta}_{\mathrm{VH}}$ were highlighted in Subsubsection
+  \ref{sec:first-order-markov-process}, and are summarized in \cite[Table
+  1][p. 71]{gile2018methods}. 
   
-  \item {\em RDS-II estimator}: Built by \cite{volz2008probability}
-  \item {\em Successive sampling estimator:} Built by \cite{gile2011improved} 
+  \item {\em Successive sampling estimator:} Under the successive sampling
+  approximation for RDS, \cite{gile2011improved} 
+  
   \item {\em HCG estimator:} 
 \end{alineas}
 
@@ -640,6 +676,8 @@ Section \ref{sec:glm}).
 
 \subsection{Regression methods}
 
+\cite{bastos2012binary}, \cite{avery2021statistical}, \cite{yauck2021general}.
+
 Although regression analysis of RDS data is frequently undertaken, the best method for accommodating
   correlation between participants (clustering) and the non-random sampling of
   recruits remains unknown."
@@ -648,6 +686,10 @@ Although regression analysis of RDS data is frequently undertaken, the best meth
 ‘regression’"
 
 Regression techniques that already exist: weighted regression (33-37);
+
+\subsection{Bootstrap methods for uncertainty quantification}
+
+\subsection{Diagnosis of RDS}
 
 \section{Generalized linear models}
 \label{sec:glm}
