@@ -61,7 +61,7 @@ Since it is not usually feasible to test everyone in the population, it is
 necessary to random select individuals from the population. On that point,
 other sampling approaches may be better options, such as stratified random
 sampling, systematic sampling, and two-stage cluster sampling. From that
-experiment, we get a sample $\{y_1, ..., y_n\}$. Based on that outcomes the Maximum Likelihood Estimator is the following expression 
+experiment, we get a sample $y = \{y_1, ..., y_n\}$. Based on that outcomes the Maximum Likelihood Estimator is the following expression 
 \begin{equation}
     \label{eq:naive-estimator}
     \hat{p} = \frac{1}{n}\sum_{i=1}^n y_i, 
@@ -616,7 +616,7 @@ difficult, despite being apparently very nice. \cite{mclaughlin2021bayesian}
 
 \subsection{Prevalence estimators}
 
-In this subsection, we outline four very common RDS proportion estimators presented in the
+In this subsection, we outline five very common RDS proportion estimators presented in the
 literature based on the modelling from Subsection
 \ref{sec:models-rds-process}. They are apparent prevalence estimators and can
 be used for prevalence estimate through equation
@@ -677,6 +677,27 @@ be used for prevalence estimate through equation
   limitation of SS estimator is that $N$ is assumed to be known, which is
   rarely the case. \textcite[p. 140]{gile2011improved} did a sensitivity
   analysis on population size estimate. 
+
+  \item {\em RDS-B estimator}: \cite{bastos2018hiv} proposes a
+  pseudo-posterior approach to estimate prevalence. Let 
+  \begin{equation*}
+    Y_i \sim \bern(\theta_i) \text{ with } \operatorname{logit}(\theta_i) = \alpha,
+  \end{equation*}  
+  where $\operatorname{logit}$ is explained in Sextion \ref{sec:glm}. Defines 
+  $\delta_i \propto n \cdot d_i^{-1}$ such that $\sum_{i=1}^n \delta_i = n$,
+  based on the weights suggested by \textcite{volz2008probability}. The
+  pseudo-likelihood is written as follows: 
+  \begin{equation*}
+    L(\alpha \mid Y = y) = \prod_{i=1}^n \Pr(Y_i = y_i \mid \alpha)^{\delta_i}. 
+  \end{equation*}
+  In a Bayesian perspective (see Section \ref{sec:bayesian_statistics}), 
+  inferences are based on the posterior distribution and 
+  \textcite[p. S18]{bastos2018hiv} used weakly informative priors for
+  $\alpha$. In this case, a pseudo-posteriori is used. This estimator has the
+  advantage of allowing prior information as convenient, but it suffers from
+  the same limitations as VH and SH estimators, since the weights are derived
+  from a Random Walk approximation. 
+
 \end{alineas}
 
 \textcite{ott2019reduced} and \textcite{fellows2019respondent} extended these
@@ -698,7 +719,8 @@ effects. \textcite{bastos2012binary} performs a binary regression to
 prevalence estimation through a hierarchical model where correlation structure
 was modelled as a Conditionally autoregressive (CAR) model (see Section XXX).
 \textcite{yauck2021general} includes homophily in a similar model, but with a
-Simultaneous Autoregressive (SAR) model (CITATION) for correlation. 
+Simultaneous Autoregressive (SAR) model (CITATION) for correlation. \todo{It
+would be nice to cite Camila, but reference not found.}
 
 \subsection{Bootstrap methods for uncertainty quantification}
 
@@ -715,8 +737,8 @@ Let $\boldsymbol{y} \in \R^n$ be a realization of a random variable $Y :
 \Omega \to \mathbb{R}^n$ associated with a phenomena such that each component
 $Y_i$ is independent of the others. Set $\mu = \ev[Y]$. The classical linear
 model assumes that $Y_i \overset{iid}{\sim} \N(\mu_i, \sigma^2)$ and $\mu =
-\boldsymbol{X}\beta$, such that $\beta \in \mathbb{R}^p$ is an unknown parameter vector and
-$\boldsymbol{X} \in \R^{n \times p}$ is the data, where $\boldsymbol{X}_{ij}$
+\boldsymbol{X}\beta$, such that $\beta \in \mathbb{R}^k$ is an unknown parameter vector and
+$\boldsymbol{X} \in \R^{n \times k}$ is the data, where $\boldsymbol{X}_{ij}$
 is the measure of the $j$-th covariate in the $i$-th individual. Non constant
 variance for each $Y_i$ is a possible variation for this model. 
 

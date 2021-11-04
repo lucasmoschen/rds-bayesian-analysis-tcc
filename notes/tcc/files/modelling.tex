@@ -7,15 +7,12 @@ Years later, Newman studied the theory of modelling which can be divided
 in three aspects \cite[p. 161]{lehmann2012model}: 
 
 \begin{enumerate}
-  \item Models of complex phenomena are created by putting together 
+  \item models of complex phenomena are created by putting together 
   simple building elements that the researcher is familiar with and can 
   handle; 
-  \item There are two types of models: the \textit{explanatory models}, 
+  \item there are two types of models: the \textit{explanatory models}, 
   which will be focused on this work, and the \textit{interpolatory formulae}. 
-  \item An explanatory theory necessitates a thorough understanding 
-  of the problem's scientific context. In this regard, we investigated 
-  this kind of problem involving Respondent-driven sampling and prevalence
-  estimation as introduced in Chapter \ref{ch:theoretical-background}. 
+  \item An explanatory theory necessitates a thorough understanding of the scientific context of the problem. In this regard, we investigated questions involving Respondent-driven sampling and prevalence estimation as introduced in Chapter \ref{ch:theoretical-background}. 
 \end{enumerate}
 
 In this chapter, we develop models that enclose these ideas building each 
@@ -25,23 +22,28 @@ researcher's uncertainty about it. For each individual, we observe $k$
 covariates that are possible risk factors represented by the vector 
 $\x_i \in \R^{k}$ of the $i^{th}$ individual. We denote $\theta_i$ the 
 probability of the $i$-th individual have been exposed to the disease
-that depends on the prevalence $\theta$ and $\x_i$. \improve{We also 
-consider when it depends on a spatial random effect caused by the 
-connections analysed by the RDS.} The probability of positive test 
-in the $i^{th}$ individual is denoted by $p_i$.  
+that depends on the prevalence $\theta$ and $\x_i$. We also consider the
+dependence of sampling from RDS as a spatial random effect. The probability of
+positive test in the $i^{th}$ individual is denoted by $p_i$.  
 
 Another important feature of the model is that sensitivity and 
 specificity have the same distribution for all individuals and 
 it only depends on the test used to diagnose. This is an assumption 
-that must be analysed for the studied disease. For instance, COVID-19 
-tests have different sensibilities and specificities for symptomatic and 
-asymptomatic individuals.  
+that must be analysed for each particular case. For instance, COVID-19 
+Sofia test has different sensibility and specificity for symptomatic and 
+asymptomatic individuals \cite[Table 1][p. 3]{mitchell2021performance}.  
 
 From above, we develop three different models: the first considers perfect 
 tests, that is, $\gamma_s = \gamma_e = 1$ and no spatial random effect; 
 the second considers imperfect tests, regarding $\gamma_s$ and $\gamma_e$, 
 but ignoring the RDS structure; and the third one has imperfect tests and 
-RDS structure. 
+RDS structure. \improve{Some considerations are made to improve the model's
+limitations.}
+
+The implementation of the following models were in the statistical computation
+platform Stan \cite{carpenter2017stan} within Python Interface PyStan
+\cite{pystan} which uses an implementation for HMC algorithm. All the codes
+are written in \autoref{appendix:stan-codes}.
 
 \section{Perfect tests}
 
@@ -50,28 +52,47 @@ which means that $\theta_i = p_i$ for all $i$. Therefore it only considers the r
 
 \begin{equation}
   \begin{aligned}
-    T_i &\sim \bern(\theta_i), \\
+    Y_i \mid \theta_i &\sim \bern(\theta_i), \\
     g(\theta_i) &= g(\theta) + \x_i^T\beta, 
   \end{aligned}  
 \end{equation}
-where $v^T$ denotes the transpose of $v$, and $g(\cdot)$ is a link function.
+where $g(\cdot)$ is the $\operatorname{logit}$ function.
 The parameter $\beta \in \R^{k}$ is the risk effects. For Bayesian inference, priors on
-$\beta$ and $\theta$ must be included. We use $\beta ~ \sim \N(\mu, \Sigma)$
-and $\theta \sim \betadist(a^{p}, b^p)$, where $\mu
-\in \R^{k}$, $\Sigma \in \R^{k\times k}$ symmetric positive-definite matrix,
-$a^p \in \R_{++}$, and $b^p \in \R_{++}$
-are fixed hyperparameters. 
+$\beta$ and $\theta$ must be included. We use $\beta ~ \sim \N(\mu_{\beta}, \Sigma_{\beta})$
+and $\theta \sim \betadist(a^{p}, b^p)$, where the vector $\mu_{\beta}
+\in \R^{k}$, the symmetric positive-definite matrix $\Sigma_{\beta} \in
+\R^{k\times k}$, and the positive real values $a^p, b^p \in \R_{>0}$ are fixed
+hyperparameters. Inferences about $\beta$ and $\theta$ are based on the posterior distribution.
 
-\begin{remark}
-  If the risk factors are zero, i.e $\x_i = 0$, the probability of the
-  $i^{th}$ having been exposed is the prevalence $\theta$, which means that in
-  a population with no risk effects, the probability of a person has the
-  disease is exactly the proportion in this population. 
-\end{remark}
+If the risk factors are zero, i.e $\x_i = 0$, the probability of the
+$i$-th individual having been exposed is the prevalence $\theta$, which means that in
+a population with no risk effects, the probability of a person having the
+disease is exactly the proportion in this population. Keeping the notation of
+Section \ref{sec:glm}, we denote $\boldsymbol{X}$ the covariate matrix. 
 
 \subsection{Identifiability}
 
-\subsection{Toy example}
+Identifiability is characterized by the likelihood function. In our model, if
+given data points $y$, two different values of $\theta$ yield the
+same likelihood function, then $\theta$ is {\em unidentifiable}. The same for
+each $\beta_i$. In this circunstancies, proper priors are sufficient to handle
+identifiability problems in Bayesian perspective \cite[p.
+3459]{xie2006measures}. A formal definition for {\em Bayesian identifiability}
+is the following: if $p(\theta \mid \beta, y, \boldsymbol{X}) = p(\theta \mid
+\beta)$, the
+data $y$ is uninformative for $\theta$ when $\beta$ is known. We can change
+the places of $\beta$ and $\theta$ with the same definition. 
+
+
+
+"if the observed values of x i are “far from” zero, resulting
+in potentially strong posterior correlation among b 0 and
+b 1 (see Fig. 2). To address this problem, centering of x i" (ogle, 2020). 
+
+\subsection{Simulated data}
+
+To present a sanity check about the functionality of the above model, we
+generate simulated data from the model and make inferences about the result. 
 
 \section{Sensitivity and specificity}
 
@@ -277,6 +298,10 @@ $$
   Random Graph can answer to us. In the sparse case, the number of edges is
   $O(n)$ with $p=1/n$. If $p=1$, the number of edges is $O(n^2)$ and the funil
   disappears. This problem does not appear in the poisson model. 
+
+  \item The effect of $\rho$ is really observed in the literature in the
+  paper: ``A close look at the spatial structure implied by the CAR and SAR
+  models''. 
 \end{enumerate}
 
 \subsection{Exponential Random Graph Model (ERGM)}
