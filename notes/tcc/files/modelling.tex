@@ -221,7 +221,7 @@ where $a^p, a^s, a^e, b^p, b^s, b^e \in \R_{++}$ are fixed hyperparameters.
 This model does not include prior knowledge about the correlation between
 specificity and sensitivity. 
 
-\subsection{Toy example}
+\subsection{Simulated data}
 
 Consider the following model \cite{gelman2020bayesian}:
 \begin{gather*}
@@ -275,7 +275,7 @@ $$
 \omega \sim \N\left(0, \left[\tau (D - \rho \tilde{Q})\right]^{-1}\right).
 $$
 
-\subsection{Toy example}
+\subsection{Simulated data}
 
 \begin{enumerate}
   \item Between the model with the log odds of prevalence having a Gaussian prior
@@ -324,7 +324,12 @@ following
 
   \item $V(Q) = \sum_{k \text{ is not seed}} \log(\lambda \boldsymbol{s}_k)$
   
-  \item $w = (0, t_2 - t_1, ..., t_n - t_{n-1})$ is the vector of the waiting times between
+  \item $w = (0, t_2 - t_1, ..., t_n - t_{n-1})$ is thely worst.
+  3. Comparison between parametrization of sigma and tau showed that they are
+  similar in sight of time of execution, energy and divergences, among others
+  diagnostics. However, the mean estimate of sigma is more controlled. The
+  median estimate is very similar. This happens because there are a few very
+   vector of the waiting times between
   recruitments.  
 \end{enumerate}
 
@@ -348,3 +353,21 @@ becomes
 \end{equation}
 The problem with this model is that we are assigning a posterior distribution
 for $Q$.
+
+\section{Improvements in the model}
+
+Several characteristics of RDS were not include in the previous model, such as
+homophily, bottlenecks, and sampling weights. This section aims to build some
+options for these aspects and establish future works in that line. 
+
+\subsection{Homophily model}
+
+\cite{yauck2021general} 
+
+\subsection{Sampling weights}
+
+GLM weighted
+
+\subsection{Bottlenecks}
+
+Partial pooling. 
