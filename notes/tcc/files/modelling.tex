@@ -51,6 +51,7 @@ The first model supposes the samples are independent and the test is perfect,
 which means that $\theta_i = p_i$ for all $i$. Therefore it only considers the risk factors $\x_i$. 
 
 \begin{equation}
+  \label{model:perfect-tests}
   \begin{aligned}
     Y_i \mid \theta_i &\sim \bern(\theta_i), \\
     g(\theta_i) &= g(\theta) + \x_i^T\beta, 
@@ -72,22 +73,87 @@ Section \ref{sec:glm}, we denote $\boldsymbol{X}$ the covariate matrix.
 
 \subsection{Identifiability}
 
-Identifiability is characterized by the likelihood function. In our model, if
-given data points $y$, two different values of $\theta$ yield the
-same likelihood function, then $\theta$ is {\em unidentifiable}. The same for
-each $\beta_i$. In this circunstancies, proper priors are sufficient to handle
-identifiability problems in Bayesian perspective \cite[p.
-3459]{xie2006measures}. A formal definition for {\em Bayesian identifiability}
-is the following: if $p(\theta \mid \beta, y, \boldsymbol{X}) = p(\theta \mid
-\beta)$, the
-data $y$ is uninformative for $\theta$ when $\beta$ is known. We can change
-the places of $\beta$ and $\theta$ with the same definition. 
+A formal definition for identifiability regards the likelihood function \cite[p.
+3459]{xie2006measures}:
+
+\begin{definition}
+  Let $\mathcal{P} = \{P_{\theta} : \theta \in \Theta\}$ be
+  the family of probability distributions for $\mathcal{Y}$. This model is
+  {\em identifiable} if for any $\theta', \theta'' \in
+  \Theta$, 
+  $$\forall y \in \mathcal{Y}, P_{\theta'}(Y = y) =
+  P_{\theta''}(Y = y) \implies
+  \theta' = \theta''.$$ 
+\end{definition} 
+
+The family distribution from model \eqref{model:perfect-tests} is the logistic
+regression parametrized by $(\theta, \beta)$ and conditioned on
+observing the regressor $\boldsymbol{X}$, with $\mathcal{Y} = \{0,1\}^n$. Defining $\beta_0 =
+g(\theta)$, we may rewrite it as 
+$$Y_i \mid \tilde{\beta}, \tilde{\x}_i \sim \bern(g^{-1}(\tilde{\x}_i^T\tilde{\beta})),$$
+such that $\tilde{\beta}$ concatenate $\beta_0$ and $\beta$, and $\tilde{\x}_i$
+concatenate $1$ and $\x_i$. \textcite[p. 7]{kuchenhoff1995identification}
+gives a formal proof for the identifiability of this representation.
+
+In the Bayesian paradigm, inferences are based on the posterior distribution.
+Therefore, identifiability should consider the prior distribution.
+\textcite[p. 46]{lindley1972bayesian}  argued that proper priors are
+sufficient to handle
+identifiability problems in the Bayesian perspective, which means that a
+well-defined posterior probability distribution is enough for parameter
+identification. A formal definition for {\em Bayesian identifiability} is the
+following: if $p(\theta \mid \beta, y, \boldsymbol{X}) = p(\theta \mid
+\beta)$, the data $y$ is uninformative for $\theta$ when $\beta$ is known. 
+The definition is analogous if $\beta$ and $\theta$ change places. However,
+\textcite[p. 248]{gelfand1999identifiability} proved that this definition is equivalent to
+likelihood identifiability. 
+
+Despite the identifiability of the model, it may be hard to sample from
+the posterior distribution depending on the value of $\x$. As an example, 
+consider the following experiment: 
+
+\begin{enumerate}[label=(\roman*)]
+  \item generate $500$ covariates $X_i \sim \N(15, 1)$;
+  \item let $\beta = 0.1$, $\theta = 0.1$, and $\theta_i = g^{-1}(g(\theta) +
+  X_i\beta)$ for $1 \le i \le 500$;
+  \item for each $i$, sample $Y_i \sim \bern(\theta_i)$;
+  \item let $a^p = 1$, $b^p = 1$, $\mu_{\beta} = 0$, and $\Sigma_{\beta} = 1$
+  the hyperparameters for the prior distributions (weakly informative);
+  \item make 1000 warm-up and 1000 sampling iterations using Stan given the
+  data $(Y_1, X_1), \dots, (Y_n, X_n)$.  
+  \item make 2000 warm-up and 2000 sampling iterations using Stan given the
+  data $(Y_1, X_1), \dots, (Y_n, X_n)$.
+\end{enumerate}
+
+The HMC sampler took around 16.7s.
+\autoref{fig:result-uncentered-mean} presents the results through the posterior
+distribution, the trace plot, and the strong posterior
+correlation between $\theta$ and $\beta$. To address this 
+problem, subtracting the mean $\bar{x}$ is a default procedure \cite[p.
+5]{ogle2020ensuring}. After centering the data around the mean, the HMC
+sampler took around 3.3s, and the improved results are shown in
+\autoref{fig:result-centered-mean}. 
 
 
+\begin{figure}
+  \centering  
+  \caption{\label{fig:result-uncentered-mean}Posterior
+  distribution, trace plot, and posterior samples of parameters 
+  $\theta$ and $\beta$ from model \eqref{model:perfect-tests} with uncentralized covariate.}
+  \includegraphics[width=14cm]{identifiability_perfect_tests_unscaled_x.pdf}
+  \fonte{Prepared by the author (2021).}
+\end{figure} 
 
-"if the observed values of x i are “far from” zero, resulting
-in potentially strong posterior correlation among b 0 and
-b 1 (see Fig. 2). To address this problem, centering of x i" (ogle, 2020). 
+\begin{figure}
+  \centering  
+  \caption{\label{fig:result-centered-mean}Posterior
+  distribution, trace plot, and posterior samples of parameters 
+  $\theta$ and $\beta$ from model \eqref{model:perfect-tests} with centralized covariate.}
+  \includegraphics[width=14cm]{identifiability_scaled_x.pdf}
+  \fonte{Prepared by the author (2021).}
+\end{figure} 
+
+Along with this discussion, the 
 
 \subsection{Simulated data}
 
