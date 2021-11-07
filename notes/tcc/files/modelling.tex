@@ -63,15 +63,20 @@ $\beta$ and $\theta$ must be included. We use $\beta ~ \sim \N(\mu_{\beta}, \Sig
 and $\theta \sim \betadist(a^{p}, b^p)$, where the vector $\mu_{\beta}
 \in \R^{k}$, the symmetric positive-definite matrix $\Sigma_{\beta} \in
 \R^{k\times k}$, and the positive real values $a^p, b^p \in \R_{>0}$ are fixed
-hyperparameters. Inferences about $\beta$ and $\theta$ are based on the posterior distribution.
-
-If the risk factors are zero, i.e $\x_i = 0$, the probability of the
-$i$-th individual having been exposed is the prevalence $\theta$, which means that in
-a population with no risk effects, the probability of a person having the
-disease is exactly the proportion in this population. Keeping the notation of
+hyperparameters. Inferences about $\beta$ and $\theta$ are based on the
+posterior distribution. Keeping the notation of
 Section \ref{sec:glm}, we denote $\boldsymbol{X}$ the covariate matrix. 
 
+\begin{remark}[Interpretation of prevalence]
+  \label{remark:interpretation-prevalence}
+  According to the model formulation, if the risk factors are zero, i.e $\x_i
+  = 0$, the probability of the $i$-th individual having been exposed is the prevalence $\theta$, which means that in
+a population with no risk effects, the probability of a person having the
+disease is exactly the proportion in this population. 
+\end{remark}
+
 \subsection{Identifiability}
+\label{sec:perfect-test-identifiability}
 
 A formal definition for identifiability regards the likelihood function \cite[p.
 3459]{xie2006measures}:
@@ -125,40 +130,161 @@ consider the following experiment:
   data $(Y_1, X_1), \dots, (Y_n, X_n)$.
 \end{enumerate}
 
-The HMC sampler took around 16.7s.
+The HMC sampler took around 8.39s.
 \autoref{fig:result-uncentered-mean} presents the results through the posterior
 distribution, the trace plot, and the strong posterior
 correlation between $\theta$ and $\beta$. To address this 
 problem, subtracting the mean $\bar{x}$ is a default procedure \cite[p.
 5]{ogle2020ensuring}. After centering the data around the mean, the HMC
-sampler took around 3.3s, and the improved results are shown in
-\autoref{fig:result-centered-mean}. 
-
+sampler took around 1.39s, and the improved results are shown in
+\autoref{fig:result-centred-mean}. 
 
 \begin{figure}
   \centering  
   \caption{\label{fig:result-uncentered-mean}Posterior
   distribution, trace plot, and posterior samples of parameters 
-  $\theta$ and $\beta$ from model \eqref{model:perfect-tests} with uncentralized covariate.}
+  $\theta$ and $\beta$ from model \eqref{model:perfect-tests} with uncentered covariate.}
   \includegraphics[width=14cm]{identifiability_perfect_tests_unscaled_x.pdf}
   \fonte{Prepared by the author (2021).}
 \end{figure} 
 
 \begin{figure}
   \centering  
-  \caption{\label{fig:result-centered-mean}Posterior
+  \caption{\label{fig:result-centred-mean}Posterior
   distribution, trace plot, and posterior samples of parameters 
   $\theta$ and $\beta$ from model \eqref{model:perfect-tests} with centralized covariate.}
   \includegraphics[width=14cm]{identifiability_scaled_x.pdf}
   \fonte{Prepared by the author (2021).}
 \end{figure} 
 
-Along with this discussion, the 
+We observe that the interpretation of prevalence from Remark
+\ref{remark:interpretation-prevalence} changes from centred and 
+uncentered since the meaning of $\x_i = 0$ is different. Along with this
+discussion, it is usual to divide the centred variable by its
+standard deviation, to put all predictors on a common scale. Discussions about
+the problems caused by standardizing are outside the scope of this work. 
+\textcite{gelman2008scaling} suggests to divide de continuous variables by 2
+times de standard deviation to allow ``the coefficients to be interpreted in
+the same way as binary deviation.'' \cite[p. 2867]{gelman2008scaling} Binary
+inputs are not standardized since their coefficients are easily interpretable.
+
+Other identifiability problems arising from the input variables are
+collinearity and {\em separation} \cite[p. 1360-1361]{gelman2008weakly}. 
+The latter occurs if a linear combination of a subset of the predictors gives
+a perfect prediction for the binary outcome. For instance, when a linear
+combination of the predictors is greater than a threshold if and only if $y =
+1$.  
 
 \subsection{Simulated data}
 
-To present a sanity check about the functionality of the above model, we
-generate simulated data from the model and make inferences about the result. 
+To present a sanity check about the functionality of model
+\eqref{model:perfect-tests} and to validate the properties of the estimation
+procedure, we simulate fake data from the model and make inferences about the
+result. We follow the experiment from Section
+\ref{sec:perfect-test-identifiability}.
+\autoref{table:experiments-perfect-test} summarizes the experiment
+parameters. 
+
+\begin{table}[!ht]
+  \centering
+  \caption{\label{table:experiments-perfect-test}Experiment settings for the
+  simulation of model \eqref{model:perfect-tests}.}
+  \begin{tabular}{ccccccc}
+  \hline
+  Exp & $n$ & $k_{c}$ (normal) & $k_{c}$ (cauchy) & $k_{b}$ & $\beta$ & $\theta$ \\ \hline
+  \multicolumn{1}{c}{1} & 100 & 3 & 0 & 2 & {[}-0.1, 2.5, 1.4, -1.8, 0.3{]} & 0.05 \\
+  \multicolumn{1}{c}{2} & 100 & 3 & 0 & 2 & {[}-0.1, 2.5, 1.4, -1.8, 0.3{]} & 0.9 \\
+  \multicolumn{1}{c}{3} & 100 & 2 & 2 & 1 & {[}-0.1, 2.5, 1.4, -1.8, 0.3{]} & 0.1 \\
+  \multicolumn{1}{c}{4} & 5000 & 40 & 5 & 5 & $F$ distribution & 0.1 \\\hline
+  \end{tabular}
+  \fonte{Prepared by the author (2021). We denote $n$ for number of samples,
+  $k_c$ for the number of continuous variables, and $k_b$ for binary variables. Between
+  paranthesis, \textit{normal} means that the variables were generated from a
+  Multivariate Normal with prespecified parameters, and \textit{cauchy} from a
+  Cauchy distribution. $F$ distribution is $\N(\mu = 0, \sigma = 2)$ with
+  probability 0.3, and 0 otherwise.}
+\end{table}
+
+We primally look at the settings from experiment 1. With a non-informative prior for $\theta$
+(Jeffreys prior $\betadist(1/2, 1/2)$) and a weakly informative for $\beta$
+(zero mean and covariance matrix four times the identity matrix),
+\autoref{fig:result-experiment1-perfect-test} shows the posterior
+distributions for the parameters. The prevalence estimate is good despite
+Jeffreys' prior. When the distance between the prior and the true value is large, the
+inferences seem to be biased. However, this makes sense regarding the model. For
+instance, for $\beta_2$, before observing the data, we put 0.7 mass probability
+for values lesser than 0.1. The data decreased it to 0.125. This highlights
+the importance of a well defined prior distribution. The values for Bulk ESS
+was greater than 3000 for all parameters, while Tails ESS were greater that
+2200 with 1000 warmup and 1000 sampling iterations, and 4 chains. For all
+parameters $\hat{R} = 1$. Trace plots and scatter plots were also good and we
+omit here since they do not bring new information for the discussion. 
+
+\begin{figure}[!ht]
+  \centering  
+  \caption{\label{fig:result-experiment1-perfect-test}Posterior
+  distribution for parameters of model \eqref{model:perfect-tests}.}
+  \includegraphics[width=14cm]{posterior_perfect_tests_exp1.pdf}
+  \fonte{Prepared by the author (2021).}
+\end{figure} 
+
+Although we are performing Bayesian inference, frequentist properties can me
+accessed through simulation. After 1000 simulations varying the input data
+$Y$, the 75\% credible interval included the true parameters in 75.8\%, 78.8\%,
+76.4\%, 77.5\%, 67.3\%, and 72.2\% of the times, respectively for $\theta,
+\beta_1, \dots, \beta_5$. Each simulation had 100 samples and weakly
+informative priors for $\beta$ and $\theta$.
+\autoref{fig:predicted-vs-simulated-perfect-tests} compares the predicted and
+simulated probabilities. The green area is delimited by the curves generated
+by $2\sqrt{\theta_i(1-\theta_i)/n}$, where $n=500$ is the number of points. 
+It was increased to show a larger variety of points. This area is a $\pm 2$
+standard-error bounds. 
+
+\begin{figure}[!ht]
+  \centering  
+  \caption{\label{fig:predicted-vs-simulated-perfect-tests}Comparing predicted
+ and simulated probabilities of having the disease from model \eqref{model:perfect-tests}.}
+  \includegraphics[width=10cm]{predicted-vs-simulated-perfect-tests.pdf}
+  \fonte{Prepared by the author (2021).}
+\end{figure} 
+
+Experiment 2 is used to see if these properties repeat when the prevalence is
+higher. The same regressors were used for the comparison, but the input data
+$Y$ were generated with different prevaleces. With prevalence being 0.9, the
+estimates were a little high for all coefficients as
+\autoref{fig:comparing-diff-prevalence-perfect-tests} presents. This is
+related to the fact that the posterior mean underestimated the true value for this
+experiment. After increasing the number of samples, the estimates were closer,
+as expected. 
+
+\begin{figure}[!ht]
+  \centering  
+  \caption{\label{fig:comparing-diff-prevalence-perfect-tests}Comparing
+  posterior mean and 94\% credibility intervals for $\beta$ in model \eqref{model:perfect-tests} with the same regressors
+  $\boldsymbol{X}$ but different prevalences.}
+  \includegraphics[width=12cm]{comparing-diff-prevalence-perfect-tests.pdf}
+  \fonte{Prepared by the author (2021).}
+\end{figure} 
+
+The third experiment aims to analyse what happens if some covariates have a
+heavier tail. No big difference was noticed despite the existence of some
+individuals very different from the others. At last, the fourth experiment
+increases the dimensionality to observe the number of effective samples. Each
+chain took around 3 minutes, instead of the 3s needed for the previous
+experiments. From the 51 parameters, 48 had the true values in the 95\% HDI
+credible interval. The Bulk ESS was greater than 4500 for 95\% of the
+parameters. \autoref{fig:predicted-vs-simulated-high-dimension-perfect-tests}
+presents how the predicted probabilities for each individual behaves in this
+case. Here the green area is delimited by the 95\% credible interval. 
+
+\begin{figure}[!hb]
+  \centering  
+  \caption{\label{fig:predicted-vs-simulated-high-dimension-perfect-tests}
+  Comparing predicted and simulated probabilities of having the disease from
+  model \eqref{model:perfect-tests} with high dimension.}
+  \includegraphics[width=10cm]{predicted-vs-simulated-high-dimension-perfect-tests.pdf}
+  \fonte{Prepared by the author (2021).}
+\end{figure} 
 
 \section{Sensitivity and specificity}
 
@@ -350,7 +476,7 @@ $$
   the latter was usually faster and without divergences. Therefore the 
   preferable model is with the prevalence. 
 
-  \item Non-centered distributions are really worst. 
+  \item Non-centred distributions are really worst. 
   \item Comparison between parametrization of sigma and tau showed that
   they are similar in sight of time of execution, energy and divergences,
   among others diagnostics. However, the mean estimate of sigma is more

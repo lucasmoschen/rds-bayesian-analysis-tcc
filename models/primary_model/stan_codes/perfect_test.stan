@@ -1,26 +1,30 @@
 data {
-    int<lower = 0> n_samples;
-    int<lower = 0> n_predictors; 
+    int<lower=0> n_samples;
+    int<lower=0> n_predictors; 
   
-    int T[n_samples];
-    matrix[n_samples, n_predictors] x;
+    int<lower=0, upper=1> Y[n_samples];
+    matrix[n_samples, n_predictors] X;
     
     cov_matrix[n_predictors] Sigma; 
     vector[n_predictors] mu;
-    real<lower = 0> alpha_p; 
-    real<lower = 0> beta_p;
+    real<lower=0> alpha_p; 
+    real<lower=0> beta_p;
+}
+transformed data {
+  matrix[n_predictors, n_predictors] sigma_beta;
+  sigma_beta = cholesky_decompose(Sigma);
 }
 parameters {
-    vector[n_predictors] effects; 
-    real<lower = 0, upper = 1> prev; 
+    vector[n_predictors] normal_raw; 
+    real<lower=0, upper=1> prev; 
+}
+transformed parameters {
+    vector[n_predictors] effects = mu + sigma_beta * normal_raw;
 }
 model {
-    effects ~ multi_normal(mu, Sigma);
+    normal_raw ~ std_normal();
     prev ~ beta(alpha_p, beta_p);
-
-    for (i in 1:n_samples) {
-       T[i] ~ bernoulli_logit(logit(prev) + x[i] * effects);
-    }
+    Y ~ bernoulli_logit(logit(prev) + X * effects);
 }
 generated quantities {
   vector[n_predictors] effects_prior = multi_normal_rng(mu, Sigma); 
