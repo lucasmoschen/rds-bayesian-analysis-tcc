@@ -289,13 +289,12 @@ case. Here the green area is delimited by the 95\% credible interval.
 \section{Sensitivity and specificity}
 
 In this section, we describe a model for estimating the sensitivity and
-specificity of a diagnostic test separately from the final model for
-estimating prevalence. This model is relevant to analyze and experiment with
-different prior specification approaches. Suppose having a {\em gold standard
-test} that is the best available test \cite{versi1992gold}, and also another
-test (for instance a simpler, a faster, or a less invasive one) which we want
-to estimate the accuracy by the sensitivity and specificity. In this scenario,
-a true positive / negative individual means they have been tested positive by
+specificity of a diagnostic test. This model is relevant to analyze and
+experiment with different prior specification approaches. Suppose having a
+gold standard test and another test, for instance, a simpler, faster, or less
+invasive one, which we want to estimate the accuracy by the sensitivity and
+specificity. In this scenario,
+true positive (negative) individuals are those who tested positive (negative) by
 the gold standard. Therefore, in a population with $n_{\gamma_e}$ true
 positives and  $n_{\gamma_s}$ true negatives, we denote 
 \begin{gather*}
@@ -311,11 +310,10 @@ prior distribution for the parameters $(\gamma_e, \gamma_s) \sim \pi(\gamma_e,
 For this, we consider three different approaches: 
 
 \begin{enumerate}
-  \item The parameters are independent a priori and each one has a beta
-  distribution with pre-specified hyperparameters.
-  \item \improve{Hierarchical partial pooling, when dealing with more studies.}
-  \item A Bivariate Beta (see Appendix
-  \ref{appendix:bivariate-beta-distribution}) 
+  \item the parameters are independent a priori and each one has a beta
+  distribution with pre-specified hyperparameters;
+  \item a bivariate normal distribution in the log odds space; 
+  \item a bivariate beta (see Appendix \ref{appendix:bivariate-beta-distribution}) 
   distribution.
 \end{enumerate}
 
