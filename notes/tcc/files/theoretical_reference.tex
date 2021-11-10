@@ -106,18 +106,19 @@ are the following:
   diagnose, despite the golden standard being positive.
 \end{alineas}
 
-\begin{table}[!ht]
+\begin{quadro}[!ht]
   \centering
+  \caption[Chart]{Two-by-two table that compares the result from the gold standard to
+  the test under evaluation.}
   \begin{tabular}{c|c|c|}
   \cline{2-3}
                                                & $Y = 0$ & $Y = 1$ \\ \hline
   \multicolumn{1}{|c|}{$Y^{\mathrm{true}}= 0$} & TN    & FP    \\ \hline
-  \multicolumn{1}{|c|}{$Y^{\mathrm{true}}= 1$} & FN    & TP    \\ \hline
+  \multicolumn{1}{|c|}{ $Y^{\mathrm{true}}= 1$} & FN    & TP    \\ \hline
   \end{tabular}
-  \caption{Two-by-two table that compares the result from the gold standard to
-  the test under evaluation.}
+  \fonte{Prepared by the author (2021) and based on \textcite[p. 126]{bastos2021modelling}.}
   \label{table:two-by-two}
-\end{table}
+\end{quadro}
 
 \begin{remark}
   When a gold standard test is not available, which is called no gold standard
@@ -540,12 +541,12 @@ From the RDS process, the observed data is $\boldsymbol{Z} = (G_R,
 \begin{definition}[Compatibility]
   Let $\hat{G}_S = (\hat{V}_S, \hat{E}_S)$ be an estimate for $G_S$. The 
   subgraph $\hat{G}_S$ is {\em compatible} with data $\boldsymbol{Z}$ if 
-  \begin{enumerate}
+  \begin{alineas}
     \item $v \in V_R$ if and only if $v \in \hat{V}_S$;
     \item $\forall (i,j) \in E_R, \{i,j\} \in \hat{E}_S$;
     \item $\forall v \in V_R, \sum_{u \in V_R / \{v\}} \ind\{\{u,v\} \in
     \hat{E}_S\} \le d_v$. \cite[p. 197]{crawford2016}.
-  \end{enumerate}
+  \end{alineas}
   We denote $\mathcal{C}(\boldsymbol{Z})$ the set of all compatible subgraphs
   for $\boldsymbol{Z}$. \todo{Provide an example to
   explain all the above definitions.}
@@ -690,9 +691,9 @@ be used for prevalence estimate through equation
   \item {\em RDS-B estimator}: \cite{bastos2018hiv} proposes a
   pseudo-posterior approach to estimate prevalence. Let 
   \begin{equation*}
-    Y_i \sim \bern(\theta_i) \text{ with } \operatorname{logit}(\theta_i) = \alpha,
+    Y_i \sim \bern(\theta_i) \text{ with } \logit(\theta_i) = \alpha,
   \end{equation*}  
-  where $\operatorname{logit}$ is explained in Sextion \ref{sec:glm}. Defines 
+  where $\logit$ is explained in Sextion \ref{sec:glm}. Defines 
   $\delta_i \propto n \cdot d_i^{-1}$ such that $\sum_{i=1}^n \delta_i = n$,
   based on the weights suggested by \textcite{volz2008probability}. The
   pseudo-likelihood is written as follows: 

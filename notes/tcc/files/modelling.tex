@@ -6,14 +6,14 @@ to comprehend by the researchers. In that sense, few parameters should represent
 Years later, Newman studied the theory of modelling which can be divided 
 in three aspects \cite[p. 161]{lehmann2012model}: 
 
-\begin{enumerate}
+\begin{alineas}
   \item models of complex phenomena are created by putting together 
   simple building elements that the researcher is familiar with and can 
   handle; 
   \item there are two types of models: the \textit{explanatory models}, 
   which will be focused on this work, and the \textit{interpolatory formulae}. 
   \item An explanatory theory necessitates a thorough understanding of the scientific context of the problem. In this regard, we investigated questions involving Respondent-driven sampling and prevalence estimation as introduced in Chapter \ref{ch:theoretical-background}. 
-\end{enumerate}
+\end{alineas}
 
 In this chapter, we develop models that enclose these ideas building each 
 block separately. For a Bayesian modelling, we assume that each parameter
@@ -57,7 +57,7 @@ which means that $\theta_i = p_i$ for all $i$. Therefore it only considers the r
     g(\theta_i) &= g(\theta) + \x_i^T\beta, 
   \end{aligned}  
 \end{equation}
-where $g(\cdot)$ is the $\operatorname{logit}$ function.
+where $g(\cdot)$ is the $\logit$ function.
 The parameter $\beta \in \R^{k}$ is the risk effects. For Bayesian inference, priors on
 $\beta$ and $\theta$ must be included. We use $\beta ~ \sim \N(\mu_{\beta}, \Sigma_{\beta})$
 and $\theta \sim \betadist(a^{p}, b^p)$, where the vector $\mu_{\beta}
@@ -295,29 +295,63 @@ gold standard test and another test, for instance, a simpler, faster, or less
 invasive one, which we want to estimate the accuracy by the sensitivity and
 specificity. In this scenario,
 true positive (negative) individuals are those who tested positive (negative) by
-the gold standard. Therefore, in a population with $n_{\gamma_e}$ true
-positives and  $n_{\gamma_s}$ true negatives, we denote 
+the gold standard. Therefore, in a population with $n_{\gamma_s}$ true
+positives and  $n_{\gamma_e}$ true negatives, we denote 
 \begin{gather*}
-  y_{negative} \sim \operatorname{Binomial}(n_{\gamma_e}, \gamma_e), \\
-  y_{positive} \sim \operatorname{Binomial}(n_{\gamma_s}, \gamma_s),
+  y_{\mathrm{pos}} \mid \gamma_s \sim \operatorname{Binomial}(n_{\gamma_s}, \gamma_s),\ \\
+  y_{\mathrm{neg}} \mid \gamma_e \sim \operatorname{Binomial}(n_{\gamma_e}, \gamma_e), 
 \end{gather*}
-such that $y_{negative}$ are negative tests on known negative 
-subjects and $y_{positive}$ are positive tests on
-known positive. In a classic Bayesian analysis, we have to define a 
-prior distribution for the parameters $(\gamma_e, \gamma_s) \sim \pi(\gamma_e,
-\gamma_s)$. 
+such that $y_{\mathrm{neg}}$ are negative tests on known negative 
+subjects and $y_{\mathrm{pos}}$ are positive tests on
+known positive. In the Two-by-two formulation from \autoref{table:two-by-two},
+we have
 
-For this, we consider three different approaches: 
+\begin{quadro}[!ht]
+  \centering
+  \caption{\label{table:two-by-two-data}Two-by-two table with the model specification.}
+  \begin{tabular}{c|c|c|c|}
+  \cline{2-4}
+                                               & $Y = 0$ & $Y = 1$ & Total\\ \hline
+  \multicolumn{1}{|c|}{$Y^{\mathrm{true}}= 0$} & $y_{\mathrm{neg}}$  & $n_{\gamma_e} - y_{\mathrm{neg}}$ & $n_{\gamma_e}$ \\ \hline
+  \multicolumn{1}{|c|}{$Y^{\mathrm{true}}= 1$} & $n_{\gamma_s} -
+  y_{\mathrm{pos}}$    & $y_{\mathrm{pos}}$  & $n_{\gamma_s}$  \\ \hline
+  \multicolumn{1}{|c|}{Total} & $n_{\gamma_s} + y_{\mathrm{neg}} -
+  y_{\mathrm{pos}}$ & $n_{\gamma_e} + y_{\mathrm{pos}} - y_{\mathrm{neg}}$ &
+  $n_{\gamma_s} + n_{\gamma_e}$ \\\hline
+  \end{tabular}
+  \fonte{Prepared by author (2021).}
+\end{quadro}
 
-\begin{enumerate}
-  \item the parameters are independent a priori and each one has a beta
-  distribution with pre-specified hyperparameters;
-  \item a bivariate normal distribution in the log odds space; 
-  \item a bivariate beta (see Appendix \ref{appendix:bivariate-beta-distribution}) 
-  distribution.
-\end{enumerate}
+In Bayesian analysis, we have to define a prior distribution with density $\pi$ for the
+parameters $(\gamma_e, \gamma_s)$. For this, we consider three different approaches: 
+
+\begin{alineas}
+  \item prior distributions are specified independently for each parameter and
+  each one has a beta distribution, i.e,  
+  $$\pi(\gamma_e, \gamma_s) =
+  \pi(\gamma_e)\pi(\gamma_s) \propto \gamma_s^{a_s}(1-
+  \gamma_s)^{b_s}\gamma_e^{a_e}(1-\gamma_s)^{b_e},$$
+  for $a_s, b_s, a_e,$ and $b_e$ being pre-determined positive real hyperparameters;
+  \item bivariate normal distribution in the log odds space, i.e,  
+  $$(\logit(\gamma_e), \logit(\gamma_s)) \sim
+  \N(\mu_{\gamma}, \Sigma_{\gamma}),$$
+  such that the vector $\mu_{\gamma} \in \R^2$ and the covariance matrix
+  $\Sigma_{\gamma} \in \R^{2\times 2}$ are pre-determined hyperparameters;
+  \item a bivariate beta distribution described in Appendix \ref{appendix:bivariate-beta-distribution}
+  with parameters $\alpha_1, \dots, \alpha_4 \in \R_{>0}$.
+\end{alineas}
 
 \subsection{Independent beta distribution priors}
+
+If the knowledge of the specificity affects the range of most possible values
+of the sensitivity, or vice-versa, there is antecedent information about the
+correlation between the parameters. When this is not the case, a possible
+independent prior formulation is the usage of $\betadist$ distribution since
+it is bounded in the interval $[0,1]$ and it is reasonably flexible in its
+shape.  Another good reason for this choice is that the beta distribution forms a conjugate family with the binomial
+distribution, that is, if the likelihood has binomial distribution and the
+prior has beta distribution, then the posterior has beta distribution.
+
 
 When considering separated experiments for specificity and
 sensitivity, there is
@@ -332,8 +366,8 @@ Using data from \cite{bennett2020estimating} about COVIDPrior information of the
 Santa Clara:  
 \begin{align*}
   y/n &= 50/3330,\\
-y_{negative}/n_{\gamma_e} &= 399/401, \\
-y_{positive}/n_{\gamma_s} &= 103/122, 
+y_{neg}/n_{\gamma_e} &= 399/401, \\
+y_{\mathrm{pos}}/n_{\gamma_s} &= 103/122, 
 \end{align*}
 we fit the model and obtain the results showed in Figure
 \ref{fig:results-posterior-model1}. All the codes were done in {\em Stan} and
@@ -353,8 +387,8 @@ Other approach considers more than one study about specificity and
 sensitivity. A {\em hierarchical partial pooling} model for these studies
 can be done in the following way: 
 \begin{gather*}
-    \operatorname{logit}(\gamma_s^j) \sim \operatorname{Normal}(\mu_{\gamma_s}, \sigma_{\gamma_s}), \\
-    \operatorname{logit}(\gamma_e^j) \sim \operatorname{Normal}(\mu_{\gamma_e}, \sigma_{\gamma_e}), 
+    \logit(\gamma_s^j) \sim \operatorname{Normal}(\mu_{\gamma_s}, \sigma_{\gamma_s}), \\
+    \logit(\gamma_e^j) \sim \operatorname{Normal}(\mu_{\gamma_e}, \sigma_{\gamma_e}), 
 \end{gather*}
 for $1 \le j \le K$ studies, such that the first study is the considered one.
 Partial pooling because the parameters can be sampled from the same
@@ -467,7 +501,7 @@ $$
 
 \subsection{Simulated data}
 
-\begin{enumerate}
+\begin{alineas}
   \item Between the model with the log odds of prevalence having a Gaussian prior
   distribution and the other with the prevalence having a Beta prior
   distribution, 
@@ -492,7 +526,7 @@ $$
   \item The effect of $\rho$ is really observed in the literature in the
   paper: ``A close look at the spatial structure implied by the CAR and SAR
   models''. 
-\end{enumerate}
+\end{alineas}
 
 \subsection{Exponential Random Graph Model (ERGM)}
 
@@ -502,7 +536,7 @@ model developed by Crawford, we can model the
 matrix $Q$ as {\em Exponential Random Graph Model} (ERGM). Define the
 following 
 
-\begin{enumerate}
+\begin{alineas}
   \item $\boldsymbol{s} = \tril(QC)^T \boldsymbol{1} + C^Tu$, such that $Q$ is the
   adjacency matrix of the recruited subjects, $C$ is the {\em Coupon Matrix},
   $u$ the vector of the number of edge ends belonging to each vertex
@@ -521,7 +555,7 @@ following
   median estimate is very similar. This happens because there are a few very
    vector of the waiting times between
   recruitments.  
-\end{enumerate}
+\end{alineas}
 
 Therefore $\Pr(Q|w) \propto \exp[T(Q)^Tw + V(Q)]$. With that, the model
 becomes 
@@ -551,20 +585,10 @@ homophily, bottlenecks, and sampling weights. This section aims to build some
 options for these aspects and establish future works in that line. 
 
 \begin{alineas}
-  \item {\em Homophily model}:
+  \item {\em Homophily model}: \cite{yauck2021general} 
+  \item {\em Sampling weights}: GLM weighted
+  \item {\em Bottlenecks}
 \end{alineas}
-
-\subsection{Homophily model}
-
-\cite{yauck2021general} 
-
-\subsection{Sampling weights}
-
-GLM weighted
-
-\subsection{Bottlenecks}
-
-Partial pooling. 
 
 \section{Mispecified data simulation}
 
