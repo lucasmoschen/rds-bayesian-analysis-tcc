@@ -3,11 +3,11 @@
 
 In this chapter, we shall describe the theoretical background
 taken under consideration for the developed models and analysis, including
-Bayesian statistics (Section \ref{sec:bayesian_statistics}), the prevalence 
-estimation problem (Section \ref{sec:prevalence_estimation_problem}), 
-Respondent-driven sampling (Section \ref{sec:respodent_driven_sampling}), 
-and computational methods (Section
-\ref{sec:computational_methods}) used in our research. \todo{Fix order after.}
+the prevalence estimation problem (Section
+\ref{sec:prevalence_estimation_problem}), Respondent-driven sampling (Section
+\ref{sec:respodent_driven_sampling}), Bayesian statistics (Section
+\ref{sec:bayesian_statistics}), and computational methods (Section
+\ref{sec:computational_methods}) used in our research.
 
 \section{Prevalence estimation problem}
 \label{sec:prevalence_estimation_problem}
@@ -33,18 +33,17 @@ As a result, prevalence represents both incidence and the duration of disease. \
 prevalence reveals the burden of a disease in respect to its effects on
 society, such as, monetary costs, quality of live, and morbidity. They also
 comment that when measured periodically, its evolution can identify potential
-causes of the infection and prevention and care methods. \todo{Should I
-mention more reasons to study prevalence?} We remark that when it is impossible to test every individual at the same
+causes of the infection and prevention and care methods. We remark that when it is impossible to test every individual at the same
 time, we assume that all individuals remain exposed to the disease at time of
 the last tested individual.
 
 Consider a population of interest and a known condition, such as, for instance,
 a disease or a binary behavior. A diagnostic test is done in the individuals
 to measure the presence or the absence of this condition, such as serological
-tests.\todo{It might be nice to add examples.} Mathematically, we denote
-$\theta \in (0,1)$ the prevalence of the condition, which is the parameter of
-interest. Let $I$ be a index set for the individuals. We also denote $Y^{\mathrm{true}}_i$ the indicator function of the presence of the
-condition in the i$^{th}$ individual, that is, 
+tests. Mathematically, we denote $\theta \in (0,1)$ the prevalence of the
+condition, which is the parameter of interest. Let $I$ be a index set for the
+individuals. We also denote $Y^{\mathrm{true}}_i$ the indicator function of
+the presence of the condition in the i$^{th}$ individual, that is, 
 $$Y^{\mathrm{true}}_i = \begin{cases}
   1, &\text{if individual } i \text{ has the condition.} \\
   0, &\text{otherwise.}
@@ -77,7 +76,7 @@ the evaluation of the diagnostic procedure by some measurement. \textcite[p.
 2]{vsimundic2009measures} presents several options with different aspects,
 such as the {\em likelihood ratio}, {\em sensitivity and specificity}, and
 {\em the area under the ROC curve}. In this work, we consider the sensitivity
-and specificity of the test. \todo{It may be good to justify this choice.}
+and specificity of the test.
 
 A perfect test would discriminate every sick individual from the non-sick ones.
 Given that there is not such thing, we suppose having a {\em gold standard
@@ -121,8 +120,8 @@ are the following:
 \end{quadro}
 
 \begin{remark}
-  When a gold standard test is not available, which is called no gold standard
-  situations \cite[p. 1]{rutjes2007evaluation}, other methods should be
+  When a gold standard test is not available, which is called {\em no gold standard
+  situations} \cite[p. 1]{rutjes2007evaluation}, other methods should be
   considered such as the construction of reference standard by giving the
   patients either different or the same tests and combining the results
   somehow. For more details, \textcite{rutjes2007evaluation} does a literature
@@ -214,7 +213,23 @@ sensitivity and specificity of the test. According to \textcite{branscum2005esti
   populations can be incorporated. \cite[p. 1]{branscum2005estimation}.
 \end{citacao}
 
-Therefore, this work focus on the Bayesian paradigm.
+Therefore, this work focus on the Bayesian paradigm. 
+
+\subsection{Correlation between sensitivity and specificity}
+\label{sec:correlation-sensitivity-specificity}
+
+A general method for a diagnostic or screening test is to construct a
+continuous scale measuring some related quantity to the disease and to define
+a cut-off number, such that values higher than the threshold indicate the
+presence of the illness. Suppose the cut-off is high, almost the maximum value
+of the scale. Therefore, the majority of the population will be tested
+negative. There will be a lot of false-negative individuals but a few
+false-positive ones, which implies that sensitivity is low and specificity is
+high. If the threshold is smaller, the opposite effect happens. Nonetheless,
+sensitivity and specificity are negatively correlated. \textcite[p.
+46]{parikh2008understanding} gives a more practical example. Observe that this
+correlation is related to the estimation of the parameters, then it can only
+be noticed in meta-analysis studies. 
 
 \section{Respondent-driven sampling}
 \label{sec:respodent_driven_sampling}
@@ -851,6 +866,18 @@ Lebesgue measure, equation \eqref{eq:bayes-update-measure} resumes to
 \begin{equation}
   p(y|\theta) = \frac{f(y\mid \theta)\pi(\theta)}{\int_{\Theta} f(y\mid t)\pi(t) \, dt}.  
 \end{equation}
+
+Another important concept used thorough out the text is the following 
+
+\begin{definition}
+  \label{def:conjugate-family}
+  Let $\mathcal{F}$ be a family of probability definitions parametrized by
+  $\theta \in \Theta$. $\mathcal{F}$ is {\em conjugate} for a likelihood $f(y
+  \mid \theta)$ when for every $\pi \in \mathcal{F}$, the posterior $p(y \mid
+  \theta) \in \mathcal{F}$. The prior is called {\em conjugate prior} for the
+  likelihood $p(y \mid \theta)$, and prior and posterior are {\em conjugate
+  distributions}. 
+\end{definition}
 
 \section{Computational methods}
 \label{sec:computational_methods}
