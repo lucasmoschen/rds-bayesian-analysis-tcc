@@ -347,7 +347,7 @@ parameters $(\gamma_e, \gamma_s)$. For this, we consider three different approac
 If more studies about the same diagnostic test are available, a {\em
 hierarchical partial pooling} approach can be adopted for prior specification,
 as explained by \textcite[p. 1272-1274]{gelman2020bayesian} and by
-\textcite[p. 2-3]{guo2017bayesian}.
+\textcite[p. 2-3]{guo2017bayesian}.  
 
 \subsection{Independent beta distribution priors}
 
@@ -377,8 +377,11 @@ which leads to the following posterior distribution from the likelihood
 
 Notice that this particular likelihood function does not add any correlation to the
 parameters since it treats each one separately. The interpretation of the beta
-distribution parameter is in terms of number of successes for the first
-parameter and failures for the second parameter. 
+distribution parameter is in terms of the number of successes for the first
+parameter and failures for the second parameter. With respect to Section
+\ref{sec:correlation-sensitivity-specificity}, since the likelihood from this
+model does not add any correlation to the posterior distribution, the prior
+distribution has to give this information to it, when necessary.  
 
 \subsection{Bivariate normal distribution in the log odds space}
 
@@ -401,29 +404,46 @@ such that $\sigma_{\gamma_s} > 0$ and $\sigma_{\gamma_e} > 0$ are the
 standard deviations from sensitivity and specificity, respectively, and $\rho$
 is the correlation between the parameters. 
 
-\subsection{Bivariate Beta prior}
+\subsection{A bivariate beta prior}
 
-Finally, we studied a joint distribution for specificity and sensitivity, a
-possible bivariate beta distribution built in \cite{olkin2015constructions}.
-This distribution is derived from a Dirichlet distribution of order four. Let $U = (U[1],...,U[4]) \sim \operatorname{Dirichlet}(\boldsymbol{\alpha})$, where
-$\boldsymbol{\alpha} \in \mathbb{R}^4_+$. Therefore, defining $X = U[1] +
-U[2]$ and $Y = U[1] + U[3]$, we will have that $(X,Y)$ has a well-defined
-probability distribution in
-$[0,1] \times [0,1]$ such that $X$ and $Y$ have marginally beta distributions,
-and they have correlation in all space. Depending on the definition of
-$\boldsymbol{\alpha}$, the correlation between the variables range from -1 and
-1. Figure \ref{fig:beta-bivariate} shows some examples of this construction. 
+A common practice is to define the beta distribution as a prior distribution
+over $[0,1]$. When more dimensions are necessary, the Dirichlet distribution
+is a possible generalization with the restriction that the parameters live in
+the simplex of lower dimension, i.e., if $\boldsymbol{x} \in [0,1]^d$ has Dirichlet
+distribution, there is the restriction $\sum_{i=1}^d \boldsymbol{x}_i = 1$.
+Because of that, \textcite{olkin2015constructions} build a bivariate beta distribution
+with positive probability in $(0,1)^2$, with marginals having beta
+distribution and correlation over the interval $(-1,1)$. Appendix
+\ref{appendix:bivariate-beta-distribution} presents a detailed derivation. The
+prior specification is as follows: 
+\begin{equation*}
+  \begin{aligned}
+    (U_1, \dots, U_4) &\sim \operatorname{Dirichlet}(\alpha_1, \dots, \alpha_4), \\
+    \gamma_e &= U_1 + U_2, \\
+    \gamma_s &= U_1 + U_3.
+  \end{aligned}
+\end{equation*}
+Prior distributions can be placed on the hyperparameters $\alpha_i$. In this work,
+we employ 
+\begin{equation*}
+  \alpha_i \sim \operatorname{Gamma}(a^i, b^i), \quad a^i, b^i > 0, \quad \text{ for } i = 1,\dots,4. 
+\end{equation*}
+Suppose the research have prior information about specificity and specificity,
+such their mean and correlation. 
 
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=\textwidth]{beta-distributions.png}
-    \caption{Different choices of $\alpha$ and the joint distribution of the variables $X$ and $Y$.}
-    \label{fig:beta-bivariate}
-\end{figure}
+To specify the prior hyperparameters using prior information, 
+the following approach is used: 
 
-In this section, we shall describe how to use the Bivariate Beta (see Appendix
-\ref{appendix:bivariate-beta-distribution}) to model the correlation between
-specificity and sensitivity.
+\begin{alineas}
+  \item having $\alpha_i$ fixed: we search for $\alpha_i = \hat{\alpha}_i >
+  0$.  
+  thorough a value 
+  \item having $\alpha_i$ as a hierarchical parameter: 
+\end{alineas}
+
+\subsection{Comparing the prior specifications with simulated data}
+
+
 
 \section{Imperfect tests}
 
