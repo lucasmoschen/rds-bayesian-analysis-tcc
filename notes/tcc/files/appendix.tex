@@ -37,7 +37,9 @@ bivariate beta distribution. Their proofs are in the Appendix.
   \centering
   \caption{Joint density of the variables $X$ and $Y$ for different choices of $\boldsymbol{\alpha}$.}
   \includegraphics[width=14cm]{joint-densities-bivariate-beta.pdf}
-  \fonte{Prepared by the author (2021).}
+  \fonte{Prepared by the author (2021). The four plots} in the first plot are
+  symmetric and have no correlation between the variables. When $\alpha =
+  [0.5, 0.5, 0.5, 0.5]$
   \label{fig:beta-bivariate}
 \end{figure}
 
@@ -168,6 +170,7 @@ From the marginal distributions, we already know the expected values and varianc
 At last we derive the covariance and the correlation between $X$ and $Y$.
 
 \begin{proposition}[Covariance and correlation]
+  \label{prop:covariance-correlation}
   The covariance between $X$ and $Y$ is 
   $$\cov(X,Y) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1\alpha_4 - \alpha_2\alpha_3)$$
   and
@@ -191,6 +194,15 @@ Therefore
 \end{equation}
   
 \end{proof}
+
+Now we present an example where the full range of correlation is covered.
+Suppose $X$ and $Y$ have uniform distribution over $[0,1]$, that is, they have
+beta distribution with parameter $1,1$. Then, we have that 
+$$\alpha_1 +
+\alpha_2 = \alpha_3 + \alpha_4 = \alpha_1 + \alpha_3 = \alpha_2 + \alpha_4 = 1,$$
+whose solution is $\alpha_1 = \alpha_4 \in (0,1)$ and $\alpha_2 = \alpha_3 = 1
+- \alpha_4$. The correlation formula boils down to 
+$$\cor(X,Y) = \alpha_4^2 - (1 - \alpha_4)^2 = 2\alpha_4 - 1 \in (-1,1).$$
 
 \section{Comments about integration}
 
@@ -228,7 +240,32 @@ not defined. More generally, $f_{X,Y}(x,y)$ is not defined if $\alpha_1 +
 
 \section{Elicitation of a bivariate beta}
 
-Suppose that it is known the following moments of the Bivariate Beta distribution: $m_1 = \ev[X], m_2 = \ev[Y], v_1 = \var(X), v_2 = \var(Y)$, and $\rho  = \cor(X,Y)$. Notice that $v_1 + m_1^2 = \var(X_1) + \ev[X_1]^2 = \ev[X_1^2]$ and
+In this section, we develop a method to elicit the parameters of the bivariate
+beta distribution, which means to define an approximation
+$\hat{\boldsymbol{\alpha}}$ for the parameter $\boldsymbol{\alpha}$. 
+This is an important step for the characterization of the prior distribution of model
+\eqref{model:sensitivity-specificity}. If the researcher does not have
+information about the parameters previous seeing the data, two approaches
+are common in the independent beta setting and are adapted for the bivariate 
+case:
+
+\begin{alineas}
+  \item both parameters receive a uniform distribution: in this case, as
+  mentioned in Proposition \ref{prop:covariance-correlation}, $\alpha_1 =
+  \alpha_4 \in (0,1)$ and $\alpha_2 = \alpha_3 = 1 - \alpha_4$. The parameter
+  $\alpha_4$ is defined in a way that $\alpha_4 = \frac{1}{2}(1 + \cor(X,Y))$.
+  If no information about the variables' correlation is available, it is recommended to use
+  the independent setting since it is more flexible;
+  \item both parameters receive a Jeffreys prior distribution
+  ($\betadist(1/2,1/2)$): in this case,  $\alpha_1 =
+  \alpha_4 \in (0,1/2)$ and $\alpha_2 = \alpha_3 = 1 - \alpha_4$. The parameter
+  $\alpha_4$ is defined in a way that $\alpha_4 = \frac{1}{4}(1 + \cor(X,Y))$.
+\end{alineas}
+
+Now, suppose that the researcher has information about following moments of
+the bivariate beta distribution: $m_1 = \ev[X], m_2 = \ev[Y], v_1 = \var(X),
+v_2 = \var(Y)$, and $\rho  = \cor(X,Y)$. Notice that $v_1 + m_1^2 = \var(X_1)
++ \ev[X_1]^2 = \ev[X_1^2]$ and
 $$
 \ev[X_1^2] - \ev[X_1] = \frac{(\alpha_1 + \alpha_2 + 1)(\alpha_1 + \alpha_2)}{(\tilde{\alpha} + 1)\tilde{\alpha}} - \frac{\alpha_1 + \alpha_2}{\tilde{\alpha}} = -\frac{(\alpha_1 + \alpha_2)(\alpha_3 + \alpha_4)}{\tilde{\alpha}(\tilde{\alpha}+1)} < 0, 
 $$
@@ -268,6 +305,7 @@ $$
 The following proposition builds a solution excluding the fourth equation, given the above comment. 
 
 \begin{proposition}
+  \label{prop:solution-to-system-bivariate-beta}
   System \eqref{eq:system-moments-alpha} without the fourth equation has a unique solution given by 
 \begin{gather}
  \label{eq:system-solution}
@@ -299,7 +337,9 @@ which is equivalent to
 Then, we can write $\alpha_1$ and $\alpha_2$ as functions of $\alpha_3$ and
 $\alpha_4$:
 \begin{align}
+  \label{eq:alpha1-as-function-alpha3-alpha4}
   \alpha_1 &= \frac{m_1+m_2-1}{1-m_1}\alpha_3 + \frac{m_2}{1-m_1}\alpha_4 \\
+  \label{eq:alpha2-as-function-alpha3-alpha4}
   \alpha_2 &= \frac{1-m_2}{1-m_1}\alpha_3 + \frac{m_1-m_2}{1-m_1}\alpha_4.
 \end{align}
 
@@ -316,7 +356,7 @@ that is a linear function of $\alpha_4$. We summarize the expressions in functio
 \begin{align*}
   \alpha_1 &= (m_1 + m_2 - 1)\frac{(m_1 - m_1^2 - v_1)}{v_1} + \alpha_4 \\
   \alpha_2 &=  (1 - m_2)\frac{(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4 \\
-  \alpha_3 &= (1-m_1)\frac{(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4, \\
+  \alpha_3 &= (1-m_1)\frac{(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4,
 \end{align*}
 which implies that 
 $$
@@ -324,7 +364,7 @@ $$
 $$
 
 Now rewrite the fifth equation using the first two equations from system \eqref{eq:system-moments-alpha} as follows 
-\begin{equation*}
+\begin{equation}
     \label{eq:rho-equation}
     \begin{split}
         \rho &= \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\sqrt{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}} \\ 
@@ -332,179 +372,110 @@ Now rewrite the fifth equation using the first two equations from system \eqref{
         &= \frac{(m_1 + m_2 - 1)\tilde{\alpha}\alpha_4 + \alpha_4^2 - ((1-m_2)\tilde{\alpha} - \alpha_4)((1-m_1)\tilde{\alpha} - \alpha_4)}{\tilde{\alpha}^2\sqrt{m_1m_2(1-m_1)(1-m_2)}} \\
         &= \frac{\alpha_4 - (1-m_1)(1-m_2)\tilde{\alpha}}{\tilde{\alpha}\sqrt{m_1m_2(1-m_1)(1-m_2)}} \\ 
     \end{split}
-\end{equation*}
+\end{equation}
 and the solution is, therefore, 
 $$
 \alpha_4 = \rho\tilde{\alpha}\sqrt{m_1m_2(1-m_1)(1-m_2)} + (1-m_1)(1-m_2).
 $$
 \end{proof}
 
-Besides the system \eqref{eq:system-moments-alpha}, the Beta Distribution needs that $\alpha_1, \dots, \alpha_4 > 0$. However, this is not necessarily true. Since it is difficult to find the subset $D \subset [0,1]^4$ in which the solution for \eqref{eq:system-solution} is strictly positive for $\alpha_1, \dots, \alpha_4$, we present some examples in Figure \ref{fig:alpha-solutions}.
+There is an additional restriction to the sum given by the marginal
+distributions. Let $Z \sim \betadist(a, b)$. Then: 
+$$
+\frac{\ev[Z](1-\ev[Z])}{\var[Z]} - 1 = \frac{\frac{ab}{(a+b)^2}}{\frac{ab}{(a+b)^2(a+b+1)}}-1 = a+b, 
+$$
+then 
+\begin{equation}
+  \label{eq:restriction-sum-alphas}
+  \sum_{i=1}^4 \alpha_i = \frac{m_1(1-m_1)}{v_1} - 1 = \frac{m_2(1-m_2)}{v_2} - 1.
+\end{equation}
 
-% \begin{figure}[!hb]
-%     \centering
-%     \caption{Verification of positivity of the solution for different and fixed values of $v_1$ and $\rho$, and $m_1, m_2 \in [0,1]^2$. The gray region specifies when $m_1 - m_1^2 \le v_1$, which is not possible for beta distribution.}
-%     \includegraphics[width=\textwidth]{alpha_solution_existence.eps}
-%     \label{fig:alpha-solutions}
-% \end{figure}
+Besides solving the system \eqref{eq:system-moments-alpha}, the bivariate 
+beta distribution needs that $\alpha_1, \dots, \alpha_4 > 0$. However, this is not necessarily
+true. Since it is difficult to find the subset $D \subset [0,1]^4$ in which
+the solution for \eqref{eq:system-solution} is strictly positive for
+$\alpha_1, \dots, \alpha_4$, we present some examples in Figure
+\ref{fig:alpha-solutions}. For each subplot, the values of $v_1$ and $\rho$
+are fixed, while $m_1, m_2 \in [0,1]^2$. The grey area corresponds to the set 
+where $v_1 \ge m_1 - m_2$, which is impossible. The orange area means that
+the solution to system \eqref{eq:system-moments-alpha} is not strictly
+positive. At last, the blue region is the set of interest. 
 
-When $\rho = -1$ for instance, only a few specifications of $m_1$ and $m_2$ generate a solution strictly positive. These examples show that several interesting specifications for the researchers can lead to a non positive solution, as we will see in next section. 
+When $\rho = -1$ for instance, only a few specifications of $m_1$ and $m_2$
+generate a strictly positive solution. These examples show that several
+interesting specifications for the researchers can lead to a non positive
+solution, which is not desirable. 
 
+\begin{figure}[!ht]
+    \centering
+    \caption{Verification of positivity of the solution for different and
+    fixed values of $v_1$ and $\rho$, and $m_1, m_2 \in [0,1]^2$.} 
+    \includegraphics[width=\textwidth]{alpha_solution_existence.pdf}
+    \fonte{Prepared by the author (2021).}
+    \label{fig:alpha-solutions}
+\end{figure}
 
-% \section{Specifying parameters
-% \texorpdfstring{$\boldsymbol{\alpha}$}{alpha}}
+Because of that reason, we can only have an approximation using some
+optimization solver. From now on we suppose the researcher has knowledge about
+$m_1$, $m_2$ and $\rho$. Through equations
+\eqref{eq:alpha1-as-function-alpha3-alpha4}, 
+\ref{eq:alpha2-as-function-alpha3-alpha4}, and solving the correlation
+equation for $\alpha_3$ with help of the symbolic solver SymPy \cite{sympy},
+we have the following three expressions: 
+\begin{equation*}
+  \begin{aligned}
+    \alpha_1 &= \alpha_4\frac{m_1m_2 + \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}}{(1-m_1)(1-m_2) + \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}} \\
+    \alpha_2 &= \alpha_4\frac{m_1(1-m_2) - \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}}{(1-m_1)(1-m_2) + \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}} \\
+    \alpha_3 &= \alpha_4\frac{m_2(1-m_1) - \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}}{(1-m_1)(1-m_2) + \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}},
+  \end{aligned}
+\end{equation*}
+and $\alpha_4 > 0$ is a free parameter. In order to have $\boldsymbol{\alpha} >
+0$, we have two situations:
+\begin{alineas}
+  \item the denominador of $\alpha_1, \alpha_2, \alpha_3$ is negative: in this
+  case, it is not possible to have both $\alpha_2$ and $\alpha_3$ positives;
+  \item the denominador of  $\alpha_1, \alpha_2, \alpha_3$ is positive: in
+  this case, we have that 
+  $$
+  \rho \in \left(-\frac{\min(m_1m_2, (1-m_1)(1-m_2))}{\sqrt{m_1m_2(1-m_1)(1-m_2)}}, 
+  \frac{\max(m_1, m_2) - m_1m_2}{\sqrt{m_1m_2(1-m_1)(1-m_2)}}\right).
+  $$
+\end{alineas}
 
-% Suppose that the researcher has knowledge about the main moments of $X$ and
-% $Y$, such that $\ev(X) = m_1 \in (0,1), \ev(Y) = m_2 \in (0,1), \var(X) = v_1
-% \in (0, 1),$ and $\var(Y) =
-% v_2 \in (0,1)$. Notice that $v_1 + m_1^2 = \var(X_1) + \ev[X_1]^2 = \ev[X_1^2]$ and
-% $$
-% \ev[X_1^2] - \ev[X_1] = \frac{(\alpha_1 + \alpha_2 + 1)(\alpha_1 + \alpha_2)}{(\tilde{\alpha} + 1)\tilde{\alpha}} - \frac{\alpha_1 + \alpha_2}{\tilde{\alpha}} = -\frac{(\alpha_1 + \alpha_2)(\alpha_3 + \alpha_4)}{\tilde{\alpha}(\tilde{\alpha}+1)} < 0, 
-% $$
-% that is, $v_1 + m_1^2 - m_1 < 0 \implies v_1 < m_1 - m_1^2$ and similarly,
-% $v_2 < m_2 - m_2^2$. After fixing these quantities, we will have a non-linear system with four equations and four
-% unknown variables. Hence, we want to solve the following 
-% \begin{equation}
-%   \label{eq:system-moments-alpha}
-%   \begin{cases}
-%     m_1 = \dfrac{\alpha_1+\alpha_2}{\tilde{\alpha}} \\
-%     m_2 = \dfrac{\alpha_1+\alpha_3}{\tilde{\alpha}} \\ 
-%     v_1 = \dfrac{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)}{\tilde{\alpha}^2(\tilde{\alpha}+1)} = m_1\dfrac{\alpha_3+\alpha_4}{\tilde{\alpha}(\tilde{\alpha}+1)} \\
-%     v_2 = \dfrac{(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}{\tilde{\alpha}^2(\tilde{\alpha}+1)} = m_2\dfrac{\alpha_2+\alpha_4}{\tilde{\alpha}(\tilde{\alpha}+1)}.
-%   \end{cases}
-% \end{equation}
+When $m_1 = m_2 = m$, the upper bound is 1 and the lower bound is 
+$$\begin{cases}
+  -\dfrac{m}{1-m}, &m < 1/2 \\
+  -\dfrac{1-m}{m}, &m > 1/2.
+\end{cases}$$
 
-% \begin{proposition}
-%   System \eqref{eq:system-moments-alpha} has a solution if, and only if, the relation
-%   \begin{equation}
-%     \label{eq:v2}
-%     v_2 = \frac{(1 - m_2)\tilde{\alpha}}{\tilde{\alpha}(\tilde{\alpha}+ 1)} = \frac{1 - m_2}{\frac{m_1 - m_1^2}{v_1}} = \frac{v_1(1 - m_2)}{m_1(1-m_1)},
-%   \end{equation}
-%   is satisfied. When there is a solution, there will be
-%   infinitely many and they all lay in the ray 
-%   $$
-% \mathcal{L} = \{(1,-1,-1,1)\alpha_4 + k : \alpha_4 > 0\}, 
-% $$
-% such that $k = \left((m_1 + m_2 - 1)\tilde{\alpha}, (1-m_2)\tilde{\alpha},
-% (1-m_1)\tilde{\alpha}, 0\right)$. 
-% \end{proposition}
+Suppose that $\rho$ belongs to this interval. Then we have to choose $\alpha_4
+> 0$. Using a symbolic solver, we see that 
+$$
+\sum_{i=1}^4 \alpha_i = \frac{\alpha_4}{(1-m_1)(1-m_2) + \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}}, 
+$$
+therefore $v_1$ and $v_2$ are inversely proportional to $\alpha_4$. To have a
+higher variance, pick a small $\alpha_4$. To have a lower variance, pick a
+large one. If $\rho$ does not belong to the interval, taking a suitable value
+in it is a possibility. 
 
-% \begin{proof}
+Suppose the researcher has also knowledge about $v_1$ and $v_2$. By
+Proposition \ref{prop:solution-to-system-bivariate-beta} and
+\autoref{fig:alpha-solutions}, there is no viable
+solution in several situations. Because of that, two approaches are suggested:
 
-% The first two equations of the system \eqref{eq:system-moments-alpha} can be
-% rewritten as a linear system:
-% \begin{align*}
-%   (m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\alpha_4 &= 0 \\
-%   (m_2 - 1)\alpha_1 + m_2\alpha_2 + (m_2-1)\alpha_3 + m_2\alpha_4 &= 0,   
-% \end{align*}
-% which is equivalent to 
-% \begin{align*}
-%   \alpha_1 + \alpha_2 + \frac{m_1}{m_1-1}\alpha_3 + \frac{m_1}{m_1-1}\alpha_4 &= 0 \\
-%   \alpha_2 + \frac{1-m_2}{m_1-1}\alpha_3 + \frac{m_1-m_2}{m_1-1}\alpha_4 &= 0.
-% \end{align*}
-% Then, we can write $\alpha_1$ and $\alpha_2$ as functions of $\alpha_3$ and
-% $\alpha_4$:
-% \begin{align}
-%   \alpha_1 &= \frac{m_1+m_2-1}{1-m_1}\alpha_3 + \frac{m_2}{1-m_1}\alpha_4 \\
-%   \alpha_2 &= \frac{1-m_2}{1-m_1}\alpha_3 + \frac{m_1-m_2}{1-m_1}\alpha_4.
-% \end{align}
-% With that expression, let $\alpha_1 = a_3\alpha_3 + a_4\alpha_4$ and $\alpha_2
-% = b_3\alpha_3 + b_4\alpha_4$. Denote $c_3 = a_3 + b_3 + 1$ and $c_4 = a_4 +
-% b_4 + 1$. Then, consider the third equation of the system
-% \eqref{eq:system-moments-alpha}, 
-% \begin{equation*}
-%   \begin{split}
-%     &\frac{v_1}{m_1} = \frac{\alpha_3+\alpha_4}{\tilde{\alpha}(\tilde{\alpha} +1)} = \frac{\alpha_3+\alpha_4}{(\alpha_1+\alpha_2+\alpha_3+\alpha_4)^2 + (\alpha_1+\alpha_2+\alpha_3+\alpha_4)} \\
-%      &\implies \frac{v_1}{m_1}(\alpha_1 + \alpha_2 + \alpha_3 + \alpha_4)^2 = \alpha_3 + \alpha_4 - \frac{v_1}{m_1}(\alpha_1 + \alpha_2 + \alpha_3 + \alpha_4) \\
-%     &\implies \frac{v_1}{m_1}(c_3\alpha_3 + c_4\alpha_4)^2 = \left(1-\frac{v_1}{m_1}c_3\right)\alpha_3 + \left(1-\frac{v_1}{m_1}c_4\right)\alpha_4 \\
-%     &\implies \frac{v_1c_3^2}{m_1}\alpha_3^2 + \left(\frac{2v_1c_3c_4\alpha_4+v_1c_3}{m_1} - 1\right)\alpha_3 + \left(\frac{v_1c_4^2\alpha_4^2 + v_1c_4\alpha_4}{m_1} - \alpha_4\right) = 0 \\ 
-%     &\implies v_1c_3^2\alpha_3^2 + (2v_1c_3c_4\alpha_4+v_1c_3 - m_1)\alpha_3 + (v_1c_4^2\alpha_4^2 + v_1c_4\alpha_4 - m_1\alpha_4) = 0.
-%   \end{split}
-% \end{equation*}
-% Using a Computer Algebra System (CAS) with the Python library SymPy, the above
-% expression can be simplified as follows:
-% $$
-% v_1\alpha_3^2 + \left(v_1(1-m_1) + 2v_1\alpha_4 - m_1(1-m_1)^2\right)\alpha_3 - \alpha_4m_1(1-m_1)^2 + \alpha_4v_1(1 - m_1) + v_1\alpha_4^2 = 0.
-% $$
-% This way, the solutions of the above equation are function of $\alpha_4$.
-% Therefore, after solving the equations, we can use the last equation of the
-% system \eqref{eq:system-moments-alpha} as a function on of $\alpha_4$. Let, 
-% $$
-% \Lambda = \left(v_1(1-m_1) + v_1\alpha_4 - m_1(1-m_1)^2\right).
-% $$
-% Then, 
-% \begin{equation*}
-%   \begin{split}
-%     \Delta &= \left(v_1(1-m_1) + 2v_1\alpha_4 - m_1(1-m_1)^2\right)^2 - 4v_1(\alpha_4v_1(1 - m_1) - \alpha_4m_1(1-m_1)^2 + v_1\alpha_4^2), \\
-%     &= \left(\Lambda + v_1\alpha_4\right)^2 - 4v_1\alpha_4\Lambda \\
-%     &= \Lambda^2 - 2\Lambda v_1\alpha_4 + (v_1\alpha_4)^2 \\
-%     &= (\Lambda - v_1\alpha_4)^2 \\
-%     &= \left(v_1(1-m_1) - m_1(1-m_1)^2\right)^2 \\ 
-%     &= (1 - m_1)^2(v_1 + m_1^2 - m_1)^2.
-%   \end{split}
-% \end{equation*}
-% Note that $v_1 + m_1^2 = \var(X_1) + \ev[X_1]^2 = \ev[X_1^2]$ and
-% $$
-% \ev[X_1^2] - \ev[X_1] = \frac{(\alpha_1 + \alpha_2 + 1)(\alpha_1 + \alpha_2)}{(\tilde{\alpha} + 1)\tilde{\alpha}} - \frac{\alpha_1 + \alpha_2}{\tilde{\alpha}} = -\frac{(\alpha_1 + \alpha_2)(\alpha_3 + \alpha_4)}{\tilde{\alpha}(\tilde{\alpha}+1)} < 0.
-% $$
-% Therefore, 
-% $$
-% \sqrt{\Delta} = (1-m_1)(m_1 - v_1 - m_1^2)
-% $$
-% and 
-% \begin{equation*}
-%   \begin{split}
-%     \alpha_3 &= \frac{1}{2v_1}\left(\left(m_1(1-m_1)^2 - v_1(1-m_1) - 2v_1\alpha_4\right) \pm (1-m_1)(m_1 - v_1 - m_1^2)\right) \\
-%     &= - \alpha_4 + \frac{(1-m_1)(m_1 - m_1^2 - v_1) \pm (1-m_1)(m_1-v_1-m_1^2)}{2v_1}.
-%   \end{split}
-% \end{equation*}
-% When the sign is negative, we have that $\alpha_3 = - \alpha_4$, an impossible
-% solution. Then, 
-% $$
-% \alpha_3 = \frac{(1-m_1)(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4.
-% $$
+\begin{alineas}
+  \item no variable is fixed: solve the optimizing problem given by 
+  \textcite[p. 7]{olkin2015constructions}. The problem with this approach is 
+  that $\rho$ and the means $m_1, m_2$ get distanced from the given values.
+  Weights can be specified for each parameter to incorporate some preference;  
+  \item fix $m_1$ and $m_2$ and let $\rho, v_1$ and $v_2$ vary: it is the
+  limit of the above method, with the weights of $m_1$ and $m_2$ going to the
+  infinity. It is more suitable when the researcher has more beliefs in the
+  means than the other moments. 
+\end{alineas}
 
-% We summarize the expressions in function of $\alpha_4$: 
-% \begin{align*}
-%   \alpha_3 &= \frac{(1-m_1)(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4 \\
-%   \alpha_1 &= \frac{m_1+m_2-1}{1-m_1}\alpha_3 + \frac{m_2}{1-m_1}\alpha_4 = \frac{(m_1 + m_2 - 1)(m_1 - m_1^2 - v_1)}{v_1} + \alpha_4 \\
-%   \alpha_2 &= \frac{1-m_2}{1-m_1}\alpha_3 + \frac{m_1-m_2}{1-m_1}\alpha_4 = \frac{(1 - m_2)(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4 .
-% \end{align*}
-
-% From here, one can calculate that
-% $$
-% \tilde{\alpha} = \frac{m_1 - m_1^2 - v_1}{v_1}.
-% $$
-% Since $\alpha_2 + \alpha_4 = (1 - m_2)\tilde{\alpha}$, we have that the last
-% equation of the system \eqref{eq:system-moments-alpha} is given by
-% \eqref{eq:v2}, that is, the system $\eqref{eq:system-moments-alpha}$ has a solution if and
-% only if, equation \eqref{eq:v2} is satisfied. If it is, the solution is the ray 
-% $$
-% \mathcal{L} = \{(1,-1,-1,1)\alpha_4 + k : \alpha_4 > 0\}, 
-% $$
-% such that $k = \left((m_1 + m_2 - 1)\tilde{\alpha}, (1-m_2)\tilde{\alpha},
-% (1-m_1)\tilde{\alpha}, 0\right)$. 
-
-% \end{proof}
-
-
-% Now change the fourth equation of \eqref{eq:system-moments-alpha} by: 
-% $$
-% \cor(X,Y) = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\sqrt{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}} = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\tilde{\alpha}^2\sqrt{m_1m_2(1-m_1)(1-m_2)}}
-% $$
-
-% Supposing the expression for $\alpha_1, \alpha_2$ and $\alpha_3$, that is,
-% $m_1, m_2$ and $v_1$ are fixed, and supposing we fix $\rho = \cor(X,Y)$, we
-% can simplify the above expression (using a software) as follows: 
-
-% $$
-% \rho = \frac{1}{\tilde{\alpha}\sqrt{m_1m_2(1-m_1)(1-m_2)}}\alpha_4 - \sqrt{\frac{(1 - m_1)(1 - m_2)}{m_1m_2}},
-% $$
-% which is linear on $\alpha_4$, that is, for fixed values of
-% $m_1, m_2, v_1$ and $\rho$, there is an unique $\alpha_4$, and hence,
-% $\alpha_1, \alpha_2$ and $\alpha_3$ that satisfies system
-% \eqref{eq:system-moments-alpha} with the fourth equation changed by the
-% correlation. 
+In this work, we use the second approach, which give less importance to the
+correlation in comparison to the means. 
 
 \chapter{Stan codes}
 \label{appendix:stan-codes}
