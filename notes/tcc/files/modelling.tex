@@ -401,8 +401,12 @@ the regressors, which simplifies to
 \end{pmatrix},
 \end{equation*}
 such that $\sigma_{\gamma_s} > 0$ and $\sigma_{\gamma_e} > 0$ are the
-standard deviations from sensitivity and specificity, respectively, and $\rho$
-is the correlation between the parameters. 
+standard deviations from log odds of sensitivity and specificity,
+respectively, and $\rho$ is the correlation between the parameters in the log 
+odds space. The possible problem with that prior approach is that the moments
+of logit normal distribution are not in closed form and there is no available
+formula to derive $\ev[\gamma_s]$ from the parameters of the normal
+distribution \cite{kurt2021logit}. 
 
 \subsection{A bivariate beta prior}
 
@@ -431,19 +435,59 @@ we employ
 Suppose the research have prior information about specificity and specificity,
 such their mean and correlation. 
 
-To specify the prior hyperparameters using prior information, 
-the following approach is used: 
+To specify the prior hyperparameters using prior information, Section
+\ref{sec:elicitation-bivariate-beta} discusses the results when the
+researcher prespecifies $m_s = \ev[\gamma_s], m_e = \ev[\gamma_e], v_s = \var(\gamma_s),
+v_e = \var(\gamma_e)$, and $\rho  = \cor(\gamma_s, \gamma_e)$. Since system
+\eqref{eq:system-moments-alpha} usually has no solution, an optimization
+problem is solved with $m_s$ and $m_e$ fixed, and the other parameters being
+an approximation of the researcher's input values. For more details, see Appendix \ref{appendix:bivariate-beta-distribution}.
 
 \begin{alineas}
   \item having $\alpha_i$ fixed: we search for $\alpha_i = \hat{\alpha}_i >
-  0$.  
-  thorough a value 
-  \item having $\alpha_i$ as a hierarchical parameter: 
+  0$ thorough the values of $m_s, m_e, \rho, v_s$, and $v_e$. An optimization
+  problem is searching for $\hat{\alpha}_i$ which gives moments
+  $\var(\gamma_s), \var(\gamma_e)$, and $\cor(\gamma_s, \gamma_e)$ as close as
+  possible to the input values, and $m_s = \ev[\gamma_s], m_e =
+  \ev[\gamma_e]$. A variation of this method would include $m_s$ and $m_e$ in
+  the optimization problem and it is suggested when believes about $m_s$ and
+  $m_e$ are less strong. 
+  \item having $\alpha_i$ as a hierarchical parameter: we first estimate
+  $\hat{\boldsymbol{\alpha}}$ the same way as described above and set
+  $\ev[\alpha_i] = a^i/b^i = \hat{\alpha}_i \implies a^i = b^i\hat{\alpha}_i$.
+  The parameter $b_i = \hat{\alpha}_i/\var(\alpha_i)$ is a inversely
+  proportional quantity to the spread of parameter $\alpha_i$. The interesting
+  thing about this approach is that it allows the prior to move more freely,
+  specially when the input values are far from the estimated ones. 
 \end{alineas}
+
+\subsubsection*{Implementation of the dirichlet distribution in Stan}
+
+The Dirichlet distribution is defined on the simplex of lower dimension.
+Therefore the sampler has to consider the restriction of $\sum_{i=1}^4 U_i =
+1$. \textcite{betancourt2012cruising} presents a simplification in the
+structure of the simplex. The propose is \cite[p. 2]{betancourt2012cruising}
+\begin{equation*}
+  \begin{aligned}
+    z_i &\sim \betadist(\tilde{\alpha}_i, \alpha_i), \text{ where } \tilde{\alpha}_i = \sum_{k=i+1}^4 \alpha_k, \quad i = 1,2,3 \\
+    U_i &= \left(\prod_{k=1}^{i-1} z_k\right)\cdot \begin{cases}
+      1 - z_i, &i < 4 \\
+      1, &i = 4
+    \end{cases},
+  \end{aligned}
+\end{equation*}
+which removes the constraint. 
 
 \subsection{Comparing the prior specifications with simulated data}
 
+Now we are going to compare the three prior specification methods from 
+three situations:
 
+\begin{alineas}
+  \item only vague information is available; 
+  \item strong beliefs about the means and no information about correlation; 
+  \item strong beliefs about the means and the correlation. 
+\end{alineas}
 
 \section{Imperfect tests}
 

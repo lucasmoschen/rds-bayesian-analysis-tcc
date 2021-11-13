@@ -49,8 +49,8 @@ class ParameterAlpha:
         rho_tilde = (alpha1 * alpha4 - alpha2 * alpha3) / (alpha_tilde * alpha_tilde)
         rho_tilde /= np.sqrt(m1 * m2 * (1-m1) * (1-m2))
         obj = 0
-        obj += c[0]*g(m1 * (1 - m1) / v1, alpha_tilde)
-        obj += c[1]*g(m2 * (1 - m2) / v2, alpha_tilde)
+        obj += c[0]*g(m1 * (1 - m1) / v1 - 1, alpha_tilde)
+        obj += c[1]*g(m2 * (1 - m2) / v2 - 1, alpha_tilde)
         obj += g(rho, rho_tilde)
         return obj
 
@@ -72,7 +72,7 @@ class ParameterAlpha:
                         args=(m1, m2, v1, v2, rho, g, c),
                         bounds=[(0, np.inf)]*4,
                         constraints={'type': 'ineq', 
-                                     'fun': lambda alpha, m1, m2, v1, v2: max(m1*(1-m1)/v1 - 1,
+                                     'fun': lambda alpha, m1, m2, v1, v2: max(m1*(1-m1)/v1-1,
                                                                               m2*(1-m2)/v2-1) \
                                                                           - sum(alpha),
                                      'args': [m1, m2, v1, v2]},
@@ -104,9 +104,10 @@ class ParameterAlpha:
             raise Exception('This system does not have a solution since alpha_3 < 0')
 
         # With the estimated alpha, the value of v2_hat.
-        v2_hat = v1*(1-m2)/(m1*(1-m1))
+        sum_alpha = alpha1 + alpha2 + alpha3 + alpha4
+        v2_hat = m2*(1-m2)/(sum_alpha + 1)
 
-        err_v2 = abs(v2 - v1*(1-m2)/(m1*(1 - m1)))/v2
+        err_v2 = abs(v2 - v2_hat)/v2
 
         return ((alpha1, alpha2, alpha3, alpha4), v2_hat, err_v2)
 
@@ -127,6 +128,11 @@ class ParameterAlpha:
                              x0=x0, 
                              args=(m1, m2, v1, v2, rho, g, c),
                              bounds=[(lb, np.inf)]*2,
+                             constraints={'type': 'ineq', 
+                                          'fun': lambda alpha, m1, m2, v1, v2: max(m1*(1-m1)/v1-1,
+                                                                                   m2*(1-m2)/v2-1) \
+                                                                               - sum(alpha)/(1-m1),
+                                          'args': [m1, m2, v1, v2]},
                              method='trust-constr')
 
         alpha3, alpha4 = minimized.x

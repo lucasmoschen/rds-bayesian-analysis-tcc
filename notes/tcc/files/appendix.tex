@@ -239,6 +239,7 @@ not defined. More generally, $f_{X,Y}(x,y)$ is not defined if $\alpha_1 +
 \alpha_4 \le 1$ and $x + y = 1$; $\alpha_2 + \alpha_3 \le 1$ and $x = y$.
 
 \section{Elicitation of a bivariate beta}
+\label{sec:elicitation-bivariate-beta}
 
 In this section, we develop a method to elicit the parameters of the bivariate
 beta distribution, which means to define an approximation
@@ -476,6 +477,63 @@ solution in several situations. Because of that, two approaches are suggested:
 
 In this work, we use the second approach, which give less importance to the
 correlation in comparison to the means. 
+
+\begin{remark}
+  If the researcher has information about a credibility interval, this
+  information needs to be converted in terms of the variance.
+\end{remark}
+
+\section{Simulate data}
+
+In this section we experiment the estimation process of $\hat{\boldsymbol{\alpha}}$ through
+two different simulations: 
+
+\begin{alineas}
+  \item simulating from bivariate beta: fix the parameter $\alpha = (0.5, 0.5,
+  0.5, 0.5)$ and generate $1000$
+  different datasets from bivariate beta distribution of size $100$; calculate
+  $m_1, m_2, v_1, v_2$, and $\rho$ and (i) solve the equations through Proposition
+  \eqref{prop:solution-to-system-bivariate-beta}, (ii) complete optimization
+  problem, and (iii) optimization problem with $m_1$ and $m_2$ fixed, which we
+  call {\em mixed solver}. The mean squared error is calculated;
+  \item simulating from bivariate logit normal distribution: fix the means and
+  covariance matrix and follow the same instructions from the previous item.
+\end{alineas}
+
+Since the comparison is in terms of mean squared error, it is clear that the
+minimization problem will have the least value. When time is important, it is
+a very expensive method. Solving equations should be the best method, but
+under uncertainty, its results can have biases.
+\autoref{tab:comparing-approaches-bivariate-beta} summarizes the results. 
+Notice that when simulating from the bivariate beta or from the bivariate
+logit normal with parameters corresponding to the beta, the estimation process
+has little error. 
+
+\begin{table}[hb]
+  \centering
+  \caption{\label{tab:comparing-approaches-bivariate-beta}Comparing the
+  different methods for each simulation strategy.}
+  \begin{tabular}{cccc}
+  \hline
+  \multicolumn{1}{c}{\textbf{Simulation}} & \textbf{Method} & \textbf{MSE} & \textbf{s/ite} \\ \hline
+  \multirow{3}{*}{Bivariate beta} & Solving equations & 0.04 & $3.47 \cdot 10^{-5}$ \\
+   & Minimization problem & 0.032 & $1.43$ \\
+   & Mixed solver & 0.033 & $0.03$ \\
+  \multirow{3}{*}{Logit bivariate normal} & Solving equations & 0.034 & $5.21 \cdot 10^{-5}$ \\
+   & Minimization problem & 0.026 & $1.53$ \\
+   & Mixed solver & 0.026 & $0.03$  \\ \hline
+  \end{tabular}
+  \fonte{Prepared by the author (2021). The MSE is the mean squared error,
+  where the mean is taken with respect to the iterations. The s/ite is the
+  number of seconds per iteration.}
+\end{table}
+
+Using the logit bivariate normal simulation with parameters $\mu = (5, 2.3)$
+and $\Sigma = [[12, -2.5], [-2.5, 4]]$ in order to yield $\ev[X] \approx 0.9,
+\ev[Y] \approx 0.8, \var(X) = \var(Y) \approx 0.05$, and $\cor(X,Y) \approx
+-0.2$, 77\% of the simulations has no exact solution strictly positive and the
+error of the solvers were 0.82 for the mixed solver and 0.91 for the
+minimization problem, which is much higher than the previous simulation. 
 
 \chapter{Stan codes}
 \label{appendix:stan-codes}
