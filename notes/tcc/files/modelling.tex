@@ -491,39 +491,30 @@ three situations:
 
 \section{Imperfect tests}
 
-This model includes the sensitivity and specificity of the diagnostic test. 
+A slight modification of model \eqref{model:perfect-tests} is to consider 
+the imperfection of the test measured through specificity and sensibility, 
+remembering the relation of these quantities to the apparent prevalence
+through equation \eqref{eq:apparent-true-prevalence}. Hence, the model can be
+written as
 
 \begin{equation}
   \begin{aligned}
-    T_i &\sim \bern(p_i) \\
+    Y_i \mid p_i &\sim \bern(p_i) \\
     p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
     g(\theta_i) &= g(\theta) + \x_i^T\beta,  \\
-    \beta &\sim \N(\mu, \Sigma), \\ 
-    \theta &\sim \betadist(a^p, b^p) \\
-    \gamma_s &\sim \betadist(a^s, b^s), \\
-    \gamma_e &\sim \betadist(a^e, b^e), \\    
+    \beta  &\sim \N(\mu_{\beta}, \Sigma_{\beta}), \\ 
+    \theta &\sim \betadist(a^p, b^p), 
   \end{aligned}  
 \end{equation}
-where $a^p, a^s, a^e, b^p, b^s, b^e \in \R_{++}$ are fixed hyperparameters.
-This model does not include prior knowledge about the correlation between
-specificity and sensitivity. 
+with priors on $(\gamma_e, \gamma_s)$ as studied in the previous section. It is
+important to highlight that we suppose prior the data that $\theta$ is
+independent of $\gamma_e$ and $\gamma_s$, which is not necessarily true as
+pointed out by \textcite{leeflang2013variation}, who concluded that
+specificity tends to be lower when prevalence is higher. This 
+is an extension of model presented by \textcite{gelman2020bayesian}. 
 
 \subsection{Simulated data}
 
-Consider the following model \cite{gelman2020bayesian}:
-\begin{gather*}
-  y \sim \operatorname{Binomial}(n, p), \\
-  p = \theta\gamma_s + (1- \theta)(1-\gamma_e), 
-\end{gather*}
-such that $y$ is the number of positive tests in a population of size $n$. In
-a Bayesian paradigm, a prior $\pi(\theta, \gamma_e, \gamma_s)$ must be
-specified. For instance, $\pi(\theta, \gamma_e, \gamma_s) =
-\pi(\theta)\pi(\gamma_e, \gamma_s)$ and $\theta \sim
-\operatorname{Beta}(\alpha_{\theta}, \beta_{\theta})$, in which
-$\alpha_{\theta}$ and $\beta_{\theta}$ are positive hyperparameters. Since the
-three parameters $\theta, \gamma_e$, and $\gamma_s$ are not jointly
-identifiable only from $y$, prior information on $\gamma_e$ and $\gamma_s$
-need be added. 
 
 \section{Imperfect tests and respondent-driven sampling}
 
