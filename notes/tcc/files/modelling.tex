@@ -30,7 +30,7 @@ Another important feature of the model is that sensitivity and
 specificity have the same distribution for all individuals and 
 it only depends on the test used to diagnose. This is an assumption 
 that must be analysed for each particular case. For instance, COVID-19 
-Sofia test has different sensibility and specificity for symptomatic and 
+Sofia test has different sensitivity and specificity for symptomatic and 
 asymptomatic individuals \cite[Table 1][p. 3]{mitchell2021performance}.  
 
 From above, we develop three different models: the first considers perfect 
@@ -82,6 +82,7 @@ A formal definition for identifiability regards the likelihood function \cite[p.
 3459]{xie2006measures}:
 
 \begin{definition}
+  \label{def:identifiability}
   Let $\mathcal{P} = \{P_{\theta} : \theta \in \Theta\}$ be
   the family of probability distributions for $\mathcal{Y}$. This model is
   {\em identifiable} if for any $\theta', \theta'' \in
@@ -478,26 +479,86 @@ structure of the simplex. The propose is \cite[p. 2]{betancourt2012cruising}
 \end{equation*}
 which removes the constraint. 
 
+\begin{remark}
+  When $\alpha$ is a random variable, the adapt delta parameter had to be
+  increased to 0.9, since some divergences were found. 
+\end{remark}
+
 \subsection{Comparing the prior specifications with simulated data}
 
-Now we are going to compare the three prior specification methods from 
-three situations:
+Now we are going to compare the three prior specification methods. For each of
+the following three situations, we are going to simulate 1000 datasets from
+the binomial likelihood with $n_{\gamma_s}, n_{\gamma_e} \sim
+\operatorname{Poisson}(50)$, $\gamma_s \sim \betadist(100, 0.15/0.85 \cdot
+100)$ to ensure $\ev[\gamma_s] = 0.85$, and  $\gamma_e \sim \betadist(100, 0.2/0.8 \cdot
+100)$ to ensure $\ev[\gamma_e] = 0.8$. The three situations are: 
 
 \begin{alineas}
-  \item only vague information is available; 
-  \item strong beliefs about the means and no information about correlation; 
-  \item strong beliefs about the means and the correlation. 
+  \item \label{item:vague-information-sensitivity-specificity} only vague information is available; 
+  \item \label{item:strong-mean-sensitivity-specificity} strong beliefs about the means and no information about correlation; 
+  \item\label{item:strong-mean-cor-information-sensitivity-specificity}  strong beliefs about the means and the correlation. 
 \end{alineas}
+
+For each situation and each dataset, it was drawn 2000 samples from the
+posterior distribution and the HDI 75\% interval and posterior mean were calculated. The Hits
+column counts the percentage of the times that the true values lied in the
+interval, while the MSE column calculates the mean squared error of the
+posterior mean with respect to the true value. We notice that the fourth prior
+approach had a little number of effective samples when compared to the other
+methods.  Notice that there is no big different among the approaches. The
+logit normal prior is worst when strong information is given. This may be
+related to the difficulty to convert information from the probability space to
+the log odds space. The estimation error decreased when information about the 
+means and correlation is given.
+\autoref{fig:comparing_hdi_prior_approaches_sens-spec} 
+shows that the credible intervals change very little for each different
+approach and even for each quantity of information, which tells that the data 
+is driving the posterior. 
+
+\begin{table}[]
+  \centering
+  \caption{\label{tab:comparison-prior-approach-sensitivity-specificity}Comparing
+  prior specification approaches in three different situations.}
+  \begin{tabular}{cccccc}
+    \hline
+    \multirow{2}{*}{\textbf{Situation}} & \multirow{2}{*}{\textbf{Prior approach}} & \multicolumn{2}{c}{\textbf{Hits}} & \multicolumn{2}{c}{\textbf{MSE}} \\ \cline{3-6} 
+     &  & \textbf{Sens} & \textbf{Spec} & \textbf{Sens} & \textbf{Spec} \\ \hline
+    \multirow{4}{*}{\autoref{item:vague-information-sensitivity-specificity}} & Independent betas & 73.8\% & 76.1\% & 0.002531 & 0.002843 \\
+     & Logit normal & 74.1\% & 74.5\% & 0.002405 & 0.002811 \\
+     & Biv. beta constant $\alpha$ & 75.6\% & 75.5\% & 0.002388 & 0.002625 \\
+     & Biv. beta random $\alpha$ & 74.9\% & 74.4\% & 0.002264 & 0.002546 \\
+    \multirow{4}{*}{\autoref{item:strong-mean-sensitivity-specificity}} & Independent betas & 74.1\% & 73.6\% & 0.002009 & 0.002363 \\
+     & Logit normal & 69.9\% & 71.2\% & 0.002300 & 0.002797 \\
+     & Biv. beta constant $\alpha$ & 75.2\% & 75\% & 0.001952 & 0.002316 \\
+     & Biv. beta random $\alpha$ & 74.7\% & 74.8\% & 0.002167 & 0.002454 \\
+    \multirow{4}{*}{\autoref{item:strong-mean-cor-information-sensitivity-specificity}} & Independent betas & 74.3\% & 74.2\% & 0.002007 & 0.002365 \\
+     & Logit normal & 68.4\% & 71.5\% & 0.002303 & 0.002804 \\
+     & Biv. beta constant $\alpha$ & 74.3\% & 74.9\% & 0.001989 & 0.002364 \\
+     & Biv. beta random $\alpha$ & 74.5\% & 75.5\% & 0.002229 & 0.002504 \\ \hline
+    \end{tabular}
+  \fonte{Prepared by the author (2021). Biv. means bivariate and Hits is the percentage of times that the estimated HDI 75\% included the true value.}
+  \end{table}
+
+\begin{figure}
+  \centering
+  \caption{\label{fig:comparing_hdi_prior_approaches_sens-spec} The mean HDI 75\% intervals
+  for each prior strategy and level of information for sensitivity and specificity}
+  \includegraphics[width=12cm]{comparing_hdi_prior_approaches_sens-spec.pdf}
+  \fonte{Prepared by the author (2021).}
+\end{figure}
+
+By the above analysis, we choose the independent betas approach given it 
+reduces the computational burden. 
 
 \section{Imperfect tests}
 
 A slight modification of model \eqref{model:perfect-tests} is to consider 
-the imperfection of the test measured through specificity and sensibility, 
+the imperfection of the test measured through specificity and sensitivity, 
 remembering the relation of these quantities to the apparent prevalence
 through equation \eqref{eq:apparent-true-prevalence}. Hence, the model can be
 written as
-
 \begin{equation}
+  \label{model:imperfect-tests}
   \begin{aligned}
     Y_i \mid p_i &\sim \bern(p_i) \\
     p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
@@ -511,7 +572,81 @@ important to highlight that we suppose prior the data that $\theta$ is
 independent of $\gamma_e$ and $\gamma_s$, which is not necessarily true as
 pointed out by \textcite{leeflang2013variation}, who concluded that
 specificity tends to be lower when prevalence is higher. This 
-is an extension of model presented by \textcite{gelman2020bayesian}. 
+is an extension of model presented by \textcite{gelman2020bayesian} and
+studied by \textcite{mcinturff2004modelling}. 
+
+\subsection{Identifiability}
+
+If the regressors $\boldsymbol{x}_i$ are not present in model
+\eqref{model:imperfect-tests}, it is no identifiable with respect to its
+likelihood as pointed out by \textcite[p. 1271]{gelman2020bayesian}. 
+Intuitively, the problem happens because $Y_i$ brings information about 
+$p_i$ which is subdivided in three parameters: $\theta, \gamma_s$ and
+$\gamma_e$. Regarding Definition \ref{def:identifiability} and dropping the
+index $i$, take $\theta = 0.1, \gamma_e = 0.9$ and $\gamma_s = 0.6$. Then, 
+\begin{equation*}
+    p = 1 - \gamma_e + \frac{\gamma_s + \gamma_e - 1}{1 + e^{-g(\theta)}} = 0.15.
+\end{equation*}
+With $\gamma_e = 0.9$, $\gamma_s = 0.2$ and $\theta = 0.5$, the value of $p$
+is also $0.15$, which implies that two
+different combinations of the parameters generate the same probability
+function for $Y$. As a consequence, the model is non-identifiable. Including the
+regressors, the calculations are harder. Suppose that $g(\theta)$
+is increased by a real $a$. The effect of $a$ on $p_i$ is through
+$g^{-1}(g(\theta) + a + \boldsymbol{x}_i^T\beta)$, which depends on
+$\boldsymbol{x}_i$. Because of that, sensitivity and specificity can not generally
+offset this difference, and identifiability can not be proved or disproved. 
+
+Nevertheless, there are some tractable cases. For instance, if $\boldsymbol{x}_i = x_i$ is a binary variable, with the same
+reasoning, it can be shown that the model is not identifiable. Moreover the
+problems concerning the covariates $\boldsymbol{X}$ appear here in the same
+manner. To avoid any identifiability problem, information should be added by
+the prior distribution, specially through $\gamma_s$ and $\gamma_s$. 
+
+Below we present a practical situation where identifiability problems appear. 
+We simulate data from the model with $\gamma_s = 0.8, \gamma_e = 0.85$ and
+$\theta = 0.1$. Moreover $\beta \in \R^5$ and $\boldsymbol{X} \in \R^{200
+\times 5}$ are chosen arbitrarily, the regressors being drawn from a normal
+distribution. For the estimation process, uniform prior for $\theta, \gamma_s$
+and $\gamma_e$, and a normal prior with mean 0 and standard deviation 1 for
+each $\beta_i$. After 4000 iterations for warmup and 4000 for sampling, the
+results are summarized in 
+\autoref{tab:results-identifiability-imperfect-tests}
+and \autoref{fig:posterior-trace-imperfect-tests-identifiability}. Notice that
+the effective sample size is very small for the Bulk. The posterior mean are
+very bad estimates for the true values. The high density set is test is the
+union of two intervals for the prevalence, mich makes little sense in the real
+life. 
+
+\begin{table}[]
+  \centering
+  \caption{\label{tab:results-identifiability-imperfect-tests}Results from HMC
+  algorithm for the practical identifiability analysis in model \eqref{model:imperfect-tests}.}
+  \begin{tabular}{cccccccc}
+    \hline
+    \textbf{} & \textbf{mean} & \textbf{sd} & \textbf{mcse mean} &
+    \textbf{mcse sd} & \textbf{ess bulk} & \textbf{ess tail} &
+    \textbf{$\hat{R}$} \\ \hline
+    $\theta$ & 0.500 & 0.340 & 0.022 & 0.016 & 291.0 & 3282.0 & 1.02 \\
+    $\gamma_e$ & 0.585 & 0.277 & 0.019 & 0.015 & 231.0 & 2453.0 & 1.02 \\
+    $\gamma_s$ & 0.415 & 0.279 & 0.020 & 0.014 & 241.0 & 2186.0 & 1.02 \\ \hline
+  \end{tabular}
+  \fonte{Prepared by the author (2021) as a result of Stan diagnostics output.
+         The meaning of the columns is: mean is the posterior mean; sd is the
+         posterior standard deviation; mcse mean is the mean Markov Chain Standard
+         Error;  mcse sd is the standard deviation Markov Chain Standard
+         error; ess bulk and ess tail are the Bulk and Tail effective sample
+         sizes.}
+\end{table}
+
+\begin{figure}[ht]
+  \centering
+  \caption{\label{fig:posterior-trace-imperfect-tests-identifiability}Posterior
+  distribution and trace plot of Prevalence, Specificity and Sensitivity for
+  model \eqref{model:imperfect-tests} with vague priors.}
+  \includegraphics[width=12cm]{posterior-trace-imperfect-tests-identifiability.pdf}
+  \fonte{Prepared by the author (2021) with output of Stan.}
+\end{figure}
 
 \subsection{Simulated data}
 
