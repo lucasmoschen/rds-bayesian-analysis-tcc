@@ -523,6 +523,7 @@ and the remaining coupons with the recruiters to define a probability
 distribution on the space of subgraphs. 
 
 \begin{definition}[Recruitment graph]
+  \label{def:recruitment-graph}
   The {\em recruitment graph} $G_R = (V_R, E_R)$ represents the recruited
   individuals and the recruitment edges. Therefore $i \in V_R$ if individual
   $i \in V$ was recruited, and $(i,j) \in E_R$ if individual $\{i,j\} \in E$ 
@@ -708,7 +709,7 @@ be used for prevalence estimate through equation
   \begin{equation*}
     Y_i \sim \bern(\theta_i) \text{ with } \logit(\theta_i) = \alpha,
   \end{equation*}  
-  where $\logit$ is explained in Sextion \ref{sec:glm}. Defines 
+  where $\logit$ is explained in Section \ref{sec:glm}. Defines 
   $\delta_i \propto n \cdot d_i^{-1}$ such that $\sum_{i=1}^n \delta_i = n$,
   based on the weights suggested by \textcite{volz2008probability}. The
   pseudo-likelihood is written as follows: 
@@ -755,7 +756,12 @@ would be nice to cite Camila, but reference not found.}
 
 \cite{gile2015diagnostics}
 
-\section{Generalized linear models}
+\section{Modelling strategies}
+
+In this section, we briefly describe some modelling strategies used
+throughout the dissertation.
+
+\subsection{Generalized linear models}
 \label{sec:glm}
 
 Let $\boldsymbol{y} \in \R^n$ be a realization of a random variable $Y :
@@ -795,12 +801,17 @@ and domain in the real line. The classical are the following:
 This work focus on Logistic regression, which is the most common inferencial
 procedure for binary response, such as having or not a disease. 
 
-\section{Conditionally autoregressive models}
+\subsection{Conditionally autoregressive models}
 \label{sec:car-models}
+
+The first appearance of the Conditionally autoregressive (CAR) models
+\cite{besag1974spatial}, which formulated it with the objective of modelling
+spatial interaction between a finite number of random variables representing
+sites.  
+
 
 This construction follows the Gaussian case \cite[Section
 3.3.1]{banerjee2003hierarchical}. 
-
 
 \section{Bayesian statistics}
 \label{sec:bayesian_statistics}

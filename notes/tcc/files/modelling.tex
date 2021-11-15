@@ -214,7 +214,7 @@ distributions for the parameters. The prevalence estimate is good despite
 Jeffreys' prior. When the distance between the prior and the true value is large, the
 inferences seem to be biased. However, this makes sense regarding the model. For
 instance, for $\beta_2$, before observing the data, we put 0.7 mass probability
-for values lesser than 0.1. The data decreased it to 0.125. This highlights
+for values less than 0.1. The data decreased it to 0.125. This highlights
 the importance of a well defined prior distribution. The values for Bulk ESS
 was greater than 3000 for all parameters, while Tails ESS were greater that
 2200 with 1000 warmup and 1000 sampling iterations, and 4 chains. For all
@@ -650,13 +650,57 @@ life.
 
 \subsection{Simulated data}
 
+As an initial check for model \eqref{model:imperfect-tests}, 
+we use it to generate the data to verify if the estimation process
+is sufficiently reliable. The experiment is similar to the one explained in
+Section \ref{sec:perfect-test-identifiability}, but with sensitivity and 
+specificity. We remind that vague priors on $\gamma_s$ and $\gamma_e$
+are not recommended in general by the identifiability problem. We compare 
+the estimates from model \eqref{model:perfect-tests} with these datasets.
+\autoref{table:experiments-imperfect-test} summarizes the experiments. We use
+a fixed $\beta = [-0.1, 2.5, 1.4, -1.8, 0.3]$ with two binary regressors and
+three continuous drew from normal distribution. 
+
+\begin{table}[!ht]
+  \centering
+  \caption{\label{table:experiments-imperfect-test}Experiment settings for the
+  simulation of model \eqref{model:imperfect-tests}.}
+  \begin{tabular}{ccccc}
+  \hline
+  Exp & $n$ & $\theta$ & $\gamma_s$ & $\gamma_e$ \\ \hline
+  \multicolumn{1}{c}{1} & 100 & 0.1 & 0.9 & 0.8 \\
+  \multicolumn{1}{c}{2} & 100 & 0.02 & 0.85 & 0.85 \\
+  \multicolumn{1}{c}{3} & 2000 & 0.01 & 0.85 & 0.85 \\
+  \multicolumn{1}{c}{4} & 2000 & 0.1 & 0.6 & 0.95 \\
+  \multicolumn{1}{c}{5} & 2000 & 0.1 & 0.95 & 0.6 \\ 
+  \multicolumn{1}{c}{6} & 2000 & 0.45 & 0.9 & 0.8 \\ \hline
+  \end{tabular}
+  \fonte{Prepared by the author (2021). We denote $n$ for number of samples.}
+\end{table}
+
+
 
 \section{Imperfect tests and respondent-driven sampling}
 
-For now, we consider the network dependence induced by the RDS with no
-associated model. Therefore, we treat it as a random effect for
-each individual. Conditionally autoregressive (CAR) models in the
-Gaussian case are used. Let $[\tilde{Q}]_{ij} = \tilde{q}_{ij}$ be a fixed matrix which measures the distance between $i$
+After understanding the problem with not considering the specificity and the
+sensitivity of the diagnostic test for the estimation of $\theta$, we focus on the
+sampling strategy studied in Section \ref{sec:respodent_driven_sampling}. 
+One of the problems with RDS is that we can not make probability statements
+without making assumptions about the sampling process. Since the participants
+recruit their peers, the sampled individuals have a dependence on the
+recruiters and on whom they recruited. In this section, we propose a model for
+the network dependence of RDS extending \textcite{bastos2012binary}.
+
+For now, the recruitment graph (see Definition \ref{def:recruitment-graph}) has no
+uncertainty incorporated and it is included as a random effect on the model  
+through a Conditionally autoregressive (CAR) model in the Gaussian case. This
+model was developed for spatial effects, but they fit in this situation since
+by adjacent sites we understand recruitment. We remark that for RDS, we
+partially observe the corresponding map. If the whole map was available, we
+could interpret it as interaction or friendship depending on the population. 
+
+
+Let $[\tilde{Q}]_{ij} = \tilde{q}_{ij}$ be a fixed matrix which measures the distance between $i$
 and $j$, and $\tilde{q}_{i+} = \sum_{j} \tilde{q}_{ij}$. In general, we use
 $$
 \tilde{q}_{ij} = \begin{cases}
@@ -737,7 +781,7 @@ following
 
   \item $V(Q) = \sum_{k \text{ is not seed}} \log(\lambda \boldsymbol{s}_k)$
   
-  \item $w = (0, t_2 - t_1, ..., t_n - t_{n-1})$ is thely worst.
+  \item $w = (0, t_2 - t_1, ..., t_n - t_{n-1})$ is the worst.
   3. Comparison between parametrization of sigma and tau showed that they are
   similar in sight of time of execution, energy and divergences, among others
   diagnostics. However, the mean estimate of sigma is more controlled. The

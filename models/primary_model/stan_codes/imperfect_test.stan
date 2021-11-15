@@ -1,10 +1,10 @@
 data {
-    int<lower = 0> n_samples;
-    int<lower = 0> n_predictors; 
+    int<lower=0> n_samples;
+    int<lower=0> n_predictors; 
   
-    int Y[n_samples];
-    matrix[n_samples, n_predictors] x;
-    
+    int<lower=0, upper=1> Y[n_samples];
+    matrix[n_samples, n_predictors] X;
+
     cov_matrix[n_predictors] Sigma; 
     vector[n_predictors] mu;
     real<lower = 0> alpha_p; 
@@ -28,7 +28,7 @@ transformed parameters {
     vector[n_samples] p; 
     vector[n_predictors] effects; 
     effects = mu + sigma * normal_raw;
-    p = (1 - spec) + (spec + sens - 1) * inv_logit(logit(prev) + x * effects);
+    p = (1 - spec) + (spec + sens - 1) * inv_logit(logit(prev) + X * effects);
 }
 model {
     normal_raw ~ std_normal();
@@ -39,5 +39,5 @@ model {
 }
 generated quantities {
     vector[n_samples] theta;
-    theta = inv_logit(logit(prev) + x * effects);
+    theta = inv_logit(logit(prev) + X * effects);
 }
