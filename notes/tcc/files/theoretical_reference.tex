@@ -804,14 +804,65 @@ procedure for binary response, such as having or not a disease.
 \subsection{Conditionally autoregressive models}
 \label{sec:car-models}
 
-The first appearance of the Conditionally autoregressive (CAR) models
-\cite{besag1974spatial}, which formulated it with the objective of modelling
-spatial interaction between a finite number of random variables representing
-sites.  
+The {\em Conditionally Autoregressive} (CAR) models have their first appearance in
+\textcite{besag1974spatial} with the objective of modelling spatial
+interactions among a finite number of random variables representing
+different regions. The joint probability specification is given by
+\cite[Section 3.3.1]{banerjee2003hierarchical}
+$$
+\omega_i \mid \omega_j, j \neq i \sim \N\left(\rho\sum_j b_{ij} \omega_j / b_{i+}, \tau^{-1} / b_{i+}\right), i = 1, \dots, n,
+$$
+where $b_{i+} = \sum_{j=1}^n b_{ij}$. By Brook's Lemma
+\cite{brook1964distinction}
+\begin{equation}
+  \label{eq:car-specification}
+  p(\omega_1, \dots, \omega_n) \propto \exp\left\{ -\frac{\tau}{2}\omega^T(D_{b} - \rho B)\omega\right\},
+\end{equation}
+where $[D_{b}]_{ij} = b_{i+}$ and $B$
+is a symmetric {\em proximity matrix}, which connects the individuals.
+$B_{ij}$ can measure the distance between $i$ and $j$ or indicate if they are
+connected. Relation \eqref{eq:car-specification} defines a normal
+distribution for $\omega_1, \dots, \omega_n$ with mean zero and covariance
+matrix $[\tau(D_b - \rho B)]^{-1}$. The parameter $\tau$ is the spatially
+variation precision, while $\rho$ controls spatial dependence. When $\rho = 1$
+the model is called {\em Intrinsically Autoregressive} (IAR) and when $\rho =
+0$, the regions are independent. 
 
+For the variables $\omega_1, \dots, \omega_n$ have a proper prior
+distribution, the matrix $D_{b} - \rho B$ must be non-singular. This
+condition is met if $\rho \in (\lambda_{\min}^{-1}, \lambda_{\max}^{-1})$, where
+$\lambda_{\min}$ and $\lambda_{\max}$ are the smaller and higher eigenvalues of
+$D_{b}^{-1/2}BD_{b}^{-1/2}$, respectively \cite[p.
+94]{banerjee2003hierarchical}. We have that $\lambda_{\min}^{-1} < 0 <
+\lambda_{\max}^{-1}$, then this interval is not empty. 
 
-This construction follows the Gaussian case \cite[Section
-3.3.1]{banerjee2003hierarchical}. 
+For many applications, CAR reproduces the strong spatial correlation between 
+neighbors only when $\rho$ is close to the limits. Moreover, its
+interpretation is not so clear. To verify this fact, we generate a random
+matrix $\tilde{B}$ with binary entrances and adjust $B =
+0.5(\tilde{B} + \tilde{B}^T)$ which yields a symmetric matrix. We fix $\tau =
+1$ and for each $\rho$ we generate 10000 datasets of 100 individuals from CAR
+model. \autoref{tab:correlations-car-model} shows the 12.5\% and 87.5\%
+quartiles of the Pearson correlations among the individuals. Notice that the
+intervals are not linear and even with high values of $\rho$, the correlation
+is not much larger. 
+
+\begin{table}[hb]
+  \centering
+  \caption{\label{tab:correlations-car-model}Interval of correlations among
+  individuals for different values of $\rho$}
+  \begin{tabular}{ccc}
+  \hline
+  \multirow{2}{*}{$\rho$} & \multicolumn{2}{c}{Interval 75\%} \\ \cline{2-3} 
+   & Quartile 12.5\% & Quartile 87.5\% \\ \hline
+  0.5 & -0.005 & 0.028 \\
+  0.8 & 0.017 & 0.06 \\
+  0.9 & 0.055 & 0.113 \\
+  0.99 & 0.426 & 0.526 \\
+  0.999 & 0.884 & 0.918 \\ \hline
+  \end{tabular}
+  \fonte{Prepared by the author (2021).}
+\end{table}
 
 \section{Bayesian statistics}
 \label{sec:bayesian_statistics}

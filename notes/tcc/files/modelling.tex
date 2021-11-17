@@ -43,7 +43,9 @@ limitations.}
 The implementation of the following models were in the statistical computation
 platform Stan \cite{carpenter2017stan} within Python Interface PyStan
 \cite{pystan} which uses an implementation for HMC algorithm. All the codes
-are written in \autoref{appendix:stan-codes}.
+are written in \autoref{appendix:stan-codes}. For plotting the diagnosis and 
+the distributions, Arviz \cite{arviz_2019} and Matplotlib \cite{Hunter_2007}
+Python packages were used. 
 
 \section{Perfect tests}
 
@@ -515,7 +517,7 @@ shows that the credible intervals change very little for each different
 approach and even for each quantity of information, which tells that the data 
 is driving the posterior. 
 
-\begin{table}[]
+\begin{table}[tbp]
   \centering
   \caption{\label{tab:comparison-prior-approach-sensitivity-specificity}Comparing
   prior specification approaches in three different situations.}
@@ -618,7 +620,7 @@ very bad estimates for the true values. The high density set is test is the
 union of two intervals for the prevalence, mich makes little sense in the real
 life. 
 
-\begin{table}[]
+\begin{table}[tbp]
   \centering
   \caption{\label{tab:results-identifiability-imperfect-tests}Results from HMC
   algorithm for the practical identifiability analysis in model \eqref{model:imperfect-tests}.}
@@ -650,16 +652,16 @@ life.
 
 \subsection{Simulated data}
 
-As an initial check for model \eqref{model:imperfect-tests}, 
-we use it to generate the data to verify if the estimation process
-is sufficiently reliable. The experiment is similar to the one explained in
-Section \ref{sec:perfect-test-identifiability}, but with sensitivity and 
-specificity. We remind that vague priors on $\gamma_s$ and $\gamma_e$
-are not recommended in general by the identifiability problem. We compare 
-the estimates from model \eqref{model:perfect-tests} with these datasets.
-\autoref{table:experiments-imperfect-test} summarizes the experiments. We use
-a fixed $\beta = [-0.1, 2.5, 1.4, -1.8, 0.3]$ with two binary regressors and
-three continuous drew from normal distribution. 
+As an initial check for model \eqref{model:imperfect-tests}, we use it to
+generate the data to verify if the estimation process is sufficiently
+reliable. The experiment is like the one explained in Section
+\ref{sec:perfect-test-identifiability}, but with sensitivity and specificity.
+We do not recommend vague priors on $\gamma_s$ and $\gamma_e$ because of the
+identifiability
+problem as mentioned above. We compare the estimates from model
+\eqref{model:perfect-tests} in this context. \autoref{table:experiments-imperfect-test} summarizes the
+experiments. We use a fixed $\beta = [-0.1, 2.5, 1.4, -1.8, 0.3]$ with
+two binary regressors and three continuous drawn from the normal distribution.
 
 \begin{table}[!ht]
   \centering
@@ -678,59 +680,126 @@ three continuous drew from normal distribution.
   \fonte{Prepared by the author (2021). We denote $n$ for number of samples.}
 \end{table}
 
+For the first experiment, we placed vague priors on the prevalence and the
+effects and informative priors for the sensitivity and specificity. The
+algorithm took around 1.87s to perform 4000 iterations  (2000 for a warm-up
+and 2000 for sampling). All the basic diagnosis from HMC were good. 
+\autoref{fig:trace_plot_experiment1_imperfect_test} summarizes the posterior
+distribution. We also applied the first model in this dataset. For this model,
+the posterior mean of the prevalence was 0.148 (HDI 94\% 0-0.326), while for
+the perfect test model, it was 0.238 (HDI 94\% 0.096-0.375), a biased
+estimate. \textcite[p. 1271]{gelman2020bayesian} concludes in its application
+that ``uncertainty in the population prevalence is in large part driven by
+uncertainty in the specificity.'' However we did not noticed this effect in
+this model. \autoref{fig:scatter_plot_posterior_imperfect_tests} presents the
+resultant scatter plot of the posterior simulations. Here we observe that all
+parameters drive prevalence uncertainty. 
+
+\begin{figure}[ht]
+  \centering
+  \caption{\label{fig:trace_plot_experiment1_imperfect_test}Posterior distribution
+  and trace plot for the first experiment of model
+  \eqref{model:imperfect-tests-rds}}
+  \includegraphics[width=14cm]{trace_plot_experiment1_imperfect_test.pdf}
+  \fonte{Prepared by the author (2021) from the Stan sampling result.}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \caption{\label{fig:scatter_plot_posterior_imperfect_tests} Scatter plot of
+  the posterior simulations of prevalence, specificity, sensitivity and effects of model
+  \eqref{model:imperfect-tests-rds}}
+  \includegraphics[width=12cm]{scatter_plot_posterior_imperfect_tests.pdf}
+  \fonte{Prepared by the author (2021) from the Stan sampling result.}
+\end{figure}
 
 
 \section{Imperfect tests and respondent-driven sampling}
 
-After understanding the problem with not considering the specificity and the
-sensitivity of the diagnostic test for the estimation of $\theta$, we focus on the
-sampling strategy studied in Section \ref{sec:respodent_driven_sampling}. 
-One of the problems with RDS is that we can not make probability statements
-without making assumptions about the sampling process. Since the participants
-recruit their peers, the sampled individuals have a dependence on the
-recruiters and on whom they recruited. In this section, we propose a model for
-the network dependence of RDS extending \textcite{bastos2012binary}.
+After understanding the problem when not considering the specificity and the
+sensitivity of the diagnostic test for the estimation of $\theta$, we focus on
+the sampling strategy studied in Section \ref{sec:respodent_driven_sampling}. 
+One problem with RDS is that we
+can not make probability statements without making assumptions about the
+sampling process. Since the participants recruit their peers, the sampled
+individuals depend on the recruiters and whom they recruited. In this section,
+we propose a model for the network dependence of RDS extending
+\textcite{bastos2012binary}. 
 
-For now, the recruitment graph (see Definition \ref{def:recruitment-graph}) has no
-uncertainty incorporated and it is included as a random effect on the model  
-through a Conditionally autoregressive (CAR) model in the Gaussian case. This
-model was developed for spatial effects, but they fit in this situation since
-by adjacent sites we understand recruitment. We remark that for RDS, we
-partially observe the corresponding map. If the whole map was available, we
+For now, the recruitment graph (see Definition  \ref{def:recruitment-graph}) 
+has no uncertainty
+incorporated, and we included it as a random effect on the model through a
+Conditionally autoregressive (CAR) model (see Section \ref{sec:car-models}) in the Gaussian case.
+\textcite{besag1974spatial} introduced
+CAR for spatial effects, but they fit in this situation since, by
+adjacent sites, we understand recruitment. We remark that for RDS, we
+partially observe the corresponding map. If the entire map was available, we
 could interpret it as interaction or friendship depending on the population. 
 
-
-Let $[\tilde{Q}]_{ij} = \tilde{q}_{ij}$ be a fixed matrix which measures the distance between $i$
-and $j$, and $\tilde{q}_{i+} = \sum_{j} \tilde{q}_{ij}$. In general, we use
-$$
-\tilde{q}_{ij} = \begin{cases}
-  1, &\text{if } i \text{ recruited } j \text{ or the contrary} \\
-  0, &\text{otherwise.} 
-\end{cases}
-$$
-Next we define the scaled adjacency matrix $Q = D^{-1}\tilde{Q}$, such that $D$
-is a diagonal matrix with $D_{ii} = \tilde{q}_{i+}$. Finally let $|\rho| < 1$ be a
-parameter to controls the dependence between neighbors. Hence, we specify the
-model as follows:
-
+Following the notation of Section \ref{sec:models-rds-process} and Section
+\ref{sec:car-models}, we denote $A$ for the adjacency matrix, where $[A]_{ij}
+=a_{ij} = 1$ if, and only if, $i$ connects to $j$ and $0$ otherwise; we also
+denote $a_{i+} = \sum_j a_{ij}$. Besides the
+parameters from model \ref{model:imperfect-tests}, we use $\tau$
+for the spatial precision parameter and $\rho$ for controlling the dependence between neighbors. Hence, we specify
+the model as follows:
 \begin{equation}
+  \label{model:imperfect-tests-rds}
   \begin{aligned}
-    T_i &\sim \bern(p_i) \\
+    Y_i \mid p_i &\sim \bern(p_i) \\
     p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
     g(\theta_i) &= g(\theta) + \x_i^T\beta + \omega_i,  \\
-    \omega_i|\{\omega_j\}_{j\neq i}, \tau &\sim \N\left(\rho\sum_j q_{ij}\omega_j, \tau^{-1}/\tilde{q}_{i+}\right) \\
-    \beta &\sim \N(\mu, \Sigma), \\ 
-    \theta &\sim \betadist(a^p, b^p) \\
-    \gamma_s &\sim \betadist(a^s, b^s), \\
-    \gamma_e &\sim \betadist(a^e, b^e), \\  
-    \tau &\sim \operatorname{Gamma}(a^{\tau}, b^{\tau}).
+    \beta  &\sim \N(\mu_{\beta}, \Sigma_{\beta}), \\ 
+    \omega_i \mid \omega_j, j \neq i &\sim \N\left(\rho\sum_j a_{ij} \omega_j / a_{i+}, \tau^{-1} / a_{i+}\right), i = 1, \dots, n, \\
+    \theta &\sim \betadist(a^p, b^p) \\ 
+    \gamma_s &\sim \betadist(a^s, b^s) \\
+    \gamma_e &\sim \betadist(a^e, b^e) \\
+    \tau &\sim \operatorname{Gamma}(a^{\tau}, b^{\tau}) \\
+    \rho & \sim \operatorname{Unif}(0,1/\lambda_{\max}^{-1}).
   \end{aligned}  
 \end{equation}
-By Brook's Lemma \cite[]{brook1964distinction}, the joint distribution of
-$\omega$ can be specified as 
-$$
-\omega \sim \N\left(0, \left[\tau (D - \rho \tilde{Q})\right]^{-1}\right).
-$$
+We remind that $\omega \sim \N\left(0, \left[\tau (D - \rho
+A)\right]^{-1}\right)$ as discussed in Section \ref{sec:car-models}, such that
+$D_{ii} = a_{i+}$. 
+
+The prior specification of $\rho$ has several discussions in the literature.
+Since we established that the lower bound is 0, we are saying that there is a
+positive correlation between the respondents, which is an usual assumption,
+but must be verified for each real application. As we noticed in Section
+\ref{sec:car-models}, this correlation is strong only if $\rho$ is close to
+$1/\lambda_{\max}^{-1}$, therefore the uniform distribution contrasts with
+this empirical knowledge. \textcite[p. 177]{banerjee2003hierarchical} suggests
+the use of beta distribution for $\rho$ with a large mean, ``but this is
+controversial since there will typically be little true prior information
+available regarding the magnitude of $\alpha$'' \cite[$\alpha$ is the
+parameter $\rho$ in our notation.][p.
+177]{banerjee2003hierarchical}. \textcite[p. 81]{lee2011comparison} uses a
+discrete uniform distribution over $\{0, 0.05, 0.1, \dots, 0.9, 0.95\}$. 
+
+The prior distribution on $\tau$ is also subject to discussion. Since it is a
+precision parameter, \textcite[p. 9, Theorem 1]{simpson2017penalising} proves
+that if the prior has finite mean, it {\em overfits}, which intuitively means
+that the prior puts not enough mass at the base model, in this case the model
+without spatial correlation. They calculate a penalized complexity prior for
+$\tau$ as the type-2 Gumbel distribution with density 
+\begin{equation}
+  \label{eq:gumbel-distribution}
+  \pi(\tau) = \frac{\lambda}{2}\tau^{-3/2}\exp(-\lambda \tau^{-1/2}), \tau > 0, 
+\end{equation}
+where $\lambda > 0$ determines the magnitude of the penalty.
+\textcite[p. 9]{simpson2017penalising} suggests to specify $U$ and
+$\alpha$ so that $\Pr(1 / \sqrt{\tau} > U) = \alpha \implies \lambda =
+-\log(\alpha)/U$. This distribution can be rewritten in terms of the standard
+deviation $\sigma = 1/ \sqrt{\tau}$ as follows
+\begin{equation}
+  \label{eq:standard-deviation-gumbel}
+  \pi(\sigma) = \frac{\lambda}{2}\sigma^{3}\exp(-\lambda \sigma) \cdot 2\sigma^{-3} = \lambda \exp(-\lambda \sigma). 
+\end{equation}
+
+Comparison between parametrization of $\sigma$ and $\tau$ showed that they are
+similar in sight of time of execution, energy and divergences, among others
+diagnostics. However, the mean estimate of $\sigma$ is more controlled, while 
+the median is very similar for both.  
 
 \subsection{Simulated data}
 
@@ -740,22 +809,13 @@ $$
   distribution, 
   the latter was usually faster and without divergences. Therefore the 
   preferable model is with the prevalence. 
-
   \item Non-centred distributions are really worst. 
-  \item Comparison between parametrization of sigma and tau showed that
-  they are similar in sight of time of execution, energy and divergences,
-  among others diagnostics. However, the mean estimate of sigma is more
-  controlled. The median estimate is very similar. This happens because there
-  are a few very high samples for $\tau$ that will have high weight in the
-  final result. Small samples for $\sigma$ have less impact, despite having
-  some. 
   \item More sparse matrices (RDS data is very sparse) is generating the funil
   we do not want to see. This is not connected to the number of connected
   components. In order to see that, a simple example with the Erdos-Renyi
   Random Graph can answer to us. In the sparse case, the number of edges is
   $O(n)$ with $p=1/n$. If $p=1$, the number of edges is $O(n^2)$ and the funil
   disappears. This problem does not appear in the poisson model. 
-
   \item The effect of $\rho$ is really observed in the literature in the
   paper: ``A close look at the spatial structure implied by the CAR and SAR
   models''. 
