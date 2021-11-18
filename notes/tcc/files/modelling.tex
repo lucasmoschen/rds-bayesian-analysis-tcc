@@ -231,17 +231,15 @@ omit here since they do not bring new information for the discussion.
   \fonte{Prepared by the author (2021).}
 \end{figure} 
 
-Although we are performing Bayesian inference, frequentist properties can me
+\autoref{fig:predicted-vs-simulated-perfect-tests} compares the predicted and
+simulated probabilities of having the disease $\theta_i$. The green area is delimited by the curves generated
+by $2\sqrt{\theta_i(1-\theta_i)/n}$, where $n=500$ is the number of points. 
+This area is a proxy for $\pm 2$ standard-error bounds. Although we are performing Bayesian inference, frequentist properties can me
 accessed through simulation. After 1000 simulations varying the input data
 $Y$, the 75\% credible interval included the true parameters in 75.8\%, 78.8\%,
 76.4\%, 77.5\%, 67.3\%, and 72.2\% of the times, respectively for $\theta,
 \beta_1, \dots, \beta_5$. Each simulation had 100 samples and weakly
 informative priors for $\beta$ and $\theta$.
-\autoref{fig:predicted-vs-simulated-perfect-tests} compares the predicted and
-simulated probabilities. The green area is delimited by the curves generated
-by $2\sqrt{\theta_i(1-\theta_i)/n}$, where $n=500$ is the number of points. 
-It was increased to show a larger variety of points. This area is a $\pm 2$
-standard-error bounds. 
 
 \begin{figure}[!ht]
   \centering  
@@ -366,7 +364,7 @@ have the following prior specification
 \begin{equation*}
   \begin{aligned}
     \gamma_s &\sim \betadist(a_s, b_s), \\
-    \gamma_e &\sim \betadist(a_e, b_e), \\
+    \gamma_e &\sim \betadist(a_e, b_e), 
   \end{aligned}
 \end{equation*}
 which leads to the following posterior distribution from the likelihood
@@ -374,7 +372,7 @@ which leads to the following posterior distribution from the likelihood
 \begin{equation*}
   \begin{aligned}
     \gamma_s \mid y_{\mathrm{pos}} \sim \betadist(a_s + y_{\mathrm{pos}}, b_s + n_{\gamma_s} - y_{\mathrm{pos}}), \\
-    \gamma_e \mid y_{\mathrm{neg}} \sim \betadist(a_e + y_{\mathrm{neg}}, b_e + n_{\gamma_e} - y_{\mathrm{neg}}). \\
+    \gamma_e \mid y_{\mathrm{neg}} \sim \betadist(a_e + y_{\mathrm{neg}}, b_e + n_{\gamma_e} - y_{\mathrm{neg}}).
   \end{aligned}
 \end{equation*}
 
@@ -674,8 +672,7 @@ two binary regressors and three continuous drawn from the normal distribution.
   \multicolumn{1}{c}{2} & 100 & 0.02 & 0.85 & 0.85 \\
   \multicolumn{1}{c}{3} & 2000 & 0.01 & 0.85 & 0.85 \\
   \multicolumn{1}{c}{4} & 2000 & 0.1 & 0.6 & 0.95 \\
-  \multicolumn{1}{c}{5} & 2000 & 0.1 & 0.95 & 0.6 \\ 
-  \multicolumn{1}{c}{6} & 2000 & 0.45 & 0.9 & 0.8 \\ \hline
+  \multicolumn{1}{c}{5} & 2000 & 0.1 & 0.95 & 0.6 \\ \hline
   \end{tabular}
   \fonte{Prepared by the author (2021). We denote $n$ for number of samples.}
 \end{table}
@@ -713,6 +710,51 @@ parameters drive prevalence uncertainty.
   \fonte{Prepared by the author (2021) from the Stan sampling result.}
 \end{figure}
 
+To verify frequentist properties, with the same specifications, 
+we simulated 1000 datasets varying the test result $Y$ and calculated the 
+75\% credible interval. For each experiment, we
+verified if the true parameter was included in the corresponding interval.
+This happened in 91.5\%, 99.8\%, 83\%, 86.1\%, 72.5\%, 80.1\%, 80.4\%, and 70\% of the
+times, respectively for $\theta, \gamma_s, \gamma_e, \beta_1, \dots, \beta_5$.
+
+The second experiment considers the case where the number of samples is not so
+high, but prevalece is low. It contrasts with the third experiment where many
+more samples are obtained. \autoref{fig:posterior_imperfect_tests_exp2_3}
+presents the differences. Notice that the uncertainty was decreased for all
+parameters, but specificity decreased the most. Even with a small quantity of
+data points, the model had a good performance. When the number of points
+increase, 
+
+\begin{figure}[ht]
+  \centering
+  \caption{\label{fig:posterior_imperfect_tests_exp2_3} Posterior
+  distribution for $\theta$, $\gamma_s$ and $\gamma_e$ from model
+  \eqref{model:imperfect-tests-rds}}
+  \includegraphics[width=12cm]{posterior_imperfect_tests_exp2_3.pdf}
+  \fonte{Prepared by the author (2021) from the Stan sampling result.}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \caption{\label{fig:trace_plot_experiment4_imperfect_test}Posterior distribution
+  and trace plot for the fourth experiment of model
+  \eqref{model:imperfect-tests-rds}}
+  \includegraphics[width=14cm]{trace_plot_experiment4_imperfect_test.pdf}
+  \fonte{Prepared by the author (2021) from the Stan sampling result.}
+\end{figure}
+
+The fourth and fifth experiments compare two opposite situations. The former
+sets a low sensitivity and a high specificity, while the latter has high
+sensitivity and low specificity. These examples are convenient for detecting
+some problems that can arise. Specifying the hyperparameters with $\alpha_p =
+2$,  $\beta_p = 8$, $alpha_s = 6$, $\beta_s = 4$, $\alpha_e = 18$, $\beta_e =
+2$, with 2000 iterations for warmup the resulting posterior and trace is given
+by \autoref{fig:trace_plot_experiment4_imperfect_test}. Notice that one of the
+chains was very far from the tru value driving a very high $\hat{R}$. Although
+the result seems awkward, it makes sense under the identifiability problem,
+since the chain produces a very similar probability of positive test. A more
+strong prior for $\gamma_s$ can handle this effect. A similar behavior happens
+for the fifth experiment. 
 
 \section{Imperfect tests and respondent-driven sampling}
 
@@ -750,7 +792,8 @@ the model as follows:
     p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
     g(\theta_i) &= g(\theta) + \x_i^T\beta + \omega_i,  \\
     \beta  &\sim \N(\mu_{\beta}, \Sigma_{\beta}), \\ 
-    \omega_i \mid \omega_j, j \neq i &\sim \N\left(\rho\sum_j a_{ij} \omega_j / a_{i+}, \tau^{-1} / a_{i+}\right), i = 1, \dots, n, \\
+    \omega_i \mid \omega_j, j \neq i &\sim \N\left(\rho\sum_j a_{ij} \omega_j / a_{i+}, \tau^{-1} / a_{i+}\right), i = 1, \dots, n, 
+    \\
     \theta &\sim \betadist(a^p, b^p) \\ 
     \gamma_s &\sim \betadist(a^s, b^s) \\
     \gamma_e &\sim \betadist(a^e, b^e) \\
@@ -790,86 +833,109 @@ where $\lambda > 0$ determines the magnitude of the penalty.
 \textcite[p. 9]{simpson2017penalising} suggests to specify $U$ and
 $\alpha$ so that $\Pr(1 / \sqrt{\tau} > U) = \alpha \implies \lambda =
 -\log(\alpha)/U$. This distribution can be rewritten in terms of the standard
-deviation $\sigma = 1/ \sqrt{\tau}$ as follows
+deviation $\sigma = 1/ \sqrt{\tau}$ by the Change of Variables
+formula as follows
 \begin{equation}
   \label{eq:standard-deviation-gumbel}
   \pi(\sigma) = \frac{\lambda}{2}\sigma^{3}\exp(-\lambda \sigma) \cdot 2\sigma^{-3} = \lambda \exp(-\lambda \sigma). 
 \end{equation}
 
+\textcite[p. 5]{lee2013carbayes} uses $\sigma^2 \sim \operatorname{Unif}(0,
+M_{\sigma})$ with $M_{\sigma} = 1000$ as default based on
+\textcite{gelman2006prior} since ``it is difficult to choose the
+hyperparameters so that it is non-informative for very small values of''
+\cite[p. 4]{lee2013carbayes} referring to specification of a non-informative
+inverse-gamma distribution for $\sigma^2$. With that distribution, we
+have, by the Change of Variables formula, 
+$$
+\pi(\tau) = \frac{1}{M_{\sigma}}\tau^{-2}\ind_{\{\tau > 1/M_{\sigma}\}}.
+$$
+
 Comparison between parametrization of $\sigma$ and $\tau$ showed that they are
 similar in sight of time of execution, energy and divergences, among others
 diagnostics. However, the mean estimate of $\sigma$ is more controlled, while 
-the median is very similar for both.  
+the median is very similar for both.
+
+\subsection{Identifiability}
+
+\subsection{Stan implementation}
+
+Implementing this model was a long process, including several failures and
+some successes. This subsection summarizes how the errors happened, how we
+detected through diagnoses such as divergences and energy, and how we fixed
+them. 
+
+\subsubsection*{Raw implementation}
+
+\subsubsection*{Vectorization of the variables}
+
+\subsubsection*{Non-centered parameterization}
+
+\subsubsection*{Efficient implementation}
+
+\subsubsection*{Scaling the precision in the efficient implementation}
 
 \subsection{Simulated data}
 
 \begin{alineas}
-  \item Between the model with the log odds of prevalence having a Gaussian prior
-  distribution and the other with the prevalence having a Beta prior
-  distribution, 
-  the latter was usually faster and without divergences. Therefore the 
-  preferable model is with the prevalence. 
-  \item Non-centred distributions are really worst. 
   \item More sparse matrices (RDS data is very sparse) is generating the funil
   we do not want to see. This is not connected to the number of connected
   components. In order to see that, a simple example with the Erdos-Renyi
   Random Graph can answer to us. In the sparse case, the number of edges is
   $O(n)$ with $p=1/n$. If $p=1$, the number of edges is $O(n^2)$ and the funil
   disappears. This problem does not appear in the poisson model. 
-  \item The effect of $\rho$ is really observed in the literature in the
-  paper: ``A close look at the spatial structure implied by the CAR and SAR
-  models''. 
 \end{alineas}
 
-\subsection{Exponential Random Graph Model (ERGM)}
+\subsection{Including uncertainty about the recruitment graph}
 
-RDS has the constraint of being without replacement. For that reason, we do
-not observe all links among the samples \cite[]{crawford2016}. Considering the
-model developed by Crawford, we can model the
-matrix $Q$ as {\em Exponential Random Graph Model} (ERGM). Define the
-following 
 
-\begin{alineas}
-  \item $\boldsymbol{s} = \tril(QC)^T \boldsymbol{1} + C^Tu$, such that $Q$ is the
-  adjacency matrix of the recruited subjects, $C$ is the {\em Coupon Matrix},
-  $u$ the vector of the number of edge ends belonging to each vertex
-  (in the order of recruitment) that are not connected to any other sampled
-  vertex, and $\tril(M)$ the lower triangle of $M$. 
+% RDS has the constraint of being without replacement. For that reason, we do
+% not observe all links among the samples \cite[]{crawford2016}. Considering the
+% model developed by Crawford, we can model the
+% matrix $Q$ as {\em Exponential Random Graph Model} (ERGM). Define the
+% following 
 
-  \item $T(Q) = -\lambda \boldsymbol{s}$, such that $\lambda$ is the rate of
-  the recruitment time. 
+% \begin{alineas}
+%   \item $\boldsymbol{s} = \tril(QC)^T \boldsymbol{1} + C^Tu$, such that $Q$ is the
+%   adjacency matrix of the recruited subjects, $C$ is the {\em Coupon Matrix},
+%   $u$ the vector of the number of edge ends belonging to each vertex
+%   (in the order of recruitment) that are not connected to any other sampled
+%   vertex, and $\tril(M)$ the lower triangle of $M$. 
 
-  \item $V(Q) = \sum_{k \text{ is not seed}} \log(\lambda \boldsymbol{s}_k)$
+%   \item $T(Q) = -\lambda \boldsymbol{s}$, such that $\lambda$ is the rate of
+%   the recruitment time. 
+
+%   \item $V(Q) = \sum_{k \text{ is not seed}} \log(\lambda \boldsymbol{s}_k)$
   
-  \item $w = (0, t_2 - t_1, ..., t_n - t_{n-1})$ is the worst.
-  3. Comparison between parametrization of sigma and tau showed that they are
-  similar in sight of time of execution, energy and divergences, among others
-  diagnostics. However, the mean estimate of sigma is more controlled. The
-  median estimate is very similar. This happens because there are a few very
-   vector of the waiting times between
-  recruitments.  
-\end{alineas}
+%   \item $w = (0, t_2 - t_1, ..., t_n - t_{n-1})$ is the worst.
+%   3. Comparison between parametrization of sigma and tau showed that they are
+%   similar in sight of time of execution, energy and divergences, among others
+%   diagnostics. However, the mean estimate of sigma is more controlled. The
+%   median estimate is very similar. This happens because there are a few very
+%    vector of the waiting times between
+%   recruitments.  
+% \end{alineas}
 
-Therefore $\Pr(Q|w) \propto \exp[T(Q)^Tw + V(Q)]$. With that, the model
-becomes 
+% Therefore $\Pr(Q|w) \propto \exp[T(Q)^Tw + V(Q)]$. With that, the model
+% becomes 
 
-\begin{equation}
-  \begin{aligned}
-    T_i &\sim \bern(p_i) \\
-    p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
-    g(\theta_i) &= g(\theta) + \x_i^T\beta + \omega_i,  \\
-    \omega_i|\{\omega_j\}_{j\neq i}, \tau &\sim \N\left(\rho\sum_j q_{ij}\omega_j/q_{i+}, \tau^2/q_{i+}\right) \\
-    Q|w &\propto \exp[T(Q)^Tw + V(Q)] \\
-    \lambda &\sim \Gamma(a^{\lambda}, b^{\lambda}), \\ 
-    \beta &\sim \N(\mu, \Sigma), \\ 
-    \theta &\sim \betadist(a^p, b^p) \\
-    \gamma_s &\sim \betadist(a^s, b^s), \\
-    \gamma_e &\sim \betadist(a^e, b^e), \\  
-    \tau &\sim \N^+(0,\sigma^2_{\tau}).
-  \end{aligned}  
-\end{equation}
-The problem with this model is that we are assigning a posterior distribution
-for $Q$.
+% \begin{equation}
+%   \begin{aligned}
+%     T_i &\sim \bern(p_i) \\
+%     p_i &= \gamma_s\theta_i + (1-\gamma_e)(1 - \theta_i),  \\
+%     g(\theta_i) &= g(\theta) + \x_i^T\beta + \omega_i,  \\
+%     \omega_i|\{\omega_j\}_{j\neq i}, \tau &\sim \N\left(\rho\sum_j q_{ij}\omega_j/q_{i+}, \tau^2/q_{i+}\right) \\
+%     Q|w &\propto \exp[T(Q)^Tw + V(Q)] \\
+%     \lambda &\sim \Gamma(a^{\lambda}, b^{\lambda}), \\ 
+%     \beta &\sim \N(\mu, \Sigma), \\ 
+%     \theta &\sim \betadist(a^p, b^p) \\
+%     \gamma_s &\sim \betadist(a^s, b^s), \\
+%     \gamma_e &\sim \betadist(a^e, b^e), \\  
+%     \tau &\sim \N^+(0,\sigma^2_{\tau}).
+%   \end{aligned}  
+% \end{equation}
+% The problem with this model is that we are assigning a posterior distribution
+% for $Q$.
 
 \section{Model extensions}
 
