@@ -858,6 +858,17 @@ the median is very similar for both.
 
 \subsection{Identifiability}
 
+This model inherits all the problems with identifiability from the previous
+ones. \textcite[p. 3470]{xie2006measures} discusses when two parameters depending on the individual are
+summed, one being a CAR component, while the other capturing heterogeneity
+among the regions. When $\rho = 1$, the prior on $\omega$ is improper and
+property of the posterior must be analysed in each case. Because of that, to
+identify the parameter $\theta$, an additional constraint is necessary, such
+as $\sum_{i=1}^n \omega_i = 0$. This is commonly added in Stan code with 
+$$
+\sum_{i=1}^n \omega_i \sim \N(0, 0.0001/n).
+$$
+
 \subsection{Stan implementation}
 
 Implementing this model was a long process, including several failures and
