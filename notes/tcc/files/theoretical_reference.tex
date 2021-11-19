@@ -423,8 +423,13 @@ the graph $G$. The choice of an undirected model for the hidden population is ve
 but not obliged. The degree of a person is, therefore, $d_i = \sum_{j=1}^N
 A_{ij}$.\todo{Include notation of RDS used posteriorly.} 
 
-\improve{Besides the following models, \cite{goel2009respondent} presents RDS
-as a MCMC}. 
+Besides the following models, there are two additional and relevant works  to
+cite. \textcite{goel2009respondent} described RDS as a Markov chain Monte
+Carlo to analyse the structure created by the recruitment links. They deeply
+discussed the problems that bottlenecks can cause.
+\textcite{mclaughlin2021bayesian} developes a Bayesian model for the
+recruitment process considering preferential selection based on the covariates.
+
 
 \subsubsection{First-order Markov process}
 \label{sec:first-order-markov-process}
@@ -635,11 +640,6 @@ the estimation of the hidden population size with the additional assumption
 that the graph $G$ has Erdős-Rényi distribution 
 \cite{crawford2018hidden}. 
 
-\subsubsection{New model}
-
-Maybe only a superficial explanation about the model, since it is really
-difficult, despite being apparently very nice. \cite{mclaughlin2021bayesian}
-
 \subsection{Prevalence estimators}
 
 In this subsection, we outline five very common RDS proportion estimators presented in the
@@ -745,8 +745,7 @@ effects. \textcite{bastos2012binary} performs a binary regression to
 prevalence estimation through a hierarchical model where correlation structure
 was modelled as a Conditionally autoregressive (CAR) model (see Section XXX).
 \textcite{yauck2021general} includes homophily in a similar model, but with a
-Simultaneous Autoregressive (SAR) model (CITATION) for correlation. \todo{It
-would be nice to cite Camila, but reference not found.}
+Simultaneous Autoregressive (SAR) model \cite[p. 98]{banerjee2003hierarchical} for correlation.
 
 \subsection{Bootstrap methods for uncertainty quantification}
 
@@ -840,26 +839,42 @@ For many applications, CAR reproduces the strong spatial correlation between
 neighbors only when $\rho$ is close to the limits. Moreover, its
 interpretation is not so clear. To verify this fact, we generate a random
 matrix $\tilde{B}$ with binary entrances and adjust $B =
-0.5(\tilde{B} + \tilde{B}^T)$ which yields a symmetric matrix. We fix $\tau =
-1$ and for each $\rho$ we generate 10000 datasets of 100 individuals from CAR
-model. \autoref{tab:correlations-car-model} shows the 12.5\% and 87.5\%
-quartiles of the Pearson correlations among the individuals. Notice that the
-intervals are not linear and even with high values of $\rho$, the correlation
-is not much larger. 
+0.5(\tilde{B} + \tilde{B}^T)$ yielding a symmetric matrix. We fix $\tau =
+1$ and for each $\rho$ we generate 10000 datasets of 500 individuals from CAR
+model. Moran's I spatial autocorrelation and the distribution of the Pearson's
+correlation of each pair were calculated.
+\autoref{fig:correlation-different-rho-values-car} presents the HDI for the
+distribution of the Pearson's correlations among the individuals and the
+Moran's I autocorrelation for different values of $\rho$. Notice the
+non-linearity of Pearson's graphic. With only high values of $\rho$ generate
+large correlations. \autoref{tab:correlations-car-model} shows that when $n$
+increases, with $\rho=0.95$, the Pearson's correlation decreases fast and
+$\rho$ has to be even higher for observing any higher value. 
 
-\begin{table}[hb]
+\begin{figure}[htbp]
   \centering
-  \caption{\label{tab:correlations-car-model}Interval of correlations among
-  individuals for different values of $\rho$}
+  \caption{\label{fig:correlation-different-rho-values-car}Moran's I spatial
+  autocorrelation and Pearson's correlation statistics for different values of
+  $\rho$}
+  \includegraphics[width=12cm]{correlation-different-rho-values-car.pdf}
+  \fonte{Prepared by the author (2021). The blue regions indicates the HDI
+  95\%, while the red on is 
+  the HDI 75\%. The black line denotes the median.}
+\end{figure}
+
+\begin{table}[htbp]
+  \centering
+  \caption{\label{tab:correlations-car-model}75\% Interval for Pearson's correlations among
+  individuals for different values of $n$}
   \begin{tabular}{ccc}
   \hline
-  \multirow{2}{*}{$\rho$} & \multicolumn{2}{c}{Interval 75\%} \\ \cline{2-3} 
+  \multirow{2}{*}{$n$} & \multicolumn{2}{c}{Interval 75\%} \\ \cline{2-3} 
    & Quartile 12.5\% & Quartile 87.5\% \\ \hline
-  0.5 & -0.005 & 0.028 \\
-  0.8 & 0.017 & 0.06 \\
-  0.9 & 0.055 & 0.113 \\
-  0.99 & 0.426 & 0.526 \\
-  0.999 & 0.884 & 0.918 \\ \hline
+  10 & 0.48 & 1.0 \\
+  50 & 0.05 & 0.32 \\
+  100 & 0.03 & 0.17 \\
+  500 & -0.002 & 0.032 \\
+  1000 & -0.007 & 0.02 \\ \hline
   \end{tabular}
   \fonte{Prepared by the author (2021).}
 \end{table}

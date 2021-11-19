@@ -228,13 +228,12 @@ omit here since they do not bring new information for the discussion.
   \caption{\label{fig:result-experiment1-perfect-test}Posterior
   distribution for parameters of model \eqref{model:perfect-tests}.}
   \includegraphics[width=14cm]{posterior_perfect_tests_exp1.pdf}
-  \fonte{Prepared by the author (2021).}
+  \fonte{Prepared by the author (2021). The red line represents the true value
+  inputed for the simulation.}
 \end{figure} 
 
 \autoref{fig:predicted-vs-simulated-perfect-tests} compares the predicted and
-simulated probabilities of having the disease $\theta_i$. The green area is delimited by the curves generated
-by $2\sqrt{\theta_i(1-\theta_i)/n}$, where $n=500$ is the number of points. 
-This area is a proxy for $\pm 2$ standard-error bounds. Although we are performing Bayesian inference, frequentist properties can me
+simulated probabilities of having the disease $\theta_i$. Although we are performing Bayesian inference, frequentist properties can be
 accessed through simulation. After 1000 simulations varying the input data
 $Y$, the 75\% credible interval included the true parameters in 75.8\%, 78.8\%,
 76.4\%, 77.5\%, 67.3\%, and 72.2\% of the times, respectively for $\theta,
@@ -246,7 +245,9 @@ informative priors for $\beta$ and $\theta$.
   \caption{\label{fig:predicted-vs-simulated-perfect-tests}Comparing predicted
  and simulated probabilities of having the disease from model \eqref{model:perfect-tests}.}
   \includegraphics[width=10cm]{predicted-vs-simulated-perfect-tests.pdf}
-  \fonte{Prepared by the author (2021).}
+  \fonte{Prepared by the author (2021). The green area is delimited by the curves generated
+  by $2\sqrt{\theta_i(1-\theta_i)/n}$, where $n=500$ is the number of points. 
+  This area is a proxy for $\pm 2$ standard-error bounds. }
 \end{figure} 
 
 Experiment 2 is used to see if these properties repeat when the prevalence is
@@ -276,7 +277,7 @@ experiments. From the 51 parameters, 48 had the true values in the 95\% HDI
 credible interval. The Bulk ESS was greater than 4500 for 95\% of the
 parameters. \autoref{fig:predicted-vs-simulated-high-dimension-perfect-tests}
 presents how the predicted probabilities for each individual behaves in this
-case. Here the green area is delimited by the 95\% credible interval. 
+case. 
 
 \begin{figure}[!hb]
   \centering  
@@ -284,7 +285,8 @@ case. Here the green area is delimited by the 95\% credible interval.
   Comparing predicted and simulated probabilities of having the disease from
   model \eqref{model:perfect-tests} with high dimension.}
   \includegraphics[width=10cm]{predicted-vs-simulated-high-dimension-perfect-tests.pdf}
-  \fonte{Prepared by the author (2021).}
+  \fonte{Prepared by the author (2021). The green area indicated the 95\%
+  credible interval for each predicted $\theta_i$}
 \end{figure} 
 
 \section{Sensitivity and specificity}
@@ -521,28 +523,31 @@ is driving the posterior.
   prior specification approaches in three different situations.}
   \begin{tabular}{cccccc}
     \hline
-    \multirow{2}{*}{\textbf{Situation}} & \multirow{2}{*}{\textbf{Prior approach}} & \multicolumn{2}{c}{\textbf{Hits}} & \multicolumn{2}{c}{\textbf{MSE}} \\ \cline{3-6} 
+    \multirow{2}{*}{\textbf{Situation}} & \multirow{2}{*}{\textbf{Prior
+    approach}} & \multicolumn{2}{c}{\textbf{Hits}} &
+    \multicolumn{2}{c}{\textbf{MSE} $10^{-3}$} \\ \cline{3-6} 
      &  & \textbf{Sens} & \textbf{Spec} & \textbf{Sens} & \textbf{Spec} \\ \hline
-    \multirow{4}{*}{\autoref{item:vague-information-sensitivity-specificity}} & Independent betas & 73.8\% & 76.1\% & 0.002531 & 0.002843 \\
-     & Logit normal & 74.1\% & 74.5\% & 0.002405 & 0.002811 \\
-     & Biv. beta constant $\alpha$ & 75.6\% & 75.5\% & 0.002388 & 0.002625 \\
-     & Biv. beta random $\alpha$ & 74.9\% & 74.4\% & 0.002264 & 0.002546 \\
-    \multirow{4}{*}{\autoref{item:strong-mean-sensitivity-specificity}} & Independent betas & 74.1\% & 73.6\% & 0.002009 & 0.002363 \\
-     & Logit normal & 69.9\% & 71.2\% & 0.002300 & 0.002797 \\
-     & Biv. beta constant $\alpha$ & 75.2\% & 75\% & 0.001952 & 0.002316 \\
-     & Biv. beta random $\alpha$ & 74.7\% & 74.8\% & 0.002167 & 0.002454 \\
-    \multirow{4}{*}{\autoref{item:strong-mean-cor-information-sensitivity-specificity}} & Independent betas & 74.3\% & 74.2\% & 0.002007 & 0.002365 \\
-     & Logit normal & 68.4\% & 71.5\% & 0.002303 & 0.002804 \\
-     & Biv. beta constant $\alpha$ & 74.3\% & 74.9\% & 0.001989 & 0.002364 \\
-     & Biv. beta random $\alpha$ & 74.5\% & 75.5\% & 0.002229 & 0.002504 \\ \hline
+    \multirow{4}{*}{\autoref{item:vague-information-sensitivity-specificity}} & Independent betas & 73.8\% & 76.1\% & 2.531 & 2.843 \\
+     & Logit normal & 74.1\% & 74.5\% & 2.405 & 2.811 \\
+     & Biv. beta constant $\alpha$ & 75.6\% & 75.5\% & 2.388 & 2.625 \\
+     & Biv. beta random $\alpha$ & 74.9\% & 74.4\% & 2.264 & 2.546 \\\hline
+    \multirow{4}{*}{\autoref{item:strong-mean-sensitivity-specificity}} & Independent betas & 74.1\% & 73.6\% & 2.009 & 2.363 \\
+     & Logit normal & 69.9\% & 71.2\% & 2.300 & 2.797 \\
+     & Biv. beta constant $\alpha$ & 75.2\% & 75\% & 1.952 & 2.316 \\
+     & Biv. beta random $\alpha$ & 74.7\% & 74.8\% & 2.167 & 2.454 \\\hline
+    \multirow{4}{*}{\autoref{item:strong-mean-cor-information-sensitivity-specificity}} & Independent betas & 74.3\% & 74.2\% & 2.007 & 2.365 \\
+     & Logit normal & 68.4\% & 71.5\% & 2.303 & 2.804 \\
+     & Biv. beta constant $\alpha$ & 74.3\% & 74.9\% & 1.989 & 2.364 \\
+     & Biv. beta random $\alpha$ & 74.5\% & 75.5\% & 2.229 & 2.504 \\ \hline
     \end{tabular}
   \fonte{Prepared by the author (2021). Biv. means bivariate and Hits is the percentage of times that the estimated HDI 75\% included the true value.}
   \end{table}
 
 \begin{figure}
   \centering
-  \caption{\label{fig:comparing_hdi_prior_approaches_sens-spec} The mean HDI 75\% intervals
-  for each prior strategy and level of information for sensitivity and specificity}
+  \caption{\label{fig:comparing_hdi_prior_approaches_sens-spec}The average
+  posterior mean estimate and average HDI 75\% intervals
+  for each prior strategy and level of information for sensitivity.}
   \includegraphics[width=12cm]{comparing_hdi_prior_approaches_sens-spec.pdf}
   \fonte{Prepared by the author (2021).}
 \end{figure}
@@ -698,7 +703,10 @@ parameters drive prevalence uncertainty.
   and trace plot for the first experiment of model
   \eqref{model:imperfect-tests-rds}}
   \includegraphics[width=14cm]{trace_plot_experiment1_imperfect_test.pdf}
-  \fonte{Prepared by the author (2021) from the Stan sampling result.}
+  \fonte{Prepared by the author (2021) from the Stan sampling result. The
+  green line marks the true value for the simulation, while the red line
+  represent the density of the prior distribution. Each blue line is a
+  posterior distribution sampled from four different chains.}
 \end{figure}
 
 \begin{figure}[ht]
@@ -731,29 +739,34 @@ increase,
   distribution for $\theta$, $\gamma_s$ and $\gamma_e$ from model
   \eqref{model:imperfect-tests-rds}}
   \includegraphics[width=12cm]{posterior_imperfect_tests_exp2_3.pdf}
-  \fonte{Prepared by the author (2021) from the Stan sampling result.}
+  \fonte{Prepared by the author (2021) from the Stan sampling result. The red
+  line represents the true value for each parameter.}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
   \centering
   \caption{\label{fig:trace_plot_experiment4_imperfect_test}Posterior distribution
   and trace plot for the fourth experiment of model
   \eqref{model:imperfect-tests-rds}}
-  \includegraphics[width=14cm]{trace_plot_experiment4_imperfect_test.pdf}
-  \fonte{Prepared by the author (2021) from the Stan sampling result.}
+  \includegraphics[width=12cm]{trace_plot_experiment4_imperfect_test.pdf}
+  \fonte{Prepared by the author (2021) from the Stan sampling result. The
+  green line marks the true value for the simulation, while the red line
+  represent the density of the prior distribution. Each blue line is a
+  posterior distribution sampled from four different chains.}
 \end{figure}
 
 The fourth and fifth experiments compare two opposite situations. The former
 sets a low sensitivity and a high specificity, while the latter has high
 sensitivity and low specificity. These examples are convenient for detecting
-some problems that can arise. Specifying the hyperparameters with $\alpha_p =
+the problem with identifiability in high dimensional data. Specifying the hyperparameters with $\alpha_p =
 2$,  $\beta_p = 8$, $alpha_s = 6$, $\beta_s = 4$, $\alpha_e = 18$, $\beta_e =
 2$, with 2000 iterations for warmup the resulting posterior and trace is given
 by \autoref{fig:trace_plot_experiment4_imperfect_test}. Notice that one of the
 chains was very far from the tru value driving a very high $\hat{R}$. Although
 the result seems awkward, it makes sense under the identifiability problem,
 since the chain produces a very similar probability of positive test. A more
-strong prior for $\gamma_s$ can handle this effect. A similar behavior happens
+strong prior for $\gamma_s$ can handle this effect, which means that the prior
+distribution depends on the size of the sample. A similar behavior happens
 for the fifth experiment. 
 
 \section{Imperfect tests and respondent-driven sampling}
@@ -810,7 +823,7 @@ Since we established that the lower bound is 0, we are saying that there is a
 positive correlation between the respondents, which is an usual assumption,
 but must be verified for each real application. As we noticed in Section
 \ref{sec:car-models}, this correlation is strong only if $\rho$ is close to
-$1/\lambda_{\max}^{-1}$, therefore the uniform distribution contrasts with
+$\lambda_{\max}^{-1}$, therefore the uniform distribution contrasts with
 this empirical knowledge. \textcite[p. 177]{banerjee2003hierarchical} suggests
 the use of beta distribution for $\rho$ with a large mean, ``but this is
 controversial since there will typically be little true prior information
@@ -864,10 +877,20 @@ summed, one being a CAR component, while the other capturing heterogeneity
 among the regions. When $\rho = 1$, the prior on $\omega$ is improper and
 property of the posterior must be analysed in each case. Because of that, to
 identify the parameter $\theta$, an additional constraint is necessary, such
-as $\sum_{i=1}^n \omega_i = 0$. This is commonly added in Stan code with 
-$$
-\sum_{i=1}^n \omega_i \sim \N(0, 0.0001/n).
-$$
+as 
+\begin{equation}
+  \label{eq:hard-restriction}
+  \sum_{i=1}^n \omega_i = 0.
+\end{equation}
+Relation \eqref{eq:hard-restriction} is called in optimization as {\em hard
+constraint} since the solution must strictly satisfies it. In probability
+theory, it would mean to give a point mass distribution for the sum.   
+In Stan, a common alternative is to put a {\em soft constraint} such as
+\begin{equation}
+  \label{eq:soft-restriction}
+  \sum_{i=1}^n \omega_i \sim \N(0, 0.0001/n), 
+\end{equation}
+that serves as a penalty term. 
 
 \subsection{Stan implementation}
 
@@ -877,6 +900,11 @@ detected through diagnoses such as divergences and energy, and how we fixed
 them. 
 
 \subsubsection*{Raw implementation}
+
+The first stan implementation is exactly as presented in equation
+\eqref{model:imperfect-tests-rds}. Coding as we model is an advantage of Stan 
+since it improves readability of the code. However this implementation suffers from
+some problems concerning the geometry of the parameter space. 
 
 \subsubsection*{Vectorization of the variables}
 
