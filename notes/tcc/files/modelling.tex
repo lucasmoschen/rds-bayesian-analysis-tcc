@@ -811,7 +811,7 @@ the model as follows:
     \gamma_s &\sim \betadist(a^s, b^s) \\
     \gamma_e &\sim \betadist(a^e, b^e) \\
     \tau &\sim \operatorname{Gamma}(a^{\tau}, b^{\tau}) \\
-    \rho & \sim \operatorname{Unif}(0,1/\lambda_{\max}^{-1}).
+    \rho & \sim \operatorname{Unif}(0,\lambda_{\max}^{-1}).
   \end{aligned}  
 \end{equation}
 We remind that $\omega \sim \N\left(0, \left[\tau (D - \rho
@@ -893,16 +893,18 @@ In Stan, a common alternative is to put a {\em soft constraint} such as
 that serves as a penalty term. 
 
 \subsection{Stan implementation}
+\label{sec:stan-implementation-rds}
 
 Implementing this model was a long process, including several failures and
 some successes. This subsection summarizes how the errors happened, how we
 detected through diagnoses such as divergences and energy, and how we fixed
 them. For the following comparisons, the contact graphs are generated
-following an Erdős–Rényi model \cite{erdos2011evolution}, which is the
-simplest way to draw a random network. Fixing a number of samples $n$ and a
-probability of contact $p$, each node is connected by a link with probability
-$p$. The expected number of edges in this graph is $pn(n-1)/2$. To perform a
-RDS sampling, we follow \textcite[p. 14670]{baraff2016estimating}: 
+following an Erdős–Rényi model \cite{erdos1960evolution}, which is the
+simplest way to draw a random network. Fixing a number of individuals $N$,
+a number of samples $n < N$ and a probability of contact $P$, each node is
+connected by a link with probability $P$. The expected number of edges in this
+graph is $PN(N-1)/2$. To perform a RDS sampling, we follow 
+\textcite[p. 14670]{baraff2016estimating}: 
 
 \begin{alineas}
   \item 10 seeds are selected at random with probability proportional to their
@@ -913,6 +915,9 @@ RDS sampling, we follow \textcite[p. 14670]{baraff2016estimating}:
   \item the last wave of recruitments happens when the number of samples
   is 150. 
 \end{alineas}
+
+More details of the simulation process is given in Subsection
+\ref{sec:simulated-data-rds-imperfect-tests}. 
 
 \subsubsection*{Raw implementation}
 
@@ -938,7 +943,7 @@ incomplete.'' \cite[p. 44]{betancourt2017conceptual}.
   \includegraphics[width=10cm]{energy_plot_inefficient_implementation_stan.pdf}
   \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.
   The blue curve is the marginal distribution of the evnergy, while the red 
-  is the distribution of the enerrgy transition.}
+  is the distribution of the energy transition.}
 \end{figure}
 
 \subsubsection*{Vectorization of the variables}
@@ -969,7 +974,7 @@ $\rho$ fixed, we reparametrize $\omega$ as follows:
 \end{equation*}
 where $V_{\omega}V_{\omega}^{*} = (D - \rho A)^{-1}$ is the Cholesky decomposition. We do the
 same thing for the effects $\beta$: 
-\begin{equation*}
+\begin{equation*}erdos2011evolution
   \begin{split}
     \beta^{\mathrm{raw}}_i &\sim \N(0,1) \\
     \beta &= \mu_{\beta} + V_{\beta} \cdot \beta^{\mathrm{raw}},
@@ -998,7 +1003,7 @@ efficient yet, since we are only taking a few iterations.
   \includegraphics[width=8cm]{energy_plot_non_centered_implementation_stan.pdf}
   \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.
   The blue curve is the marginal distribution of the evnergy, while the red 
-  is the distribution of the enerrgy transition.}
+  is the distribution of the energy transition.}
 \end{figure}
 
 \subsubsection*{Efficient implementation}
@@ -1062,24 +1067,107 @@ rescale the parameter $\tau$ from the sparse re\begin{equation*}
   \omega &= 1/\sqrt{\tau} \cdot \omega^{\mathrm{scaled}}.
 \end{align*}
 
-The efficient representation of the density of $\omega^{\mathrm{sacaled}}$ is 
+The efficient representation of the density of $\omega^{\mathrm{scaled}}$ is 
 \begin{equation*}
-  \log f_{\omega}(\omega \mid \rho) = \frac{1}{2}\sum_{i=1}^n(1 - \rho \lambda_i) - \frac{1}{2}\omega^T(D - \rho A)\omega,
+  \log f_{\omega}(\omega^{\mathrm{scaled}} \mid \rho) = 
+  \frac{1}{2}\sum_{i=1}^n(1 - \rho \lambda_i) 
+  - \frac{1}{2}(\omega^{\mathrm{scaled}})^T(D - \rho A)\omega^{\mathrm{scaled}},
 \end{equation*}
-which is equivalent to $\log f_{\omega}(\omega \mid \tau=1, \rho)$. 
+which is equivalent to $\log f_{\omega}(\omega \mid \tau=1, \rho)$. With this
+simple modification, the energy plot improves as
+\autoref{fig:energy_plot_partially_centered_implementation_stan} demonstrates.
+For comparison purposes,
+\autoref{fig:scatter_plot_efficient_partially_centered_samples_rds} 
+highlights how the funnel effect decreased after this change. 
 
-\subsubsection*{Scaling the precision in the efficient implementation}
+\begin{figure}[htb]
+  \centering
+  \caption{\label{fig:energy_plot_partially_centered_implementation_stan}Energy plot
+  efficient and scaled Stan implementation of model \eqref{model:imperfect-tests-rds}}
+  \includegraphics[width=8cm]{energy_plot_partially_centered_implementation_stan.pdf}
+  \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.
+  The blue curve is the marginal distribution of the evnergy, while the red 
+  is the distribution of the energy transition.}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \caption{\label{fig:scatter_plot_efficient_partially_centered_samples_rds}Scatter plot 
+  of posterior samples of few parameter from the efficient and scaled Stan implementation of model
+  \eqref{model:imperfect-tests-rds}}
+  \includegraphics[width=10cm]{scatter_plot_efficient_partially_centered_samples_rds.pdf}
+  \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.}
+\end{figure}
 
 \subsection{Simulated data}
+\label{sec:simulated-data-rds-imperfect-tests}
+
+Here we present how the inferences change from different specifications of the
+parameters. First of all, we have to generate a graph to represent 
+the hidden population. We use four different approaches:
 
 \begin{alineas}
-  \item More sparse matrices (RDS data is very sparse) is generating the funil
-  we do not want to see. This is not connected to the number of connected
-  components. In order to see that, a simple example with the Erdos-Renyi
-  Random Graph can answer to us. In the sparse case, the number of edges is
-  $O(n)$ with $p=1/n$. If $p=1$, the number of edges is $O(n^2)$ and the funil
-  disappears. This problem does not appear in the poisson model. 
+  \item Erdős–Rényi (ER1) \cite{erdos1960evolution}: let $G$ be a graph with $N$
+  nodes. For each pair of nodes, we connect them by a link with probability
+  $P$. The expected number of edges is $PN(N-1)/2$ and the average number of
+  neighbors of a node is $P(N-1)$. 
+  \item Erdős–Rényi with preferencial attachment by a binary variable (ER2):
+  from a graph $G$ with $N$ nodes, each
+  node $i$ receives a binary variable $Z_i \in \{0,1\}$ with $\Pr(Z_i =
+  1) = 0.3$ creating two subpopulations. Two individuals within the same
+  subpopulation connects with probability $P_1$, while individuals with
+  different values of $Z$ connect with probability $P_2 < P_1$. Each
+  subpopulation, conditioned on the binary variables, is a Erdős–Rényi
+  graph. 
+  \item Barabasi-Albert (BA1) \cite{barabasi1999emergence}: let $m_0$ be a
+  initial number of nodes. Each time, a node is added to the graph and connects
+  to $m \le m_0$ other nodes with probability $P^i$ proportional to the degree of
+  the nodes without replacement. If $k_i$ is the degree of node $i \in \{1, \dots,
+  m_0\}$, so $P^i \propto k_i$. The algorithm ends when the number of nodes
+  is $N$. This property is called {\em Preferential attachment} since nodes
+  with high degree are preferred for the new connections. 
+  \item Barabasi-Albert with preferencial attachment by a binary variable
+  (BA2): the only change in BA1 is that each node connects to other within the
+  same population with probability $P$ and to any node disregarding variable
+  $Z$ with probability $1- P$.
 \end{alineas}
+
+With a graph $G$, we need to simulate a respondent-driven sampling. For that,
+we use two different approaches: 
+\begin{alineas}
+  \item standard: this formulation was used by \textcite[p.
+  14670]{baraff2016estimating}, as described in Section
+  \ref{sec:stan-implementation-rds}. 
+  \item preferential: the variable $Z$ influences the recruitment choice. For
+  each coupon the individual possess, there is a probability $R$ of choosing
+  someone within the same subpopulation and $1-R$ of choosing disregarding the
+  variable $Z$. 
+\end{alineas}
+
+After specifying the network and the sampling simulation, we obtain the
+matrices $A$ and $D$. We set $\beta =
+[-0.1, 2.5, 1.4, -1.8, 0.3]
+$ with two binary regressors and three continuous draw form the normal
+distribution, $\gamma_s = 0.9$, $\gamma_e = 0.85$, and $\theta = 0.1$. 
+The second binary regressor is used for creating the subpopulation whenever
+necessary. \autoref{tab:experiments-imperfect-tests-rds} summarizes the experiments. 
+
+\begin{table}[htbp]
+  \centering
+  \caption{\label{tab:experiments-imperfect-tests-rds}Experiment settings for
+  the simulation of model \eqref{model:imperfect-tests-rds}.}
+  \begin{tabular}{ccccc}
+  \hline
+  Exp & Grafo & RDS & $\rho$ & $\tau$ \\ \hline
+  1 & (ER1) & Standard & 0.9 & 1 \\
+  2 & (ER1) & Standard & 0.9 & 10000 \\
+  3 & (ER1) & Standard & 0.3 & 1 \\
+  4 & (ER2) & Preferential & 0.9 & 1 \\
+  5 & (BA1) & Standard & 0.9 & 1 \\
+  6 & (BA2) & Preferential & 0.9 & 1 \\ \hline
+  \end{tabular}
+  \fonte{Prepared by the author (2021).}
+  \end{table}
 
 \subsection{Including uncertainty about the recruitment graph}
 
