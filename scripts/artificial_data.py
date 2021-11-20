@@ -29,22 +29,24 @@ class GenerateData:
         This function is a way of generating artificial subgraph of
         recruitment when a population graph is specified.
         """
-        ro = np.random.RandomState(seed = seed)
-        seeds = ro.choice(graph.nodes, size = n_seeds, replace = False)
+        ro = np.random.RandomState(seed=seed)
+        degrees = np.array(list(dict(graph.degree()).values()))
+        seeds = ro.choice(graph.nodes, size=n_seeds, replace=False,
+                          p=degrees/degrees.sum())
 
         recruited = set(seeds)
         current_recruited = set()
         edges = []
 
-        while len(recruited) < sample_size: 
+        while len(recruited) < sample_size:
             for node in seeds:
                 neighbors = set(graph.neighbors(node)) - recruited
-                s = ro.choice([0,1,2,3], p = probs)
+                s = ro.choice([0,1,2,3], p=probs)
                 if len(neighbors) == 0 or s == 0:
                     continue 
-                elif len(neighbors) < s: 
+                elif len(neighbors) < s:
                     s = len(neighbors)
-                recruits = ro.choice(list(neighbors), size = s, replace = False)
+                recruits = ro.choice(list(neighbors), size=s, replace=False)
                 for r in recruits: 
                     edges.append((node, r))
                 

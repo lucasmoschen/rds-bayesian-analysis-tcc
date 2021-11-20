@@ -1,10 +1,10 @@
 data {
-    int<lower = 0> n_samples;
-    int<lower = 0> n_predictors; 
+    int<lower=0> n_samples;
+    int<lower=0> n_predictors; 
   
-    int T[n_samples];
-    matrix[n_samples, n_predictors] x;
-    
+    int<lower=0, upper=1> Y[n_samples];
+    matrix[n_samples, n_predictors] X;
+
     cov_matrix[n_predictors] Sigma; 
     vector[n_predictors] mu;
     real<lower = 0> alpha_p; 
@@ -17,7 +17,6 @@ data {
     real<lower = 0> beta_tau;
     
     matrix[n_samples, n_samples] precision; 
-    real<lower = 0, upper = 1> rho; 
 }
 transformed data {
   vector[n_samples] zeros;
@@ -37,7 +36,7 @@ transformed parameters {
     vector[n_samples] p; 
     
     for (i in 1:n_samples) {
-        theta[i] = inv_logit(logit(prev) + x[i] * effects + omega[i]);
+        theta[i] = inv_logit(logit(prev) + X[i] * effects + omega[i]);
         p[i] = sens*theta[i] + (1 - spec)*(1 - theta[i]);
     }
 }
@@ -52,12 +51,6 @@ model {
     spec ~ beta(alpha_e, beta_e);
 
     for (i in 1:n_samples) {
-       T[i] ~ bernoulli(p[i]);
+       Y[i] ~ bernoulli(p[i]);
     }
-}
-generated quantities {
-  vector[n_predictors] effects_prior = multi_normal_rng(mu, Sigma); 
-  real<lower = 0, upper = 1> prev_prior = beta_rng(alpha_p, beta_p); 
-  real<lower = 0, upper = 1> sens_prior = beta_rng(alpha_s, beta_s);
-  real<lower = 0, upper = 1> spec_prior = beta_rng(alpha_e, beta_e);
 }

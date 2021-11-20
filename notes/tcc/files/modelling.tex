@@ -44,7 +44,7 @@ The implementation of the following models were in the statistical computation
 platform Stan \cite{carpenter2017stan} within Python Interface PyStan
 \cite{pystan} which uses an implementation for HMC algorithm. All the codes
 are written in \autoref{appendix:stan-codes}. For plotting the diagnosis and 
-the distributions, Arviz \cite{arviz_2019} and Matplotlib \cite{Hunter_2007}
+the distributions, ArviZ \cite{arviz_2019} and Matplotlib \cite{Hunter_2007}
 Python packages were used. 
 
 \section{Perfect tests}
@@ -897,20 +897,176 @@ that serves as a penalty term.
 Implementing this model was a long process, including several failures and
 some successes. This subsection summarizes how the errors happened, how we
 detected through diagnoses such as divergences and energy, and how we fixed
-them. 
+them. For the following comparisons, the contact graphs are generated
+following an Erdős–Rényi model \cite{erdos2011evolution}, which is the
+simplest way to draw a random network. Fixing a number of samples $n$ and a
+probability of contact $p$, each node is connected by a link with probability
+$p$. The expected number of edges in this graph is $pn(n-1)/2$. To perform a
+RDS sampling, we follow \textcite[p. 14670]{baraff2016estimating}: 
+
+\begin{alineas}
+  \item 10 seeds are selected at random with probability proportional to their
+  degree; 
+  \item each participant receives three coupons and has probabilities of 1/3,
+  1/6, 1/6 and 1/3 to recruit, respectively, 0, 1, 2 or 3 individuals from their
+  contacts;
+  \item the last wave of recruitments happens when the number of samples
+  is 150. 
+\end{alineas}
 
 \subsubsection*{Raw implementation}
 
-The first stan implementation is exactly as presented in equation
+The first Stan implementation is exactly as presented in equation
 \eqref{model:imperfect-tests-rds}. Coding as we model is an advantage of Stan 
 since it improves readability of the code. However this implementation suffers from
-some problems concerning the geometry of the parameter space. 
+some problems concerning the geometry of the parameter space. For this
+implementation we treat $\rho$ as a fixed parameter. 1000 iterations of the
+algorithm took around 6min. The resulting inferences were not so bad despite
+the small number of iterations.
+\autoref{fig:energy_plot_inefficient_implementation_stan} presents a
+comparative plot between the marginal energy distribution and the distribution
+of the transition energy. Since they are very different, it means that the
+target distribution has heavy tails, which is challenging for the sampling. In
+this case, ``the stochastic exploration between level sets will become so slow that after any finite
+number of transitions the exploration of the Markov chain will be
+incomplete.'' \cite[p. 44]{betancourt2017conceptual}.
+
+\begin{figure}
+  \centering
+  \caption{\label{fig:energy_plot_inefficient_implementation_stan}Energy plot
+  raw Stan implementation of model \eqref{model:imperfect-tests-rds}}
+  \includegraphics[width=10cm]{energy_plot_inefficient_implementation_stan.pdf}
+  \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.
+  The blue curve is the marginal distribution of the evnergy, while the red 
+  is the distribution of the enerrgy transition.}
+\end{figure}
 
 \subsubsection*{Vectorization of the variables}
 
+According to the Stan documentation \cite{stan2021vectorization}, the
+vectorized form of probability functions and operations such as matrix
+products are more efficient than loops and transformed parameters. Because of
+that, we apply this suggestion to the implementation. Notice that it does not
+solve the problem with the heavy tails of the target distribution, then the
+time to make 1000 iterations was around 5min. Although the vectorization did
+not prove to be better for the model in particular, we keep on using it given
+the general recommendations of the documentation. 
+
 \subsubsection*{Non-centered parameterization}
 
+Parametrization of hierarchical models is a longstanding topic.
+\autoref{fig:scatter_plot_inefficient_samples_rds} shows a how the posterior
+samples behavior in a hierarchical model. This effect is known as funnel since
+there is a high density region with low volume and a low density region with
+high volume \cite[p. 1]{betancourt2015hamiltonian}. The posterior correlation
+observed can be mitigated through a non-centered parameterization. Taking
+$\rho$ fixed, we reparametrize $\omega$ as follows: 
+\begin{equation*}
+  \begin{split}
+    \omega^{\mathrm{raw}}_i &\sim \N(0,1) \\
+    \omega &= \tau^{-1/2}V_{\omega} \cdot \omega^{\mathrm{raw}},
+  \end{split}
+\end{equation*}
+where $V_{\omega}V_{\omega}^{*} = (D - \rho A)^{-1}$ is the Cholesky decomposition. We do the
+same thing for the effects $\beta$: 
+\begin{equation*}
+  \begin{split}
+    \beta^{\mathrm{raw}}_i &\sim \N(0,1) \\
+    \beta &= \mu_{\beta} + V_{\beta} \cdot \beta^{\mathrm{raw}},
+  \end{split}
+\end{equation*}
+where $V_{\beta}V_{\beta}^{*} = \Sigma_{\beta}$. With that little exchange,
+the time to run the four chains and 1000 iterations took around 1min, much
+better than the previous.
+\autoref{fig:energy_plot_non_centered_implementation_stan} shows how this
+improves the results on the energy plot. However, this implementation is not
+efficient yet, since we are only taking a few iterations. 
+
+\begin{figure}[htb]
+  \centering
+  \caption{\label{fig:scatter_plot_inefficient_samples_rds}Scatter plot 
+  of posterior samples of few parameter from the inefficient Stan implementation of model
+  \eqref{model:imperfect-tests-rds} to visualize funnel effects}
+  \includegraphics[width=10cm]{scatter_plot_inefficient_samples_rds.pdf}
+  \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \caption{\label{fig:energy_plot_non_centered_implementation_stan}Energy plot
+  non-centered Stan implementation of model \eqref{model:imperfect-tests-rds}}
+  \includegraphics[width=8cm]{energy_plot_non_centered_implementation_stan.pdf}
+  \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.
+  The blue curve is the marginal distribution of the evnergy, while the red 
+  is the distribution of the enerrgy transition.}
+\end{figure}
+
 \subsubsection*{Efficient implementation}
+
+RDS connection matrix is essentially sparse since the number of edges is at
+most four times the number of individuals (one recruiter and three
+recruited). Because of that, we follow the efficient implementations of sparse
+CAR models
+from \textcite{donegan2021spatial} and \textcite{exactcar}. The probability
+density of a multivariate normal distribution with zero mean is 
+\begin{equation}
+  \label{eq:multivariate_normal}
+  f_{\omega}(\omega \mid \tau, \rho) = \frac{1}{\sqrt{(2\pi)^n\det(\Sigma^{-1})}
+  }\exp\{-\frac{1}{2}\omega^T\Sigma^{-1}\omega\}, 
+\end{equation}
+where $\Sigma^{-1} = \tau(D - \rho A)$. \textcite[p. 955]{jin2005generalized}
+proves the following relation
+$$
+\det(\tau(D - \rho A)) = \tau^n \det(D - \rho A) \propto \tau^n \prod_{i=1}^n (1 - \rho \lambda_i), 
+$$
+where $\lambda_1, \dots, \lambda_n$ are the eigenvalues of $D^{-1/2} A
+D^{-1/2}$. Notice that $\{\lambda_i\}_{i=1}^n$ are calculated before of the
+HMC algorithm. We also have that $\omega^T(D - \rho A)\omega = \omega^T D \omega - \rho \omega^T A
+\omega$. Since $D$ is a diagonal matrix, $\omega^T D \omega = \sum_{i=1}^n
+D_ii\omega_i^2$ which can be easily calculated. Moreover, by the sparsity of $A$,
+$\omega^T A \omega$ can be performed with sparse matrix operations. 
+
+Given that Stan receives the log density and constants are not necessary,
+\eqref{eq:multivariate_normal} can be simplified to 
+\begin{equation*}
+  \log f_{\omega}(\omega \mid \tau, \rho) = \frac{n}{2}\log(\tau) + 
+  \frac{1}{2}\sum_{i=1}^n(1 - \rho \lambda_i) - \frac{\tau}{2}\omega^T(D - \rho A)\omega.
+\end{equation*}
+
+The time to perform 1000 iterations was around 8s, which is a pretty good
+reduction compared to the previous implementations. Despite that, the
+efficient implementation has the disadvantage of not
+allowing to rescale the multivariate normal distribution, given that matrix $V_{\omega}$ does not have
+a sparse representation. Therefore, the energy plot is very similar to
+\autoref{fig:energy_plot_inefficient_implementation_stan}. The scatter plot is
+aso very similar to \autoref{fig:scatter_plot_inefficient_samples_rds}, but
+since the we can draw more samples without worrying about time of execution,
+the funnel effects is more evident as presented in \autoref{fig:scatter_plot_efficient_samples_rds}.
+
+\begin{figure}[htb]
+  \centering
+  \caption{\label{fig:scatter_plot_efficient_samples_rds}Scatter plot 
+  of posterior samples of few parameter from the efficient Stan implementation of model
+  \eqref{model:imperfect-tests-rds} to visualize funnel effects}
+  \includegraphics[width=10cm]{scatter_plot_efficient_samples_rds.pdf}
+  \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.}
+\end{figure}
+
+Although the Cholesky decomposition of $D - \rho A$ is not sparse, we can
+rescale the parameter $\tau$ from the sparse re\begin{equation*}
+  \log f_{\omega}(\omega \mid \tau, \rho) = \frac{n}{2}\log(\tau) + 
+  \frac{1}{2}\sum_{i=1}^n(1 - \rho \lambda_i) - \frac{\tau}{2}\omega^T(D - \rho A)\omega.
+\end{equation*}presentation of CAR model. Let 
+\begin{align*}
+  \omega^{\mathrm{scaled}}_i &\sim \N(0,1) \\ 
+  \omega &= 1/\sqrt{\tau} \cdot \omega^{\mathrm{scaled}}.
+\end{align*}
+
+The efficient representation of the density of $\omega^{\mathrm{sacaled}}$ is 
+\begin{equation*}
+  \log f_{\omega}(\omega \mid \rho) = \frac{1}{2}\sum_{i=1}^n(1 - \rho \lambda_i) - \frac{1}{2}\omega^T(D - \rho A)\omega,
+\end{equation*}
+which is equivalent to $\log f_{\omega}(\omega \mid \tau=1, \rho)$. 
 
 \subsubsection*{Scaling the precision in the efficient implementation}
 

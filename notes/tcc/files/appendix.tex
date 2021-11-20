@@ -537,3 +537,39 @@ minimization problem, which is much higher than the previous simulation.
 
 \chapter{Stan codes}
 \label{appendix:stan-codes}
+
+\section{Perfect tests}
+
+This is the Stan code for model \eqref{model:perfect-tests}
+
+\lstinputlisting[basicstyle=\footnotesize, language=Stan]{../../models/primary_model/stan_codes/perfect_test.stan}
+
+\section{Sensitivity and specificity}
+
+This is the Stan code for model \eqref{model:sensitivity-specificity}
+
+\subsection*{Logit normal prior}
+
+\lstinputlisting[basicstyle=\footnotesize, language=Stan]{../../models/sensitivity_specificity/spec_sens_model_logit_normal.stan}
+
+\subsection*{Bivariate beta prior with constant $\alpha$}
+
+\lstinputlisting[basicstyle=\footnotesize, language=Stan]{../../models/sensitivity_specificity/spec_sens_model_constant_alpha_smooth.stan}
+
+\subsection*{Bivariate beta prior with random $\alpha$}
+
+\lstinputlisting[basicstyle=\footnotesize, language=Stan]{../../models/sensitivity_specificity/spec_sens_model_random_alpha_smooth.stan}
+
+\section{Imperfect tests}
+
+This is the Stan code for model \eqref{model:imperfect-tests}
+
+\lstinputlisting[basicstyle=\footnotesize, language=Stan]{../../models/primary_model/stan_codes/imperfect_test.stan}
+
+\section{Imperfect tests and respondent-driven sampling}
+
+This is the Stan code for model \eqref{model:imperfect-tests-rds}
+
+\lstinputlisting[basicstyle=\footnotesize, language=Stan]{../../models/primary_model/stan_codes/rds_imperfect_test_v4.stan}
+
+
