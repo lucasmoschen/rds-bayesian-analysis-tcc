@@ -1125,7 +1125,8 @@ the hidden population. We use four different approaches:
   the nodes without replacement. If $k_i$ is the degree of node $i \in \{1, \dots,
   m_0\}$, so $P^i \propto k_i$. The algorithm ends when the number of nodes
   is $N$. This property is called {\em Preferential attachment} since nodes
-  with high degree are preferred for the new connections. 
+  with high degree are preferred for the new connections. The average degree
+  is $2m - m/N - m^2/N$.
   \item Barabasi-Albert with preferencial attachment by a binary variable
   (BA2): the only change in BA1 is that each node connects to other within the
   same population with probability $P$ and to any node disregarding variable
@@ -1150,7 +1151,10 @@ matrices $A$ and $D$. We set $\beta =
 $ with two binary regressors and three continuous draw form the normal
 distribution, $\gamma_s = 0.9$, $\gamma_e = 0.85$, and $\theta = 0.1$. 
 The second binary regressor is used for creating the subpopulation whenever
-necessary. \autoref{tab:experiments-imperfect-tests-rds} summarizes the experiments. 
+necessary. \autoref{tab:experiments-imperfect-tests-rds} summarizes the
+experiments. All the experiments set $N=10000$ and choose the other parameters
+to obtain an average number of neighbors of approximately $50$. All
+experiments have $500$ samples. 
 
 \begin{table}[htbp]
   \centering
@@ -1159,12 +1163,12 @@ necessary. \autoref{tab:experiments-imperfect-tests-rds} summarizes the experime
   \begin{tabular}{ccccc}
   \hline
   Exp & Grafo & RDS & $\rho$ & $\tau$ \\ \hline
-  1 & (ER1) & Standard & 0.9 & 1 \\
-  2 & (ER1) & Standard & 0.9 & 10000 \\
-  3 & (ER1) & Standard & 0.3 & 1 \\
-  4 & (ER2) & Preferential & 0.9 & 1 \\
-  5 & (BA1) & Standard & 0.9 & 1 \\
-  6 & (BA2) & Preferential & 0.9 & 1 \\ \hline
+  1 & (ER1, $P=0.005$) & Standard & 0.9 & 1 \\
+  2 & (ER1, $P=0.005$) & Standard & 0.9 & 10000 \\
+  3 & (ER1, $P=0.005$) & Standard & 0.3 & 1 \\
+  4 & (ER2, $P_1=0.008, P_2 = 0.002$) & Preferential($R = 0.5$) & 0.9 & 1 \\
+  5 & (BA1, $m = 25$) & Standard & 0.9 & 1 \\
+  6 & (BA2, $P = 0.5, m = 25$) & Preferential($R=0.5$) & 0.9 & 1 \\ \hline
   \end{tabular}
   \fonte{Prepared by the author (2021).}
   \end{table}

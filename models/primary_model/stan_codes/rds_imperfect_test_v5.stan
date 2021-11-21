@@ -31,7 +31,10 @@ functions {
       return 0.5 * (sum(ldet_terms) - omegat_D * omega + rho * (omegat_W * omega));
   }
   real gumbel_type2_lpdf(real tau, real lambda){
-    return log(lambda) - 3/2 * log(tau) - lambda*tau^(-1/2) - log(2); 
+    return -(3.0/2.0 * log(tau) + lambda / sqrt(tau)); 
+  }
+  real gamma_a_lpdf(real tau, real M_sigma){
+      return -2.0 * log(tau);
   }
 } 
 data {
@@ -49,17 +52,25 @@ data {
     real<lower = 0> beta_s;
     real<lower = 0> alpha_e; 
     real<lower = 0> beta_e;
+    real<lower = 0> alpha_rho; 
+    real<lower = 0> beta_rho;
+
     real<lower = 0> alpha_tau; 
     real<lower = 0> beta_tau;
+    real<lower = 0> lambda_tau;
+    real<lower = 0> M_sigma;
+    int<lower = 0, upper = 2> tau_prior;
     
     matrix<lower = 0, upper = 1>[n_samples, n_samples] adj_matrix; 
     int adj_pairs;
 }
 transformed data{
   int adj_sparse[adj_pairs, 2];   // adjacency pairs
-  vector[n_samples] D_sparse;     // diagonal of D (number of neigbors for each site)
+  vector[n_samples] D_sparse;     // diagonal of D
   vector[n_samples] lambda;       // eigenvalues of invsqrtD * A * invsqrtD
   matrix[n_predictors, n_predictors] sigma;
+  real max_lambda;
+  real lower_bound_tau;
   
   { // generate sparse representation for A
   int counter;
@@ -82,18 +93,24 @@ transformed data{
       invsqrtD[i] = 1 / sqrt(D_sparse[i]);
     }
     lambda = eigenvalues_sym(quad_form(adj_matrix, diag_matrix(invsqrtD)));
+    max_lambda = max(lambda);
   }
   sigma = cholesky_decompose(Sigma);
+  if (tau_prior == 2){
+      lower_bound_tau = 1/M_sigma; 
+  }else {
+    lower_bound_tau = 0;
+  }
 }
 parameters {
     vector[n_predictors] normal_raw; 
     real<lower = 0, upper = 1> prev;
     real<lower = 0, upper = 1> sens;
     real<lower = 0, upper = 1> spec;
-    real<lower = 0, upper = 1> rho;
+    real<lower = 0, upper = 1/max_lambda> rho;
     
     vector[n_samples] omega; 
-    real<lower = 0> tau; 
+    real<lower = lower_bound_tau> tau; 
 }
 transformed parameters {
     vector<lower = 0, upper = 1>[n_samples] p;
@@ -102,8 +119,15 @@ transformed parameters {
     p = (1 - spec) + (spec + sens - 1) * inv_logit(logit(prev) + X * effects + (1/sqrt(tau)) * omega);
 }
 model {
-    tau ~ gamma(alpha_tau, beta_tau); 
-    rho ~ uniform(0,1);
+    if (tau_prior == 0){
+        tau ~ gamma(alpha_tau, beta_tau); 
+    } else if (tau_prior == 1) {
+       tau ~ gumbel_type2(lambda_tau);
+    } else {
+       tau ~ gamma_a(M_sigma);
+    }
+    
+    rho ~ beta(alpha_rho, beta_rho);
     omega ~ sparse_car(rho, adj_sparse, D_sparse, lambda, n_samples, adj_pairs);
 
     normal_raw ~ std_normal();
