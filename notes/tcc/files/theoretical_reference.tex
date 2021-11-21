@@ -757,8 +757,9 @@ Simultaneous Autoregressive (SAR) model \cite[p. 98]{banerjee2003hierarchical} f
 
 \section{Modelling strategies}
 
-In this section, we briefly describe some modelling strategies used
-throughout the dissertation.
+In this section, we briefly describe two modelling strategies used
+throughout the dissertation: Generalized Linear Models (GLM) and Conditionally
+Autoregressive (CAR) models. 
 
 \subsection{Generalized linear models}
 \label{sec:glm}
@@ -772,7 +773,7 @@ $\boldsymbol{X} \in \R^{n \times k}$ is the data, where $\boldsymbol{X}_{ij}$
 is the measure of the $j$-th covariate in the $i$-th individual. Non constant
 variance for each $Y_i$ is a possible variation for this model. 
 
-Generalized linear models (GLM) extend the above model. In order to understand
+GLM extend the above model. In order to understand
 this extension, we follow \textcite[p. 27]{mccullagh2019generalized} setting 
 \begin{equation*}
   \eta = \boldsymbol{X}\beta \quad \text{ and } \quad \eta_i = g(\mu_i), i = 1, \dots, n,
