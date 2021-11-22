@@ -408,6 +408,11 @@ are related to specific models, which are presented in Section
   heterogeneity among a population of heavy drug users in Rio de Janeiro. 
 \end{alineas}
 
+To check this assumptions and to analyze aspects of RDS,
+\textcite{gile2015diagnostics} developed a tool of diagnostics. From
+that toolbox, convergence of estimates, bottleneck plot and measurement of
+degree are some options. 
+
 \subsection{Models for the RDS Process}
 \label{sec:models-rds-process}
 
@@ -421,7 +426,7 @@ is a connection between individuals $i$ and $j$, and $A_{ij} = 0$ otherwise.
 We denote $|V|$ to mean the number of nodes, and $|E|$ the number of edges in
 the graph $G$. The choice of an undirected model for the hidden population is very common,
 but not obliged. The degree of a person is, therefore, $d_i = \sum_{j=1}^N
-A_{ij}$.\todo{Include notation of RDS used posteriorly.} 
+A_{ij}$.
 
 Besides the following models, there are two additional and relevant works  to
 cite. \textcite{goel2009respondent} described RDS as a Markov chain Monte
@@ -557,7 +562,19 @@ recruitment event. The row order is the same of $\boldsymbol{t}$. \cite[p.
 \end{definition}
 
 From the RDS process, the observed data is $\boldsymbol{Z} = (G_R,
-\boldsymbol{d}, \boldsymbol{t}, C)$. 
+\boldsymbol{d}, \boldsymbol{t}, C)$. \autoref{fig:crawford_model_example}
+illustrates how the data is presented in a simple situation. The algorithm to
+generate simulated data was self-made based on the assumptions of
+\textcite{crawford2016}.
+
+\begin{figure}
+  \centering
+  \caption{\label{fig:crawford_model_example}Example of simulated data from
+  Crawford model.}
+  \includegraphics[width=15cm]{crawford_mode_example.pdf}
+  \fonte{Prepared by the author (2021). In the network graphic, the blue nodes
+  were sampled, and the red edges are the non observed links between sampled.}
+\end{figure}
 
 \begin{definition}[Compatibility]
   Let $\hat{G}_S = (\hat{V}_S, \hat{E}_S)$ be an estimate for $G_S$. The 
@@ -569,8 +586,7 @@ From the RDS process, the observed data is $\boldsymbol{Z} = (G_R,
     \hat{E}_S\} \le d_v$. \cite[p. 197]{crawford2016}.
   \end{alineas}
   We denote $\mathcal{C}(\boldsymbol{Z})$ the set of all compatible subgraphs
-  for $\boldsymbol{Z}$. \todo{Provide an example to
-  explain all the above definitions.}
+  for $\boldsymbol{Z}$. 
 \end{definition}
 
 After the recruitment time $t_i$, individual $i$ is a recruiter until 
@@ -632,10 +648,7 @@ and $\lambda$ to obtain,
   \label{eq:posterior-distribution-graph}
   p(G_S, \lambda | G_R,C,d,t) \propto L(w|G_S, \lambda) \pi(G_S, \lambda), 
 \end{equation}
-where $\pi(G_S, \lambda)$ is a prior density. \improve{A 
-Metropolis-within-Gibbs sampling scheme is used to draw pairs $(G_S,
-\lambda)$. A simulated anneling procedure can be used to obtain a sequence
-that converges to the maximum a posteriori.} An application of this model was
+where $\pi(G_S, \lambda)$ is a prior density. An application of this model was
 the estimation of the hidden population size with the additional assumption
 that the graph $G$ has Erdős-Rényi distribution 
 \cite{crawford2018hidden}. 
@@ -749,11 +762,40 @@ Simultaneous Autoregressive (SAR) model \cite[p. 98]{banerjee2003hierarchical} f
 
 \subsection{Bootstrap methods for uncertainty quantification}
 
-\cite{baraff2016estimating}, \cite{salganik2006variance}. 
+Quantifying the uncertainty about unknown quantities is an objective of modern
+statistics. It is also an aim of this project. Since most of the work on RDS
+used frequentist inference, bootstrapping is the most exploited technique.
+\cite{salganik2006variance} introduced a procedure assuming the Markov chain
+model on the categories built by Heckathorn. For each bootstrap dataset, the
+idea is:
+\begin{alineas}
+  \item it selects a starting node randomly from the whole sample;
+  \item let $x_i$ be the category of the sampled individual. From the set of nodes recruited by some recruiter within the category $x_i$, it selects a node randomly;
+  \item it ends when the sample size is $n$ and calculates the point estimate. 
+\end{alineas}
+After estimating the prevalence for each bootstrap dataset, 
+the distribution of the point estimates derives confidence intervals and 
+variance estimators. This estimates tend to underestimate the uncertainty as
+pointed out by \textcite[p. 6746]{goel2010assessing}. \textcite[p. 80]{gile2018methods} points some of the
+limitations of this procedure that were addressed in the literature.
 
-\subsection{Diagnosis of RDS}
+More recently,  developed the tree bootstrap. 
+Different from , the bootstrap samples
+are trees similar to the original one, rather than a unique chain of contacts.
+The 
 
-\cite{gile2015diagnostics}
+More recently, \textcite{baraff2016estimating} developed the tree bootstrap.
+Different from \textcite{salganik2006variance}, the bootstrap samples are
+trees similar to the original one, rather than a unique chain of contacts. The
+design is:
+\begin{alineas}
+  \item selects the first wave of seeds with replacement; 
+  \item for each recruiter, it samples with replacement from their recruit;
+  \item the process ends when the number of waves reaches the same as in the original tree. 
+\end{alineas}
+After this process, it estimates variance and confidence intervals.
+\textcite{green2020consistency} proved this estimator is consistent in the
+$m$-trees context.
 
 \section{Modelling strategies}
 
@@ -963,10 +1005,9 @@ Another important concept used thorough out the text is the following
 Beyond the text, we use a state-of-art implementation of {\em Hamiltonian Monte
 Carlo} (HMC) to sample from the posterior distribution of the parameters. HMC
 is an advanced technique, and it is especially effective for hierarchical
-models. In this section, we briefly describe the method and its diagnosis. 
-
-HMC was developed in the late 1980s as a Hybrid MOnte Carlo to tackle
-calculations in Lattice Quantum 
+models. In this section, we illustrate the method and its diagnosis. We also
+discuss the {\em Metropolis-within-Gibbs} technique used to sample graphs from
+\textcite{crawford2016}'s model.
 
 \subsection{Hamiltonian Monte Carlo}
 \label{sec:hamiltonian-monte-carlo}
