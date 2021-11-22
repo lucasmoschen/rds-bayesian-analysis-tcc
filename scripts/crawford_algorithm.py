@@ -31,7 +31,7 @@ class Crawford:
         degree_prob = 1.0 * degree_prob / degree_prob.sum()
         seeds = ro.choice(list(graph.nodes), p=degree_prob, size=n_seeds)
 
-
+        
 
 if __name__ == '__main__':
     simulation = Crawford()

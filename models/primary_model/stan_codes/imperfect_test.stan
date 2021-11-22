@@ -28,7 +28,9 @@ transformed parameters {
     vector[n_samples] p; 
     vector[n_predictors] effects; 
     effects = mu + sigma * normal_raw;
-    p = (1 - spec) + (spec + sens - 1) * inv_logit(logit(prev) + X * effects);
+    p = (1 - spec) 
+        + (spec + sens - 1) 
+        * inv_logit(logit(prev) + X * effects + (1/sqrt(tau)) * omega);
 }
 model {
     normal_raw ~ std_normal();

@@ -1,11 +1,11 @@
 functions {
   /**
-  * Return the log probability of a proper conditional autoregressive (CAR) prior 
+  * Return the log probability of a proper (CAR) prior 
   * with a sparse representation for the adjacency matrix
   *
   * @param omega Vector containing the parameters with a CAR prior
   * @param tau Precision parameter for the CAR prior (real)
-  * @param rho Dependence (usually spatial) parameter for the CAR prior (real)
+  * @param rho Dependence parameter for the CAR prior (real)
   * @param W_sparse Sparse representation of adjacency matrix (int array)
   * @param n Length of omega (int)
   * @param W_n Number of adjacent pairs (int)
@@ -23,12 +23,15 @@ functions {
       omegat_D = (omega .* D_sparse)';
       omegat_W = rep_row_vector(0, n);
       for (i in 1:W_n) {
-        omegat_W[W_sparse[i, 1]] = omegat_W[W_sparse[i, 1]] + omega[W_sparse[i, 2]];
-        omegat_W[W_sparse[i, 2]] = omegat_W[W_sparse[i, 2]] + omega[W_sparse[i, 1]];
+        omegat_W[W_sparse[i, 1]] = omegat_W[W_sparse[i, 1]] 
+                                   + omega[W_sparse[i, 2]];
+        omegat_W[W_sparse[i, 2]] = omegat_W[W_sparse[i, 2]] 
+                                   + omega[W_sparse[i, 1]];
       }
     
       for (i in 1:n) ldet_terms[i] = log1m(rho * lambda[i]);
-      return 0.5 * (sum(ldet_terms) - omegat_D * omega + rho * (omegat_W * omega));
+      return 0.5 * (sum(ldet_terms) 
+             - omegat_D * omega + rho * (omegat_W * omega));
   }
   real gumbel_type2_lpdf(real tau, real lambda){
     return -(3.0/2.0 * log(tau) + lambda / sqrt(tau)); 
@@ -116,7 +119,9 @@ transformed parameters {
     vector<lower = 0, upper = 1>[n_samples] p;
     vector[n_predictors] effects; 
     effects = mu + sigma * normal_raw; 
-    p = (1 - spec) + (spec + sens - 1) * inv_logit(logit(prev) + X * effects + (1/sqrt(tau)) * omega);
+    p = (1 - spec) 
+        + (spec + sens - 1) 
+        * inv_logit(logit(prev) + X * effects + (1/sqrt(tau)) * omega);
 }
 model {
     if (tau_prior == 0){
@@ -128,7 +133,8 @@ model {
     }
     
     rho ~ beta(alpha_rho, beta_rho);
-    omega ~ sparse_car(rho, adj_sparse, D_sparse, lambda, n_samples, adj_pairs);
+    omega ~ sparse_car(rho, adj_sparse, D_sparse, 
+                       lambda, n_samples, adj_pairs);
 
     normal_raw ~ std_normal();
     prev ~ beta(alpha_p, beta_p);

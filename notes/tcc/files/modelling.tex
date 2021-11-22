@@ -1170,10 +1170,10 @@ recruiter and the recruit.
     Exp & Grafo                           & RDS                     & $\rho$ & $\tau$ \\ \hline
     1   & (ER1, $P=0.005$)                & Standard                & 0.9995  & 1      \\
     2   & (ER1, $P=0.005$)                & Standard                & 0.9995  & 10000  \\
-    3   & (ER1, $P=0.005$)                & Standard                & 0.5    & 100      \\
-    4   & (ER2, $P_1=0.008, P_2 = 0.002$) & Preferential($R = 0.5$) & 0.9995  & 100      \\
-    5   & (BA1, $m = 25$)                 & Standard                & 0.9995  & 100      \\
-    6   & (BA2, $P = 0.5, m = 25$)        & Preferential($R=0.5$)   & 0.9995  & 100      \\ \hline
+    3   & (ER1, $P=0.005$)                & Standard                & 0.5    & 10      \\
+    4   & (ER2, $P_1=0.008, P_2 = 0.002$) & Preferential($R = 0.5$) & 0.9999  & 10      \\
+    5   & (BA1, $m = 25$)                 & Standard                & 0.9999  & 10      \\
+    6   & (BA2, $P = 0.5, m = 25$)        & Preferential($R=0.5$)   & 0.9999  & 10      \\ \hline
   \end{tabular}
   \fonte{Prepared by the author (2021).}
 \end{table}
@@ -1260,21 +1260,23 @@ than the RDS itself regarding this model.
 Strong priors on $\beta$ decrease the posterior uncertainty, but they do not
 change the comparison between both models. For the second experiment, with
 $\tau = 10000$, time execution time was around 1 min, much less than the
-previous experiment. In this experiment, the expected magnitude of $\omega$ is
+previous one. In this experiment, the expected magnitude of $\omega$ is
 100 times less than $\tau = 1$. \autoref{fig:tau-influence-probability-space}
 presents the histogram of 
 $$
 \frac{1}{1 + \exp(\omega_i)}, i = 1, \dots, n.
 $$
-Because of that reason, we pick $\tau = 100$ for the next experiments. In this
-case, notice that the posterior of $\rho$ in
-\autoref{fig:posterior_parameters_rds_tau100} is very different from
+When we include $\tau = 100$, we notice that the posterior of $\rho$, as in
+\autoref{fig:posterior_parameters_rds_tau100}, differs from
 \autoref{fig:posterior_rds_imperfect_tests_exp1_rho}. It means that the
 correlation between recruiter and recruited in the data is not strong. Because
-of that reason we have to set a higher $\rho$. We highlight that there is a non-trivial
+of that reason, we have to set a higher $\rho$. We highlight that there is a non-trivial
 relation between $\rho$ and $\tau$.
 \autoref{fig:posterior_parameters_rds_tau100} also answers what happens when
-$\rho$ is small as the third experiment. 
+$\rho$ is small, as in the third experiment. Unfortunately, as higher as $\rho$
+gets, the harder is the geometry of the problem, then more execution time is
+required. In particular, with $\tau = 100$ and $\rho = 0.999995$, the chains had very problematic divergences. 
+With that in mind, we pick $\tau = 10$ for the next experiments. 
 
 \begin{figure}
   \centering
@@ -1289,11 +1291,32 @@ $\rho$ is small as the third experiment.
 \begin{figure}
   \centering
   \caption{\label{fig:posterior_parameters_rds_tau100}Posterior distribution
-  for $\theta$, $\tau$ and $\rho$ for model \eqref{model:imperfect-tests-rds}
+  for $\theta$, $\tau$ and $\rho$ from model \eqref{model:imperfect-tests-rds}
   when $\tau = 100$.}
   \includegraphics[width=14cm]{posterior_parameters_rds_tau100.pdf}
   \fonte{Prepared by the author (2021) and based on Stan and ArviZ results.}
 \end{figure}
+
+Another important aspect is the prior distribution for $\tau$, as discussed
+when we presented model \eqref{model:imperfect-tests-rds}. The gamma
+distribution gives low probability to the model without the spatial effect
+$\omega$. With Gumbel prior, $\tau$ has more freedom to visit high values.
+\autoref{fig:trace_plot_experiment2_gumbel_imperfect_test_rds} shows how this
+impacts the inferences with $\lambda = \log(10)$, which is equivalent to setting
+$\Pr(1/\sqrt{\tau} > 1) = 0.1$. The prior distribution for $\theta$ was very
+strong leading to little learning from the data. 
+
+\begin{figure}
+  \centering
+  \caption{\label{fig:trace_plot_experiment2_gumbel_imperfect_test_rds}Posterior
+  distribution and trace plot for $\theta$, $\tau$ and $\rho$ from model 
+  \eqref{model:imperfect-tests-rds}}
+  \includegraphics[width=14cm]{trace_plot_experiment2_gumbel_imperfect_test_rds.pdf}
+  \fonte{Prepared by the author (2021) and based on Stan and ArviZ results.}
+\end{figure}
+
+At last we compare the last three experiments to verify if the inferences for
+$\theta$ are robust for different graphs structures. 
 
 \subsection{Including uncertainty about the recruitment graph}
 
