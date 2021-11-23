@@ -1101,8 +1101,37 @@ solutions. Below there are the main available diagnostics:
   are possible solutions for this warning. 
   \item low E-BFMI value: As stated by \textcite[p.
   6]{betancourt2016diagnosing}, we expect the distribution of the energies
-  induced by the position $q$.
-  \item low effective sample size:
+  induced by the position $q$ be similar to the marginal distribution $\pi_E$.
+  To verify this, it is used the the {\em Bayesian fraction of missing informa-
+  tion} given by the expression 
+  $$
+  BFMI = \frac{\ev_{\pi}[\var_{\pi_{E \mid q}}(E \mid q)]}{\var_{\pi_E}[E]},
+  $$
+  which measures the insufficient energy variation in the momentum resampling.
+  When this value is close to $0$, the average variance of the energy induced
+  by $q$ is much smaller than the marginal, which represents a very slow
+  exploration through level sets. In other words, the Markov chain did not
+  efficiently walk through the target distribution. Reparametrization of the
+  model is a good option that we use in the text. 
+  \item low {\em effective sample size} (ESS): the ESS quantifies the
+  necessary independent samples from the target distribution to give similar
+  estimator obtained by the MCMC algorithm. It is divided in bulk-ESS for
+  measuring the efficiency in location estimates and tail-ESS for tail
+  estimates, such as 5\% and 95\% quartiles. 
+  \item {\em trace plot} and other visual diagnostics: the traceplot indicates
+  the space explored for each parameter. It can diagnose if some chain got
+  stuck in a region or if there are two different chains. Other visual
+  diagnostics such as posterior samples scatter plots can show the quality of
+  the estimates.
 \end{alineas}
+
+One limitation of HMC method is the need for a continuous space to define 
+the gradient correctly. Because of that, it can not sample the graphs from 
+\textcite{crawford2016} model, and other method should be used. The two most
+used procedures for MCMC algorithms before HMC are Metropolis-Hastings and
+Gibbs sampling. We give a short discussion about these methods for our
+discussion in the text. 
+
+The other method we use for sampling graphs
 
 If this method is used. 

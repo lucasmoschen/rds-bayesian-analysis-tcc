@@ -37,8 +37,8 @@ From above, we develop three different models: the first considers perfect
 tests, that is, $\gamma_s = \gamma_e = 1$ and no spatial random effect;
 the second considers imperfect tests, regarding $\gamma_s$ and $\gamma_e$,
 but ignoring the RDS structure; and the third one has imperfect tests and
-RDS structure. \improve{Some considerations are made to improve the model's
-  limitations.}
+RDS structure. Some considerations are made to improve the model's
+  limitations.
 
 The implementation of the following models were in the statistical computation
 platform Stan \cite{carpenter2017stan} within Python Interface PyStan
@@ -1275,7 +1275,12 @@ relation between $\rho$ and $\tau$.
 \autoref{fig:posterior_parameters_rds_tau100} also answers what happens when
 $\rho$ is small, as in the third experiment. Unfortunately, as higher as $\rho$
 gets, the harder is the geometry of the problem, then more execution time is
-required. In particular, with $\tau = 100$ and $\rho = 0.999995$, the chains had very problematic divergences.
+required. In particular, with $\tau = 100$ and $\rho = 0.999995$, the chains
+had very problematic divergences. We also noticed that the beta prior for
+$\rho$ with high mass around 1, such as specifying $\alpha_{\rho} = 900$ and
+$\beta_{\rho} = 1$, for instance, provokes inefficient searches, which is
+shown to us through the maximum tree depth. This should be investigated in
+future works. 
 
 \begin{figure}
   \centering
@@ -1315,12 +1320,55 @@ strong leading to little learning from the data.
 \end{figure}
 
 At last we compare the last three experiments to verify if the inferences for
-$\theta$ are robust for different graphs structures. 
+$\theta$ are robust for different graphs structures. We compare the posterior
+94\% HDI and the posterior mean for the parameter $\beta$ for each different
+graph structure in
+\autoref{fig:credible_intervals_effects_prev_comparison_rds_graphs}. Weakly
+informative priors on $\beta$ and $\theta$ were posed. Notice that the
+credible intervals for $\beta$ are very similar in the three structures,
+including $\beta_2$, the parameter related to the variable used for
+preferential recruitment in the models ER2 and BA2. The credible intervals are
+wide, as observed before. The credible intervals for $\theta$ presents
+something already noted in the literature (see \cite{gile2018methods} for
+instance). The estimates of the model not considering sampling weights and
+homophily generate biased estimates when RDS structure habe these behaviors.
+This is a relevant limitation of this model. However, the credible intervals
+included the true value, which is an evidence of uncertainty quantification.
+
+Performing model \eqref{model:imperfect-tests} over the dataset with BA2 graph
+structure resulted in a posterior for $\theta$ of 0.51 with 94\% credible
+interval of 0.2 to 0.84, which not included the true value of $\theta$. This
+fact show that ignoring RDS structure can derive misleading results. 
+
+\begin{figure}
+  \centering
+  \caption{\label{fig:credible_intervals_effects_prev_comparison_rds_graphs}Comparing
+  posterior mean and 94\% credibility intervals for $\beta$ and $\theta$ for model
+  \eqref{model:imperfect-tests-rds} from three different graph structures.}
+  \includegraphics[width=12cm]{credible_intervals_effects_prev_comparison_rds_graphs.pdf}
+  \fonte{Prepared by the author (2021) ans based on Stan result}
+\end{figure}
+
+We compare the prevalence estimates when strong priors are posed on $\theta$
+in \autoref{fig:credible_intervals_effects_prev_comparison_rds_graphs_strong}.
+Notice that the estimates are much better for the prevalence, but the graph structure
+BA1 leads to inferences that are much closer to the true value in comparison
+to ER2 and BA2 that add homophily effects in the recruitment.
+
+\begin{figure}
+  \centering
+  \caption{\label{fig:credible_intervals_effects_prev_comparison_rds_graphs_strong}Comparing
+  posterior mean and 94\% credibility intervals for $\beta$ and $\theta$ for model
+  \eqref{model:imperfect-tests-rds} from three different graph structures with
+  strong priors.}
+  \includegraphics[width=12cm]{credible_intervals_effects_prev_comparison_rds_graphs_strong.pdf}
+  \fonte{Prepared by the author (2021) ans based on Stan result}
+\end{figure}
 
 \subsection{Including uncertainty about the recruitment graph}
 
 
-% RDS has the constraint of being without replacement. For that reason, we do
+% RDS has the constraint of being without replacement. For that reason, we d
 % not observe all links among the samples \cite[]{crawford2016}. Considering the
 % model developed by Crawford, we can model the
 % matrix $Q$ as {\em Exponential Random Graph Model} (ERGM). Define the
