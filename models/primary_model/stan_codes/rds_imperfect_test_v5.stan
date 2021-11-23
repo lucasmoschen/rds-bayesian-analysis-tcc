@@ -44,7 +44,7 @@ data {
     int<lower=0> n_samples;
     int<lower=0> n_predictors; 
   
-    int<lower=0, upper=1> Y[n_samples];
+    int Y[n_samples];
     matrix[n_samples, n_predictors] X;
 
     cov_matrix[n_predictors] Sigma; 
@@ -118,7 +118,7 @@ parameters {
 transformed parameters {
     vector<lower = 0, upper = 1>[n_samples] p;
     vector[n_predictors] effects; 
-    effects = mu + sigma * normal_raw; 
+    effects = mu + sigma * normal_raw;
     p = (1 - spec) 
         + (spec + sens - 1) 
         * inv_logit(logit(prev) + X * effects + (1/sqrt(tau)) * omega);

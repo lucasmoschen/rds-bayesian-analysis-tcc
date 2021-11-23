@@ -140,5 +140,5 @@ model {
 
     normal_raw ~ std_normal();
 
-    T ~ bernoulli_logit(apparent_prev);
+    T ~ bernoulli(apparent_prev);
 }
