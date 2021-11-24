@@ -1125,13 +1125,41 @@ solutions. Below there are the main available diagnostics:
   the estimates.
 \end{alineas}
 
-One limitation of HMC method is the need for a continuous space to define 
+One limitation of HMC method is the need for a continuous probability space
+for the parameters to define 
 the gradient correctly. Because of that, it can not sample the graphs from 
 \textcite{crawford2016} model, and other method should be used. The two most
-used procedures for MCMC algorithms before HMC are Metropolis-Hastings and
-Gibbs sampling. We give a short discussion about these methods for our
+used procedures for MCMC algorithms besides HMC are {\em Metropolis-Hastings} and
+{\em Gibbs sampler}. We give a short discussion about these methods for our
 discussion in the text. 
 
-The other method we use for sampling graphs
+Metropolis-Hastings builds a Markov chain starting from an arbitrary initial
+point $X^{(0)}$ and a probability distribution with density $q(y \mid x)$ called {\em
+proposal distribution}. The transition kernel is designed to have the target
+distribution $\pi$ as the stationary distribution. For each iteration $t$, 
+we draw $X$ from $q(\cdot \mid X^{(t-1)})$ and accept the new value with probability $\alpha(X \mid
+X^{(t-1)})$, where 
+\begin{equation}
+  \label{eq:alpha-metropolis-hastings}
+  \alpha(X \mid X^{(t-1)}) = \min\left(1, \frac{\pi(X)q(X^{(t-1)} \mid X)}{\pi(X^{(t-1)})q(X \mid X^{(t-1)})}\right).
+\end{equation}
+Imposing some condition on $q$, such as $\pi(x), \pi(y) > 0 \implies q(x \mid
+y)>0$, the chain is irreducible \cite[p. 274]{robert2004monte} and we can assume
+convergence of Monte Carlo estimates to quantifies of interest. 
 
-If this method is used. 
+On the other hand, Gibbs sampler builds a Markov chain using the full
+conditional probabilities and it is more popular in high-dimensional
+distributions. One particular formulation that we use in this work is the {\em
+Systematic scan Gibbs sampler}. Suppose $X = (X_1, X_2)$ and let $X^{(0)} =
+(X_1^{(0)}, X_2^{(0)})$ be an arbitrary initial point. For each iteration $t$,
+we sample $X_1^{(t)} \sim \pi_{X_1 \mid X_2}(\cdot \mid X_2^{(t-1)})$ and
+$X_2^{(t)} \sim \pi_{X_2 \mid X_1}(\cdot \mid X_1^{(t)})$. The kernel of this
+distribution admits $\pi$ as stationary distribution. With some regularity
+condition, we can show that the sampling generates a irreducible and recurrent
+Markov chain such shat Monte Carlo estimates converge to the integrals we are
+interested in. 
+
+When the full conditionals are not available, Metropolis-Hastings can be used
+inside the Gibbs sampling cycle generating a sub-chain of size $T$. The scheme generated is called {\em
+Metropolis-within-Gibbs}. It is usual to use $T=1$ since large values are
+unnecessary \cite[p. 213]{gamerman2006markov}. 

@@ -533,7 +533,98 @@ and $\Sigma = [[12, -2.5], [-2.5, 4]]$ in order to yield $\ev[X] \approx 0.9,
 \ev[Y] \approx 0.8, \var(X) = \var(Y) \approx 0.05$, and $\cor(X,Y) \approx
 -0.2$, 77\% of the simulations has no exact solution strictly positive and the
 error of the solvers were 0.82 for the mixed solver and 0.91 for the
-minimization problem, which is much higher than the previous simulation. 
+minimization problem, which is much higher than the previous simulation.
+
+\chapter{Sampling from the posterior distribution of the graph}
+\label{sec:sampling-posterior-graph}
+
+Here we derive the method developed by \textcite{crawford2016} for sampling
+from $p(G_S, \lambda \mid \boldsymbol{Z})$. The
+implementation used Python language. We first define
+the prior density for $(G_s, \lambda)$ as 
+$$
+\pi(G_S, \lambda) = \pi(G_S) \times \pi(\lambda) = \frac{1}{|\mathcal{C}(\boldsymbol{Z})|} \times \frac{\beta_{r}^{\alpha_{r}}}{\Gamma(\alpha_{r})}\lambda^{\alpha_r - 1}e^{-\beta_r \lambda}, 
+$$
+where $\alpha_r$ and $\beta_r$ are positive hyperparameters. Notice that $G_S$
+as uniform distribution over all compatible graphs and $\lambda \sim
+\operatorname{Gamma}(\alpha_r, \beta_r)$.
+
+To perform Gibbs sampling, we need to sample from $p(G_S \mid \lambda,
+\boldsymbol{Z})$ and $p(\lambda \mid G_S , \boldsymbol{Z})$. Since we do not
+know to sample from both conditional distributions, \textcite{crawford2016}
+proposes to use Metropolis-Hastings for each one. Then, we need to specify a
+proposal distribution to both conditionals:
+\begin{alineas}
+  \item the proposal for $p (G_S | \lambda, \boldsymbol{Z})$ generates a new compatible graph
+   $G_S^*$ with a simple algorithm. It samples two random nodes $i,j$
+   without replacement. If both nodes have less connections in $G_S$ than
+   their informed degrees, i.e., $u_i \ge 1$ and
+   $u_j \ge 1$, and they are not connected in $G_S$, we include the edge
+   $\{i,j\}$ in $G_S^*$ and copy all the other edges. If the edge already is
+   in $G_S$ and it is not in $G_R$, we remove it from $G_S^*$. Otherwise we
+   draw another two nodes and continue. We call this proposal of $P(G_S^* \mid
+   G_S)$; 
+   \item the proposal for $p(\lambda \mid G_S, \boldsymbol{Z})$ assumes a
+   normal distribution for the Maximum likelihood estimator (MLE)
+   $\hat{\lambda}$ of $\lambda$ from the likelihood
+   \eqref{eq:likelihood-wainting-times}. Deriving it, we obtain 
+   \begin{equation*}
+     \begin{split}
+      \frac{d}{d \lambda} \log L(w \mid G_S, \lambda) &= \frac{d}{d \lambda}\left[ (n - m)\log(\lambda) + \sum_{k \mathrm{isn't seed}} \log(s_k) - \lambda \boldsymbol{s}^Tw\right] \\
+      &= \frac{n-m}{\lambda} - \boldsymbol{s}^Tw,
+     \end{split}
+   \end{equation*}
+   where $m$ is the number of seeds. At the optimal $\hat{\lambda}$, we have
+   that 
+   $$
+   \frac{n-m}{\hat{\lambda}} - \boldsymbol{s}^Tw = 0 \implies \hat{\lambda} = \frac{n-m}{\boldsymbol{s}^Tw}.
+   $$
+   The Fisher information is, under some regularity conditions,
+   $$
+   I(\lambda) = -\ev\left[-\frac{n-m}{\lambda^2}\right] = \frac{n-m}{\lambda^2}.
+   $$
+   For a large $n$, we can assume
+   $$\sqrt{n-m}(\hat{\lambda} - \lambda) \overset{d}{\to} N(0, \lambda^2).$$ 
+   Then the proposal distribution is the normal distribution of mean
+   $\hat{\lambda}$ and variance $\sigma^2 = \lambda^2/(n - m)$.
+\end{alineas} 
+
+Now, it remains to calculate the probability of acceptance for both
+Metropolis-Hastings samplings. \textcite{crawford2016} 
+establishes several results to make the calculations more efficient. We omit
+then here. Using relation \eqref{eq:alpha-metropolis-hastings}, the probabilities are: 
+
+\begin{alineas}
+  \item for the graph transition:
+  \begin{equation*}
+    \begin{split}
+      \alpha(G_S^* \mid G_S) &= \min\left(1, \frac{p (G_S^*| \lambda, \boldsymbol{Z})P(G_S \mid G_S^*)}{p (G_S | \lambda, \boldsymbol{Z}) P(G_S^* \mid G_S)}\right) \\
+      &= \min\left(1, \frac{L(w \mid G_S^*, \lambda)\pi(G_S^*)\pi(\lambda)P(G_S \mid G_S^*)}{ L(w \mid G_S, \lambda)\pi(G_S)\pi(\lambda)P(G_S^* \mid G_S)}\right) \\
+      &= \min\left(1, \frac{L(w \mid G_S^*, \lambda)P(G_S \mid G_S^*)}{ L(w \mid G_S, \lambda)P(G_S^* \mid G_S)}\right);
+    \end{split}
+  \end{equation*}
+  \item for the rate $\lambda$ transition:
+  \begin{equation*}
+    \begin{split}
+      \alpha(\lambda^* \mid \lambda) &= \min\left(1, \frac{p (\lambda^* \mid  G_S,  \boldsymbol{Z})g(\lambda \mid G_S)}{p (\lambda \mid G_S, \boldsymbol{Z}) g(\lambda^* \mid G_S)}\right) \\
+      &= \min\left(1, \frac{L(w \mid G_S, \lambda^*)\pi(G_S)\pi(\lambda^*)g(\lambda \mid G_S)}{ L(w \mid G_S, \lambda)\pi(G_S)\pi(\lambda)P(\lambda \mid G_S)}\right) \\
+      &= \min\left(1, \frac{L(w \mid G_S, \lambda^*)\pi(\lambda^*)g(\lambda \mid G_S)}{ L(w \mid G_S, \lambda)\pi(\lambda) g(\lambda^* \mid G_S)}\right).
+    \end{split}
+  \end{equation*}
+  This probability is better calculated using the logarithmic transformations,
+  since 
+  $$
+  \log \frac{L(w \mid G_S, \lambda^*)}{ L(w \mid G_S, \lambda)} = (n-m)\left(\log(\lambda^*) - \log(\lambda)\right) - \boldsymbol{s}^Tw(\lambda^* - \lambda),
+  $$
+  $$
+  \log \frac{\pi(\lambda^*)}{\pi(\lambda)} = (\alpha_r - 1)(\log(\lambda^*) - \log(\lambda)) - \beta(\lambda^* - \lambda), \text{ and }
+  $$
+  $$
+  \log \frac{g(\lambda \mid G_S)}{g(\lambda^* \mid G_S)} = \log(\lambda^*) - \log(\lambda) - \frac{1}{2}\left[\frac{(\lambda - \hat{\lambda})^2}{\sigma^2} - \frac{(\lambda^* - \hat{\lambda})^2}{(\sigma^*)^2}\right].
+  $$
+\end{alineas}
+
+Establishing the Metropolis-Hastings, the Gibbs sampling is well-defined.
 
 \chapter{Stan codes}
 \label{appendix:stan-codes}

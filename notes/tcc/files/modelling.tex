@@ -1367,12 +1367,38 @@ to ER2 and BA2 that add homophily effects in the recruitment.
 
 \subsection{Including uncertainty about the recruitment graph}
 
+RDS has the constraint of being without replacement. For that reason, we do
+not observe all links among the sampled individuals. Considering the model
+developed by 
+\textcite{crawford2016}, we can include the uncertainty regarding the
+recruitment graph $G_R$. We modify the model \eqref{model:imperfect-tests-rds} as
+follows: 
+\begin{alineas}
+  \item we suppose having the necessary data for \textcite{crawford2016}'s
+  model, which includes the Coupon Matrix $C$, the recruitment times
+  $\boldsymbol{t}$ and the informed degrees $\boldsymbol{d}$, besides the
+  recruitment graph $G_R$;
+  \item we sample from the posterior distribution given by equation
+  \eqref{eq:posterior-distribution-graph} using a Metropolis-within-Gibbs
+  procedure detailed below (see Appendix \ref{sec:sampling-posterior-graph});
+  \item with the sampled compatible subgraphs $\hat{G}_S^{(i)}$ and its
+  corresponding adjacency matrix $A^{(i)}$, we have the distribution of the
+  recruitment-induced subgraph $G_S$. 
+  \item for each sampled $A^{(i)}$ we can obtain samples from model
+  \eqref{model:imperfect-tests-rds}. The collection of all samples form a
+  complete sampling considering the uncertainty over $G_R$. 
+\end{alineas}
 
-% RDS has the constraint of being without replacement. For that reason, we d
-% not observe all links among the samples \cite[]{crawford2016}. Considering the
-% model developed by Crawford, we can model the
-% matrix $Q$ as {\em Exponential Random Graph Model} (ERGM). Define the
-% following 
+There are several limitations in \textcite{crawford2016}'s work. The
+recruitment are independent of the recruiter identity, the neighbors,
+and all the other waiting times in the model, but in real applications, this is
+hardly the case. It supposes that $\boldsymbol{d}$ is a fixed data without
+considering the uncertainty about it. Moreover, the sampled graphs are subject
+to inaccuracies since the uniform prior does not offer information to
+distinguish edge $\{i, j\}$ from $\{i, k\}$ when both do not appear in the
+recruitment graph. In general, there are many more wrong options to $i$
+connect than right options. Inclusion of recruiter's characteristics can be
+helpful in future works. 
 
 \section{Model extensions}
 

@@ -134,7 +134,9 @@ class Crawford:
         """
         likelihood_ratio = (self.n_samples - self.n_seeds) * (np.log(rate_new) - np.log(rate))
         likelihood_ratio += -d * (rate_new - rate)
-        propose_ratio = -0.5/sigma_hat ** 2 * (rate - rate_new) * (rate + rate_new - 2 * lambda_hat)
+        sigma_star = rate_new/np.sqrt(self.n_samples - self.n_seeds)
+        propose_ratio = np.log(rate_new) - np.log(rate)
+        propose_ratio -= 0.5*((rate - lambda_hat)**2/sigma_hat**2 - (rate_new - lambda_hat)**2/sigma_star**2)
         prior_ratio = (alpha - 1) * (np.log(rate_new) - np.log(rate)) - beta * (rate_new - rate)
         log_p = likelihood_ratio + propose_ratio + prior_ratio
         return np.exp(min(0, log_p))
@@ -158,7 +160,7 @@ class Crawford:
         """
         d = np.dot(s.flatten(), self.waiting_times.flatten())
         lambda_hat = (self.n_samples - self.n_seeds) / d
-        sigma_hat = lambda_hat / np.sqrt(self.n_samples - self.n_seeds)
+        sigma_hat = rate / np.sqrt(self.n_samples - self.n_seeds)
         rate_new = np.random.normal(lambda_hat, sigma_hat)
         rho = self._probability_metropolis_rate(rate, rate_new, d, lambda_hat, sigma_hat, alpha, beta)
         if np.random.random() < rho:
@@ -193,7 +195,7 @@ class Crawford:
         add_GS, rem_GS = self._proposal_ratio(G_S, u)
 
         d = np.dot(s.flatten(), self.waiting_times.flatten())
-        rate = (self.n_samples - self.n_seeds) / d
+        rate = (self.n_samples - self.n_seeds) / d[0,0]
 
         for _ in tqdm(range(iters)):
             G_S, s, u, add_GS, rem_GS = self.sample_graph_given_rate(G_S, rate, u, s, add_GS, rem_GS)
