@@ -273,7 +273,7 @@ The third experiment aims to analyse what happens if some covariates have a
 heavier tail. No big difference was noticed despite the existence of some
 individuals very different from the others. At last, the fourth experiment
 increases the dimensionality to observe the number of effective samples. Each
-chain took around 3 minutes, instead of the 3s needed for the previous
+chain took around three minutes, instead of the 3s needed for the previous
 experiments. From the 51 parameters, 48 had the true values in the 95\% HDI
 credible interval. The bulk-ESS was greater than 4500 for 95\% of the
 parameters. \autoref{fig:predicted-vs-simulated-high-dimension-perfect-tests}
@@ -927,7 +927,7 @@ The first Stan implementation is exactly as presented in equation
 since it improves readability of the code. However this implementation suffers from
 some problems concerning the geometry of the parameter space. For this
 implementation we treat $\rho$ as a fixed parameter. 1000 iterations of the
-algorithm took around 6min. The resulting inferences were not so bad despite
+algorithm took around six minutes. The resulting inferences were not so bad despite
 the small number of iterations.
 \autoref{fig:energy_plot_inefficient_implementation_stan} presents a
 comparative plot between the marginal energy distribution and the distribution
@@ -954,7 +954,7 @@ vectorized form of probability functions and operations such as matrix
 products are more efficient than loops and transformed parameters. Because of
 that, we apply this suggestion to the implementation. Notice that it does not
 solve the problem with the heavy tails of the target distribution, then the
-time to make 1000 iterations was around 5min. Although the vectorization did
+time to make 1000 iterations was around five minutes. Although the vectorization did
 not prove to be better for the model in particular, we keep on using it given
 the general recommendations of the documentation.
 
@@ -982,7 +982,7 @@ same thing for the effects $\beta$:
   \end{split}
 \end{equation*}
 where $V_{\beta}V_{\beta}^{*} = \Sigma_{\beta}$. With that little exchange,
-the time to run the four chains and 1000 iterations took around 1min, much
+the time to run the four chains and 1000 iterations took around one minute, much
 better than the previous.
 \autoref{fig:energy_plot_non_centered_implementation_stan} shows how this
 improves the results on the energy plot. However, this implementation is not
@@ -1211,7 +1211,7 @@ of a relation between the variables, as we wanted to simulate.
 
 Placing strong priors on $\gamma_s$ and $\gamma_e$ as usual, and weakly
 informative priors on the other parameters, we perform 4000 warmup and 2000
-sampling interactions. The execution time was around 9 min.
+sampling interactions. The execution time was around nine minutes.
 \autoref{fig:posterior_rds_imperfect_tests_exp1} shows the learning of the
 parameters from the data. An interesting thing is that $\gamma_s$ moved the
 mode of the prior distribution closer to the true value. The bulk-ESS was less
@@ -1259,7 +1259,7 @@ than the RDS itself regarding this model.
 
 Strong priors on $\beta$ decrease the posterior uncertainty, but they do not
 change the comparison between both models. For the second experiment, with
-$\tau = 10000$, time execution time was around 1 min, much less than the
+$\tau = 10000$, time execution time was around one minute, much less than the
 previous one. In this experiment, the expected magnitude of $\omega$ is
 100 times less than $\tau = 1$. \autoref{fig:tau-influence-probability-space}
 presents the histogram of 
@@ -1392,13 +1392,39 @@ follows:
 There are several limitations in \textcite{crawford2016}'s work. The
 recruitment are independent of the recruiter identity, the neighbors,
 and all the other waiting times in the model, but in real applications, this is
-hardly the case. It supposes that $\boldsymbol{d}$ is a fixed data without
+hardly the case. It supposes that $\boldsymbol{d}lambda$ is a fixed data without
 considering the uncertainty about it. Moreover, the sampled graphs are subject
 to inaccuracies since the uniform prior does not offer information to
 distinguish edge $\{i, j\}$ from $\{i, k\}$ when both do not appear in the
 recruitment graph. In general, there are many more wrong options to $i$
 connect than right options. Inclusion of recruiter's characteristics can be
 helpful in future works. 
+
+As a validation of this method, with the same specifications of the Experiment
+1 of \autoref{tab:experiments-imperfect-tests-rds}, we generate RDS data
+through \textcite{crawford2016}'s model obtaining $G_R, \boldsymbol{d},
+\boldsymbol{t}$ and matrix $C$. Moreover, we can get the recruitment-induced
+subgraph $G_S$ and its adjacency matrix. We generate the results of the tests
+$Y$ using model \eqref{model:imperfect-tests-rds}. We first sampled from the
+distribution $p(G_S \mid \boldsymbol{Z})$ using Metropolis-within-Gibbs
+described in Appendix \ref{sec:sampling-posterior-graph}. We used 10000 warmup
+and 100 sampling iterations $\hat{G}_S$, which took around five minutes. With each
+graph, we performed HMC to obtain samples for the other parameters with 2200
+warmup and 400 sampling iterations for two chains. This marginalize the
+effect of the graphs. This process took about four hours. Informative priors
+were placed in $\theta$ and $\beta$, since even without considering the
+uncertainty of the graph, the credible intervals already are too wide. Counter
+intuitively, the credible intervals were not too wide. Therefore, well defined
+priors can help with our uncertainty about the graph. 
+
+\begin{figure}[htbp]
+  \centering
+  \caption{\label{fig:posteriors-including-uncertainty}Posterior distribution
+  of $\theta$ and $\beta$ in model \eqref{model:imperfect-tests-rds} with
+  uncertainty in the graph.}
+  \includegraphics[width=12cm]{posteriors-including-uncertainty.pdf}
+  \fonte{Prepared by the author (2021) and based on Stan and ArviZ results.}
+\end{figure}
 
 \section{Model extensions}
 
@@ -1407,25 +1433,41 @@ homophily, bottlenecks and sampling weights. This section aims to build some
 options for these aspects and establish future works in that line.
 
 \begin{alineas}
-  \item {\em Homophily model}: Ignoring homophily effects can derive biased
-  estimates as we simulated in this work. \textcite[p. 9]{yauck2021general} defined a
+  \item {\em homophily model}: ignoring homophily effects can lead to biased 
+  estimates, as we simulated in this work. \textcite[p. 9]{yauck2021general} defined a
   similar model where the spatial effect follows a SAR model and a parameter
-  $\gamma$ to measure homophily effects. In our model it would change the
+  $\gamma$ is included to measure homophily effects. In our model it would change the
   formulation of $\theta_i$ to 
   $$
-  g(\theta_i) = g(\theta) + \boldsymbol{X} \beta + \gamma\frac{1}{n_i}\sum_{k \sim j}z_{k} + \omega_i,
+  g(\theta_i) = g(\theta) + \boldsymbol{X} \beta + \gamma\frac{1}{n_i}A_iz + \omega_i,
   $$
-  where $n_i$ is the number of connections of an individual and $z$ is a
-  variable that influences the recruitment choice. The parameter $\gamma$ as
+  where $n_i$ is the number of connections of individual and $i$, $A_i$ is the
+ $i$-th row of $A$ and $z$ is a variable that influences the recruitment
+ choice. The parameter $\gamma$ has
   serious problems with identification as pointed out by \textcite[p.
   11]{yauck2021general}, which, in our case, could be dealt with a strong prior.
-  \item {\em Sampling weights}: one of the objectives of the introduction of 
+  \item {\em sampling weights}: One objective of introducing the
   Volz-Heckathorn estimator for prevalence was to consider the inclusion
-  probabilities of the individuals in the estimator. Our model does not
-  consider these probabilities, which can lead to wrong inferences.
-  \textcite{bastos2018hiv} uses the pseudo-likelihood strategy to powder the
-  likelihood of each individual. When point estimates are considered, the
-  definition of a loss function which makes this correction can also be a
-  valid solution. For instance, if 
-  \item {\em Bottlenecks}
+  probabilities of the individuals in the research. Our model does not
+  consider these probabilities, which can contribute to wrong inferences.
+  \textcite{bastos2018hiv} use the pseudo-likelihood strategy to ponder the likelihood of each
+  individual. For point estimate of $\theta$, other approaches are used, such
+  as 
+  $$
+  \hat{\theta} = \sum_{i=1}^n \frac{w_i \theta_i}{\sum_{i=1}^n w_i},
+  $$
+  where $w_i$ are weights. 
+  \item {\em Bottlenecks}: bottleneck effects create clusters of individuals 
+  based on their characteristics. Fortunately, hierarchical models can address
+  this situation including an additional index $j$ for the corresponding
+  cluster. Then, the expression of $\theta_i$ turns to
+  $$
+  g(\theta_{ij}) = g(\theta) + \boldsymbol{X}\beta + \omega_{ij},
+  $$
+  where $\omega_{ij}$ can take into consideration to different effects, within
+  cluster and between clusters. 
 \end{alineas}
+
+These modifications are possible future works. There are other limitations we do not comment, such as differential activity
+\cite[p. 68]{gile2018methods}, limited number of sample waves, random
+recruitment, and small size networks \cite{gile2015diagnostics}.
