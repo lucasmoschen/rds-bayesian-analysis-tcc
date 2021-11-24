@@ -179,7 +179,7 @@ class Crawford:
             s_new += (C[i:i+1, :] * np.array([k > j for k in range(self.n_samples)]) + C[j:j+1, :]).reshape(-1, 1)
         return s_new
 
-    def metropolis_within_gibbs(self, iters, hypers):
+    def metropolis_within_gibbs(self, warmup, iters, hypers):
         """
         Performs Gibbs sampler with Metropolis Hastings to derive the
         conditional distributions.
@@ -197,7 +197,10 @@ class Crawford:
         d = np.dot(s.flatten(), self.waiting_times.flatten())
         rate = (self.n_samples - self.n_seeds) / d[0,0]
 
-        for _ in tqdm(range(iters)):
+        for _ in tqdm(range(warmup), desc='warmup'):
+            G_S, s, u, add_GS, rem_GS = self.sample_graph_given_rate(G_S, rate, u, s, add_GS, rem_GS)
+            rate = self.sample_rate_given_graph(rate, s, alpha, beta)
+        for _ in tqdm(range(iters), desc='sampling'):
             G_S, s, u, add_GS, rem_GS = self.sample_graph_given_rate(G_S, rate, u, s, add_GS, rem_GS)
             rate = self.sample_rate_given_graph(rate, s, alpha, beta)
             trace['graphs'].append(G_S)

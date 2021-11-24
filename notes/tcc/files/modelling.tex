@@ -1403,11 +1403,29 @@ helpful in future works.
 \section{Model extensions}
 
 Several characteristics of RDS were not include in the previous model, such as
-homophily, bottlenecks, and sampling weights. This section aims to build some
+homophily, bottlenecks and sampling weights. This section aims to build some
 options for these aspects and establish future works in that line.
 
 \begin{alineas}
-  \item {\em Homophily model}: \cite{yauck2021general}
-  \item {\em Sampling weights}: GLM weighted
+  \item {\em Homophily model}: Ignoring homophily effects can derive biased
+  estimates as we simulated in this work. \textcite[p. 9]{yauck2021general} defined a
+  similar model where the spatial effect follows a SAR model and a parameter
+  $\gamma$ to measure homophily effects. In our model it would change the
+  formulation of $\theta_i$ to 
+  $$
+  g(\theta_i) = g(\theta) + \boldsymbol{X} \beta + \gamma\frac{1}{n_i}\sum_{k \sim j}z_{k} + \omega_i,
+  $$
+  where $n_i$ is the number of connections of an individual and $z$ is a
+  variable that influences the recruitment choice. The parameter $\gamma$ as
+  serious problems with identification as pointed out by \textcite[p.
+  11]{yauck2021general}, which, in our case, could be dealt with a strong prior.
+  \item {\em Sampling weights}: one of the objectives of the introduction of 
+  Volz-Heckathorn estimator for prevalence was to consider the inclusion
+  probabilities of the individuals in the estimator. Our model does not
+  consider these probabilities, which can lead to wrong inferences.
+  \textcite{bastos2018hiv} uses the pseudo-likelihood strategy to powder the
+  likelihood of each individual. When point estimates are considered, the
+  definition of a loss function which makes this correction can also be a
+  valid solution. For instance, if 
   \item {\em Bottlenecks}
 \end{alineas}
