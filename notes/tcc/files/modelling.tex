@@ -1454,9 +1454,10 @@ options for these aspects and establish future works in that line.
   individual. For point estimate of $\theta$, other approaches are used, such
   as 
   $$
-  \hat{\theta} = \sum_{i=1}^n \frac{w_i \theta_i}{\sum_{i=1}^n w_i},
+  \hat{\theta} = \sum_{i=1}^n \frac{w_i \hat{\theta_i}}{\sum_{i=1}^n w_i},
   $$
-  where $w_i$ are weights. 
+  where $w_i$ are weights and $\hat{\theta}_i$ are point estimates of the
+  posterior distribution of $\theta_i$. 
   \item {\em Bottlenecks}: bottleneck effects create clusters of individuals 
   based on their characteristics. Fortunately, hierarchical models can address
   this situation including an additional index $j$ for the corresponding

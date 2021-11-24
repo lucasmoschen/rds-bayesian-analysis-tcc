@@ -1,3 +1,199 @@
-\chapter{Validation by simulation}
+\chapter{Data applications}
 \label{ch:real_data_applications}
 
+In this chapter, we describe two applications to data not directly generated
+by our model. In fact, real applications are very difficult to obtain by
+ethical concerns. Several datasets do not fit in our problem by
+several reasons: unavailable diagnostic tests \cite{perestroika2021sexual,
+khoury2020hard, salganik2011assessing}, unavailable RDS structure
+\cite{coutinho2019risks, kendall201912}, and unavailable covariates
+\cite{wu2017using}. Based on that fact, we use two datasets to verify our
+inferences: Faux datasets in package RDS \cite{rds_package} and Project 90
+study \cite{project90}.
+
+\section{Faux dataset}
+
+Faux dataset is simulated data designed to ``demonstrate RDS functions and
+analysis'' \cite[p. 15]{rds_package}. It contains information about the
+individual identification, the recruiter identification, the informed degree,
+and three covariates, two being binary and one assuming three possible values.
+The summary statistics are in \autoref{tab:summary-statistics-faux-data}.
+\autoref{fig:degre_distribution_fauxdata} presents the degree distribution for
+this sample. The RDS structure is pictured in \autoref{fig:rds_faux_data}. In
+total, there are 389 samples. 
+
+\begin{table}[htbp]
+    \centering
+    \caption{\label{tab:summary-statistics-faux-data}Summary statistics of
+    Faux dataset.}
+    \begin{tabular}{cc}
+    \hline
+    Variable & Proportions \\ \hline
+    \multicolumn{2}{c}{X} \\ \hline
+    red & 0.7 \\
+    blue & 0.3 \\ \hline
+    \multicolumn{2}{c}{Y} \\ \hline
+    blue & 0.44 \\
+    green & 0.38 \\
+    black & 0.18 \\ \hline
+    \multicolumn{2}{c}{Z} \\ \hline
+    red & 0.57 \\
+    blue & 0.43 \\ \hline
+    \end{tabular}
+    \fonte{The table was generated with data from \textcite{rds_package}.}
+\end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \caption{\label{fig:degre_distribution_fauxdata}Histogram of the simulated 
+    informed degrees.}
+    \includegraphics[width=8cm]{degree_distribution_fauxdata.pdf}
+    \fonte{The figure was generated with data from \textcite{rds_package}.}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \caption{\label{fig:rds_faux_data}RDS structure in 
+      Faux dataset.}
+    \includegraphics[width=14cm]{rds_faux_data.pdf}
+    \fonte{The figure was generated with data from \textcite{rds_package} in
+    NetworkX package. The colors indicate the result of the test, yes being positive and no being negative.}
+  \end{figure}
+
+We interpret the variable $X$ as the presence of the disease, in
+which blue indicates positive and red negative. We define variable $\hat{X}$
+to be the diagnostic test result. We omit $X$ and change it by the result of a
+diagnostic test with sensitivity $\gamma_s = 0.9$ and specificity $\gamma_e =
+0.85$. The prevalence is set to be $0.28$, a little
+lower value than the detected in the dataset. The variables $Y$ and $Z$ are
+regressors. \autoref{tab:results-estimators-faux-data} presents the biased
+results when misclassification is not regarded. The 95\% bootstrap confidence interval
+calculated for RDS (SS) estimator was of $(0.352, 0.44)$. 
+
+\begin{table}[htb]
+    \centering
+    \caption{\label{tab:results-estimators-faux-data}Prevalence point estimation of
+    disease $X$ by different approaches in faux dataset}
+    \begin{tabular}{ccc}
+    \hline
+    Estimator & Ignoring misclassification & Frequentist correction \\ \hline
+    Naive & 0.385 & 0.314 \\
+    RDS (SH) & 0.4 & 0.333 \\
+    RDS (VH) & 0.399 & 0.332 \\
+    RDS (SS, N=1000) & 0.396 & 0.331 \\
+    RDS (SS, N=10000) & 0.398 & 0.314 \\
+    RDS-B & 0.4 & 0.334 \\ \hline
+    \end{tabular}
+    \fonte{Prepared by the author (2021) and based on the results of
+    \cite{rds_package}, except for RDS-B, which was self-made. The second
+    columns indicate the point estimate without considering the misclassification
+    of the test, while the third corrects it with equation \eqref{eq:rogan-estimate-prevalence}.}
+\end{table}
+
+Applying our model, we first verify that a gamma prior for $\tau$ is not
+indicated, since it puts to much mass in the assumption of correlation. It
+caused divergences in the HMC algorithm. Placing a Gumbel prior has the
+advantage of allowing $\tau$ be higher. In this case, the posterior mean was
+of order $10^{5}$. The parameter $\rho$ had posterior mean of $0.3$. These
+results indicate absence of correlation among recruitments. The prevalece
+estimate was of $0.25$, a much closer value to $0.28$ than the others, even
+with weakly informative priors for the parameters. All the effects include 0
+in the centered 50\% credible interval, which indicates that none of them
+had effect on the prevalence.
+
+There are two variations of this dataset: madrona and sycamore. The difference
+between them is that the latter has extreme seed dependence, while the latter
+not. The seed dependence is caused by sampling all the initial individuals
+within the infected population. We use the informed degree as a covariate with
+the following reasoning: we expect a priori that individuals with more
+connections have a greater chance of becoming infected.
+\autoref{fig:bottleneck_plot_madrona} and
+\autoref{fig:bottleneck_plot_sycamore} presents the bottleneck plots for each
+dataset. This plotting diagnostic introduced by \textcite{gile2015diagnostics}
+calculates RDS (VH) estimator for each chain generated by a different seed.
+Notice that in sycamore data, all seeds start in the highest part of the graph
+and converge more slowly to the final estimate. 
+
+\begin{figure}
+    \centering
+    \caption{\label{fig:bottleneck_plot_madrona}Bottleneck plot for faux
+    madrona dataset.}
+    \includegraphics[width=10cm]{faux_madrona_bottleneck_plot.pdf}
+    \fonte{Output of \textcite{rds_package}'s package.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{\label{fig:bottleneck_plot_sycamore}Bottleneck plot for faux
+    sycamore dataset.}
+    \includegraphics[width=10cm]{faux_sydramore_bottleneck_plot.pdf}
+    \fonte{Output of \textcite{rds_package}'s package.}
+\end{figure}
+
+Both datasets are built with true prevalence of 0.2 and no covariate besides
+the informed degree are available. They both have size 500. We make the
+inferences considering a diagnostic test with sensitivity $\gamma_s = 0.9$ 
+and specificity $\gamma_e = 0.85$.
+\autoref{tab:results-estimators-faux-madrona-data} shows the resulting
+inferences. It seams that the naive estimator got closer to the correct value.
+This ocurred because the problems with the naive estimator compensate each
+other. All estimators had a bad performance in estimating the prevalence
+because the known sensitivity of the test is different from the calculated
+within the dataset, i.e., from the individuals without the disease, 90\%
+tested negative, which is a greater value than 85\%. This little difference in
+\textcite{rogan1978estimating}'s bias adjustment leads to a high difference in
+the estimates, which shows a non-robustness of the estimator. Without considering the
+correction for misclassification, the estimated bootstrap 95\% confidence interval was
+of $(0.226, 0.279)$ for RDS (SS). 
+
+\begin{table}[htbp]
+    \centering
+    \caption{\label{tab:results-estimators-faux-madrona-data}Prevalence point estimation of
+    disease by different approaches in faux madrona dataset}
+    \begin{tabular}{ccc}
+    \hline
+    Estimator & Ignoring misclassification & Frequentist correction \\ \hline
+    Naive & 0.298 & 0.197 \\
+    RDS (SH) & 0.228 & 0.104 \\
+    RDS (VH) & 0.231 & 0.108 \\
+    RDS (SS, N=1000) & 0.253 & 0.137 \\
+    RDS (SS, N=10000) & 0.233 & 0.111 \\
+    RDS-B & 0.23 & 0.111 \\ \hline
+    \end{tabular}
+    \fonte{Prepared by the author (2021) and based on the results of
+    \cite{rds_package}, except for RDS-B, which was self-made. The second
+    columns indicate the point estimate without considering the misclassification
+    of the test, while the third corrects it with equation \eqref{eq:rogan-estimate-prevalence}.}
+\end{table}
+
+XXX: resultados do modelo
+
+For the faux sycamore dataset, the effect of the bias adjustment was less
+because the true values for sensitivity and specificity were very close to the
+observed in the dataset. In special, SS estimator when the population size is
+known $N = 1000$ is the best estimator. Since the seeds influence to much the
+inferences, the naive estimator was very far from the true value. 
+
+\begin{table}[htbp]
+    \centering
+    \caption{\label{tab:results-estimators-faux-sycamore-data}Prevalence point estimation of
+    disease by different approaches in faux sycamore dataset}
+    \begin{tabular}{ccc}
+        \hline
+        Estimator & Ignoring misclassification & Frequentist correction \\ \hline
+        Naive & 0.354 & 0.272 \\
+        RDS (SH) & 0.246 & 0.129 \\
+        RDS (VH) & 0.27 & 0.161 \\
+        RDS (SS, N=1000) & 0.297 & 0.197 \\
+        RDS (SS, N=10000) & 0.273 & 0.164 \\
+        RDS-B & 0.273 & 0.164 \\ \hline
+        \end{tabular}
+    \fonte{Prepared by the author (2021) and based on the results of
+    \cite{rds_package}, except for RDS-B, which was self-made. The second
+    columns indicate the point estimate without considering the misclassification
+    of the test, while the third corrects it with equation \eqref{eq:rogan-estimate-prevalence}.}
+\end{table}
+
+XXX: resultados do modelo.  
+
+\section{Project 90 data}
