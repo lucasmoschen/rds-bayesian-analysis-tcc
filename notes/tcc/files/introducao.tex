@@ -1,42 +1,27 @@
 \chapter{Introduction}
 
-
-Hidden or hard-to-reach populations have two main features: no sampling frame
-exists, given that their size and boundaries are unknown, and there are
-privacy concerns because the subjects are stigmatized or have illegal behavior
-\cite{heckathorn1997}. Fear of exposition or prosecution complicates the
-enumeration of the populations and the learning about them. Moreover, if the
+Hidden or hard-to-reach populations have two key features: no sampling frame
+exists, and the individuals have privacy concerns about participating in
+surveys. The former occurs because the population's size and boundaries are
+unknown. Furthermore, the subjects suffer from stigmatization or have illegal
+behaviour \cite{heckathorn1997}, which complicates the learning about them. Moreover, if the
 occurrence frequency of the condition is low, there are high logistic costs
 involved. Some examples are heavy drug users, sex workers, homeless people,
-and men who have sex with men. 
+and men who have sex with men.
 
-Research has been carried out with the development of some methods to reach these
-populations, such as, for example, snowball sampling \cite{goodman1961}, key
+Research has been carried out with the development of some methods to reach these populations, such as, for example, snowball sampling \cite{goodman1961}, key
 important sampling \cite{deaux-callaghan1985}, 
-and targeted sampling \cite{watters-biernacki1989}. \citeauthor{heckathorn1997} introduced the Respondent-Driven Sampling (RDS) to
-fill some gaps from other methods he depicted in his work. In his proposed
-approach, the researchers select a handful of individuals from the target
-population and give them coupons to recruit their peers. The individuals
-receive a reward for being recruited and for recruiting, which creates a dual
-incentive system. After \cite{heckathorn1997}, several papers studied this
-topic more deeply. 
+and targeted sampling \cite{watters-biernacki1989}. \textcite{heckathorn1997} introduced the Respondent-Driven Sampling (RDS) to fill some gaps from other methods he depicted in his work. In his proposed approach, the researchers select a handful of individuals from the target population and give them coupons to recruit their peers. The individuals receive a reward for being recruited and for recruiting, which creates a dual incentive system. After \textcite{heckathorn1997}, several papers studied this topic more deeply. 
 
-Following the sampling from the target population, a questionnaire or a
-disease test is conducted. This work considers binary outcomes. For
-instance, asking about smoking status or testing for HIV infections. However,
-the diagnoses are subject to measure error, and regard their accuracy is a
-vital step \cite{reitsma2005bivariate}. One common way to do this is to
-measure jointly {\em sensitivity} and {\em specificity}. The former is the
-ability to detect the condition, while the latter to identify the absence of
-it. 
+After sampling from the target population, a questionnaire or a disease test is conducted. This work considers binary outcomes, such as smoking status or testing for HIV infections. When considering a disease, an essential quantity for epidemiologists is the proportion of infected people, called the prevalence. The estimation of this parameter can be crucial for public decision making. 
 
-Nevertheless, because of our lack of knowledge about Nature itself, it is
-necessary to model the uncertainty of this process, and Bayesian Statistics is
-the indicated area of study. In the Bayesian paradigm, the parameters are random
-variables, and the beliefs about them are updated given new data. The idea is
-to propagate uncertainty about the outcome through the network of contacts,
-which has its probability distribution.
+However, the diagnoses are subject to measurement error, and their accuracy is
+a vital step \cite{reitsma2005bivariate}. One common way to do this is jointly measuring {\em
+sensitivity} and {\em specificity}. Sensitivity measures the ability of the
+test to detect the condition, while specificity the absence of it. With that
+in mind, we consider both misclassification and RDS structure to infer the
+prevalence. 
 
-This work proposes to study the survey method Respondent-Driven Sampling (RDS), a chain-referral method with the objective of sampling from hard-to-reach populations when necessary to estimate the prevalence of some binary condition from this population. The modeling also accounts for sensibility and sensitivity since the imperfection of the detection tests. We also intend to apply
-this framework efficiently, comparing Monte Carlo algorithms and Laplace
-approximations.
+Because of our lack of knowledge about nature itself, it is necessary to model the uncertainty of this process, and Bayesian Statistics is the recommended area of study. In this paradigm, the parameters are random variables, and new data update the beliefs about them. The idea is to propagate outcome uncertainty through the network of contacts. We develop a hierarchical model to represent the structure of the process. 
+
+This work proposes to study the survey method RDS, a chain-referral method to interview hard-to-reach populations when necessary to estimate the prevalence of some binary condition from this population. The modelling also accounts for sensibility and sensitivity since the imperfection of the detection tests. We also apply these methods using the Hamiltonian Monte Carlo method, with an analysis of its results.
