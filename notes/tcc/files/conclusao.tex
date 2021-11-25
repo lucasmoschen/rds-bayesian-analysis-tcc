@@ -1,4 +1,49 @@
 \chapter{Conclusion}
 
-Parte final do trabalho, apresenta as conclusões correspondentes aos objetivos
-ou hipóteses.
+Respondent-driven sampling is a useful tool when the population can not be
+enumerated since by building a dual incentive system, it encourages the
+individuals from the target population to engage in the research and convince
+others to do the same. Analysis of RDS started with \textcite{heckathorn1997}
+and much work has being done as a wall of bricks. The resulting structure of
+the process needs many assumptions that need to be considered in our analysis.
+This work proposed a method to quantity the uncertainty about the
+characteristics of these populations, which is vital for correction of
+expectations. 
+
+Regression analysis is powerful toolbox of statistical procedures that help
+the understanding of the populations, but ``with great power comes great
+responsibility'' \cite[p. 13]{spider_man}. When correct analysis are not done,
+problems of estimation, such as identifiability and biases, can lead to wrong
+inferences. In this work, we showed the importance of identifiability and
+possible solutions in the Bayesian paradigm. CAR models showed to be a good
+representation of spatial correlation, but with hidden problems. The parameter of
+correlation is very difficult to interpret and even high values can not
+generate the correct expected spatial dependencies. However, these models
+complicate the sampling by increasing the parameter space dimension. For an unbiased estimation of prevalence, this work presented the relevant 
+role of sensitivity and specificity, in special when there considering theirs
+uncertainties. 
+
+We also analysed different prior specifications of sensitivity and specificity
+since strong priors are required. We highlighted each one's advantages and
+disadvantages. In particular, we detailed several characteristics of the
+bivariate beta distribution derived by \textcite{olkin2015constructions}. This
+distribution showed to have some specification problems since not all
+information can be directly converted to a well-defined distribution. 
+
+Other key aspect of Bayesian inference is the prior specification. It can save
+our life in identification problems, but it can derive wrong results when
+badly specified. In particular, when there is not much spatial correlation, a 
+finite mean prior specification leads to divergences in the sampling method
+and incorrect inferences. Prior information is not always easily converted to
+prior distributions as we studied in the logit normal case. Prior and
+posterior predictive checks are possible ways to understand the process. 
+
+Analysis of HMC results and its diagnostics are very important for the
+learning process. Observing divergences, mixing of the chain, energy of the
+model, among other diagnoses can enlighten problems with the parametrization
+of the model and indicate possible solution paths. 
+
+Finally, the simulations indicated two important characteristics of the
+presented model: the computational burden is high with a very complicated
+geometry, and the inferences are consistent when HMC is well diagnosed and
+prior specification is well thought.  
