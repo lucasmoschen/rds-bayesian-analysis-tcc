@@ -229,8 +229,75 @@ participants, the researchers asked them to describe the relationships with
 every other named contact. Only partial information is available for privacy
 concerns. 
 
-There are 17 nodes without connections in the dataset and 108 connected
-components. The greater has 4430 nodes, while the second has 50 nodes. We,
-therefore, focus on this bigger connected subgraph. 
+There are 17 nodes without connections and 108 connected
+components in the dataset. The greater has 4430 nodes, while the second has 50
+nodes. Therefore, we focus on this bigger connected subgraph. \autoref{fig:graph_project90_degree_distribution} presents the
+graph structure and the degree distribution of the nodes. The degree
+distribution graph follows the instructions of \textcite[Advanced Topic
+3.A]{barabasi2013network} with a log-log plot and logarithmic binning. The
+slow decay of the distribution indicates a scale-free network \cite{barabasi2013network}.
 
-TO BE FINISHED. 
+\begin{figure}
+    \centering
+    \caption{\label{fig:graph_project90_degree_distribution}Graph structure and
+    degree distribution of the individuals from Project 90 study.}
+    \includegraphics[width=14cm]{graph_projet90_degree_distribution.pdf}
+    \fonte{Data from \textcite{project90} and graphics prepared by the author
+    (2021). The degree distribution is inn the log-log scale. The grey dots
+    represent the degree histogram, while the blue dots calculate the mean for
+    each interval defined by logarithmic binning. The construction follows \textcite{barabasi2013network}.}
+\end{figure}
+
+\autoref{tab:covariates_project90} summarizes the binary variables of the
+dataset. In addition to these variables, the data inform the race of each
+individual with 75\% White, 21\%  Black, 1\% Asian/Pacific Islander, 1\%
+Native americans, and 0.1\% being others. 93\% of the participants possess the
+complete data. We remove the rest from the dataset for simplicity, 
+but in a real applications, the uncertainty about this data should be
+considered.
+
+\begin{table}[htbp]
+    \centering
+    \caption{\label{tab:covariates_project90}Proportion distribution for each
+    binary variable in Project 90 dataset.}
+    \begin{tabular}{cccccccc}
+    \hline
+    \multirow{2}{*}{Covariate} & \multicolumn{3}{l}{Percentage (\%)} & \multirow{2}{*}{Covariate} & \multicolumn{3}{l}{Percentage (\%)} \\ \cline{2-4} \cline{6-8} 
+     & No & Yes & NA &  & No & Yes & NA \\ \hline
+    Female & 56.8 & 43.2 & 0.0 & Thief & 91.8 & 2.2 & 6.0 \\
+    Sex worker & 88.7 & 5.2 & 6.1 & Retired & 91.1 & 2.9 & 6.0 \\
+    Pimp & 92.5 & 1.5 & 6.0 & Housewife & 88.0 & 6.0 & 5.9 \\
+    Sex work client & 91.0 & 8.9 & 0.1 & Disabled & 89.9 & 4.1 & 6.0 \\
+    Drug dealer & 87.6 & 6.4 & 6.0 & Unemployed & 77.8 & 16.2 & 6.0 \\
+    Drug cook & 93.2 & 0.8 & 6.0 & Homeless & 92.8 & 1.2 & 6.0 \\ \hline
+    \end{tabular}
+    \fonte{Data from \textcite{project90}.}
+\end{table}
+
+Since no information about HIV test is available, we use the
+column disabled as the outcome of interest. We define the sensitivity
+$\gamma_s = 0.9$ and specificity $\gamma_e = 0.85$ for the diagnostic test and
+perform a random testing. Moreover, we perform
+RDS in this graph following \textcite{baraff2016estimating}, as in Section
+\ref{sec:simulated-data-rds-imperfect-tests} and \textcite{crawford2016}, as
+in Subsection \ref{sec:including_uncertainty_recruitment_graph}. We compare
+the results from our model to the value in the whole network of 0.047. 
+
+Placing priors $\theta \sim \operatorname{Unif}(0,1)$ and $\beta_i \sim
+\N(0,1)$, we get a posterior mean for $\theta$ of 0.084 (94\% HDI of $0 -
+0.238$) for \textcite{baraff2016estimating}'s simulation and 
+0.059 (94\% HDI of $0 - 0.169$) for \textcite{crawford2016}'s model.
+All of the effect parameters $\beta$ had 80\% HDI credible intervals
+including the value $0$, which indicates no evidence of relation between the variables and
+the disabled condition. The prior for $\tau$ was Gumbel with parameter
+$\lambda_{\tau} = \log(10)$, while $\rho \sim \operatorname{Unif}(0,1)$. The
+posterior mean of $\tau$ was more than 20000 and the posterior mean of $\rho$
+was 0.476. In light of the dataset's size and the analysis made in Section
+\ref{sec:car-models} about $\rho$, we conclude that there is not much graphical correlation
+between recruiters and recruited regarding the disabled condition. Including
+gamma prior for $\tau$ did not change the parameter estimates, except for
+$\tau$, as expected.
+
+Choosing the seeds within the disabled subpopulation modified the estimate to
+0.134 (94\% HDI of $0.0 - 0.333$). The seed dependence bias the results, but
+the credible interval is larger, which is a good sign. 

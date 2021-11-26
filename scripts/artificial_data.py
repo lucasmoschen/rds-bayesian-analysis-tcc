@@ -65,15 +65,16 @@ class GenerateData:
 
         return G
 
-    def RDS_generator(self, graph, seed, n_seeds, sample_size, probs, R=0):
+    def RDS_generator(self, graph, seed, n_seeds, sample_size, probs, R=0, seeds=None):
         """
         This function is a way of generating artificial subgraph of
         recruitment when a population graph is specified.
         """
         ro = np.random.RandomState(seed=seed)
         degrees = np.array(list(dict(graph.degree()).values()))
-        seeds = ro.choice(graph.nodes, size=n_seeds, replace=False,
-                          p=degrees/degrees.sum())
+        if seeds is None:
+            seeds = ro.choice(graph.nodes, size=n_seeds, replace=False,
+                              p=degrees/degrees.sum())
 
         recruited = set(seeds)
         current_recruited = set()
