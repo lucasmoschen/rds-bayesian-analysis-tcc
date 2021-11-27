@@ -3,44 +3,59 @@
 Hidden or hard-to-reach populations have two key features: no sampling frame
 exists, and the individuals have privacy concerns about participating in
 surveys. The former occurs because the population's size and boundaries are
-unknown. Furthermore, the subjects suffer from stigmatization or have illegal
-behaviour \cite{heckathorn1997}, which complicates the learning about them. Moreover, if the
-occurrence frequency of the condition is low, there are high logistic costs
+unknown. Furthermore, the subjects suffer from stigmatization or engage in illegal
+behaviour \cite{heckathorn1997}, which complicates learning about them.
+Moreover, if the frequency of the condition of interest is low, there are high logistic
+costs
 involved. Some examples are heavy drug users, sex workers, homeless people,
 and men who have sex with men.
 
-Research has been carried out with the development of some methods to reach these populations, such as, for example, snowball sampling \cite{goodman1961}, key
+Methods to reach these populations, such as, for example, snowball sampling \cite{goodman1961}, key
 important sampling \cite{deaux-callaghan1985}, 
-and targeted sampling \cite{watters-biernacki1989}. \textcite{heckathorn1997} introduced the Respondent-Driven Sampling (RDS) to fill some gaps from other methods he depicted in his work. In his proposed approach, the researchers select a handful of individuals from the target population and give them coupons to recruit their peers. The individuals receive a reward for being recruited and for recruiting, which creates a dual incentive system. After \textcite{heckathorn1997}, several papers studied this topic more deeply. 
+and targeted sampling \cite{watters-biernacki1989} have been developed. \textcite{heckathorn1997} introduced the Respondent-Driven Sampling (RDS) to fill some gaps from other strategies he depicted in his work. In his proposed approach, the researchers select a handful of individuals from the target population and give them coupons to recruit their peers. The individuals receive a reward for being recruited and for recruiting, which creates a dual incentive system. After \textcite{heckathorn1997}, several papers studied this topic more deeply. 
 
 After sampling from the target population, a questionnaire or a disease test
-is conducted. This work considers binary outcomes, such as smoking status or
-testing for HIV infections. When considering a disease, an essential quantity
+is conducted. When considering a disease, an essential quantity
 for epidemiologists is the proportion of infected people, called the
-prevalence. The estimation of this parameter can be crucial for public
-decision making. However, the diagnoses are subject to measurement error, and their accuracy is
+prevalence. The estimation of this quantity can be crucial for public
+decision making. However, the diagnoses are subject to measurement error, and considering
+their accuracy is
 a vital step \cite{reitsma2005bivariate}. One common way to do this is jointly measuring {\em
 sensitivity} and {\em specificity}. Sensitivity measures the ability of the
-test to detect the condition, while specificity the absence of it. With that
-in mind, we consider both misclassification and RDS structure to infer the
-prevalence. 
+test to detect the condition, whereas specificity refers to the test's
+capacity to verify its absence. These quantities are often negatively
+correlated, and a higher sensitivity of a screening test reduces the
+specificity and vice versa.
 
 Furthermore, other variables accessed in the survey can be possible risk
-factors for the disease and need better understanding. The literature of
+factors for the disease and need better understanding within the target
+population. From correlational studies, one can analyze causal dependencies. 
+The literature of
 regression analysis in RDS samples is not established yet \cite[p.
 15]{avery2021statistical} and conceptual questions are yet to be addressed. 
 We develop a hierarchical model to represent the structure of the process. 
 
-
-Because of our lack of knowledge about nature itself, it is necessary to model
-the uncertainty of this process, and Bayesian Statistics is the recommended
-area of study. In this paradigm, the parameters are random variables, and new
-data update the beliefs about them. The idea is to propagate outcome
-uncertainty through the network of contacts. 
+Because of our lack of knowledge about the complex interactions in Nature, it
+is necessary to model the uncertainty of the process under study. The models
+we develop to represent these interactions are approximations subjected to
+error. It leads to the famous quote: "all models are wrong, but some are
+useful." In finite sample experiments, the model parameters should reflect our
+state-of-art knowledge about them. The Bayesian Statistics paradigm handles
+uncertainty quantification defining the unknown quantities as random
+variables, and new data update the beliefs about these quantities.  
 
 This work proposes to study the survey method RDS, a chain-referral method to
 interview hard-to-reach populations when necessary to estimate the prevalence
-of some binary condition from this population. The modelling also accounts for
-sensibility and sensitivity since the imperfection of the detection tests. We
-also apply these methods using the Hamiltonian Monte Carlo method, with an
-analysis of its results.
+of some binary condition from this population. The modelling strategy follows
+a hierarchical model with regressor variables. The modelling also accounts for
+sensibility and sensitivity given the imperfection of the detection tests. We
+apply these methods using the Hamiltonian Monte Carlo method in Simulated and
+real data.
+
+The dissertation is organized as follows: Chapter \ref{ch:theoretical-background}
+describes the theoretical foundations. Chapter \ref{ch:modelling} discusses
+each block of the model and validades its properties in simulated data. Model
+extensions are also discussed in the end of the chapter.
+Chapter \ref{ch:real_data_applications} describes two datasets and utilize the
+model on them. At last, Chapter \ref{ch:conclusions} concludes the main aspects of
+this work.  
