@@ -16,8 +16,8 @@ The study of how health-related conditions are distributed among populations
 is known as {\em Epidemiology} \cite[p. 32]{rothman2008modern}, which aims to derive valid estimates for
 potential causes from diseases that affect people. It is a fundamental
 research area in policy formulation, implementation of prevention programs,
-and development of laws. In order to accomplish these goals, the
-epidemiologists use some {\em measures of disease frequency}, including {\em
+and development of laws. In order to accomplish these goals,
+epidemiologists use {\em measures of disease frequency}, including {\em
 incidence} and {\em prevalence}. The former is related to the proportion of
 new cases of a disease given a period of time, while the latter is the proportion
 of individuals exposed at time $t$ and it is the object of
@@ -29,16 +29,16 @@ study of this section. An interesting point is the following:
   \cite[p. 46]{rothman2008modern}.
 \end{citacao}
 
-As a result, prevalence represents both incidence and the duration of disease. \textcite[p. c18]{noordzij2010measures} highlights that
+As a result, prevalence is determined by both incidence and the duration of disease. \textcite[p. c18]{noordzij2010measures} highlights that
 prevalence reveals the burden of a disease in respect to its effects on
-society, such as, monetary costs, quality of live, and morbidity. They also
-comment that when measured periodically, its evolution can identify potential
+society, such as monetary costs, quality of live, and morbidity. They also
+comment that when measured periodically, the evolution of prevalence can identify potential
 causes of the infection and prevention and care methods. We remark that when it is impossible to test every individual at the same
-time, we assume that all individuals remain exposed to the disease at time of
+time, we may assume that all individuals remain exposed to the disease at time of
 the last tested individual.
 
 Consider a population of interest and a known condition, such as, for instance,
-a disease or a binary behavior. A diagnostic test is done in the individuals
+a disease or a binary behavior, such as smoking status. A diagnostic test is done in the individuals
 to measure the presence or the absence of this condition, such as serological
 tests. Mathematically, we denote $\theta \in (0,1)$ the prevalence of the
 condition, which is the parameter of interest. Let $I$ be a index set for the
@@ -56,10 +56,10 @@ $$Y_i = \begin{cases}
   0, &\text{otherwise.}
 \end{cases}$$
 
-Since it is not usually feasible to test everyone in the population, it is
-necessary to random select individuals from the population. On that point,
+Since it is not usually feasible to test every individual in the population, it is
+necessary to randomly select individuals from the population. On that point,
 other sampling approaches may be better options, such as stratified random
-sampling, systematic sampling, and two-stage cluster sampling. From that
+sampling, systematic sampling, and two-stage cluster sampling \cite[p. 125]{daniel2011sampling}. From that
 experiment, we get a sample $y = \{y_1, ..., y_n\}$. Based on that outcomes the Maximum Likelihood Estimator is the following expression 
 \begin{equation}
     \label{eq:naive-estimator}
@@ -79,16 +79,14 @@ such as the {\em likelihood ratio}, {\em sensitivity and specificity}, and
 and specificity of the test.
 
 A perfect test would discriminate every sick individual from the non-sick ones.
-Given that there is not such thing, we suppose having a {\em gold standard
+Given that there is no such thing, we suppose having a {\em gold standard
 test} that is the best available test \cite{versi1992gold} to diagnose a
 particular disease. Its result is a proxy for the real $Y^{\mathrm{true}}_i$ and 
-
 \begin{citacao}
-  In the context of infectious diseases, a gold standard can be a very precise
+  in the context of infectious diseases, a gold standard can be a very precise
   molecular test that detects the presence of the pathogen’s genetic material,
   polymerase chain reaction (PCR) for instance. \cite[p. 125]{bastos2021modelling}.
 \end{citacao}
-
 From the gold standard, we can evaluate a second test, typically faster or
 cheaper. The possible results upon comparing these tests are presented in
 table \ref{table:two-by-two}. The definitions for each initials in the table
@@ -100,9 +98,9 @@ are the following:
   \item true negative (TN): when both tests agree that the individual does not
   have the disease;
   \item false positive (FP): when the test under evaluation has a positive
-  diagnose, despite the golden standard being negative;
+  diagnose, despite the gold standard being negative;
   \item false negative (FN): when the test under evaluation has a negative
-  diagnose, despite the golden standard being positive.
+  diagnose, despite the gold standard being positive.
 \end{alineas}
 
 \begin{quadro}[!ht]
@@ -122,9 +120,9 @@ are the following:
 \begin{remark}
   When a gold standard test is not available, which is called {\em no gold standard
   situations} \cite[p. 1]{rutjes2007evaluation}, other methods should be
-  considered such as the construction of reference standard by giving the
+  considered, such as the construction of reference standard by giving the
   patients either different or the same tests and combining the results
-  somehow. For more details, \textcite{rutjes2007evaluation} does a literature
+  somehow. \textcite{rutjes2007evaluation} does a literature
  review on the topic.  
 \end{remark}
 
@@ -188,7 +186,7 @@ A frequentist approach assumes that $\theta$ is fixed and unknown. Its
 inference is based on the point 
 estimate for the apparent prevalence $\hat{p}$ given in Equation
 \eqref{eq:naive-estimator}, along with a Confidence Interval, such as the Wald
-Confidence Interval built with a normal approximation. In order to provide a 
+Confidence interval built with a normal approximation. In order to provide a 
 point estimate for $\hat{\theta}$, \textcite[p. 73]{rogan1978estimating}
 propose
 \begin{equation}
@@ -213,7 +211,7 @@ sensitivity and specificity of the test. According to \textcite{branscum2005esti
   populations can be incorporated. \cite[p. 1]{branscum2005estimation}.
 \end{citacao}
 
-Therefore, this work focus on the Bayesian paradigm. 
+Therefore, this work focuses on the Bayesian paradigm. 
 
 \subsection{Correlation between sensitivity and specificity}
 \label{sec:correlation-sensitivity-specificity}
@@ -227,17 +225,18 @@ negative. There will be a lot of false-negative individuals but a few
 false-positive ones, which implies that sensitivity is low and specificity is
 high. If the threshold is smaller, the opposite effect happens. Nonetheless,
 sensitivity and specificity are negatively correlated. \textcite[p.
-46]{parikh2008understanding} gives a more practical example. Observe that this
-correlation is related to the estimation of the parameters, then it can only
-be noticed in meta-analysis studies. 
+46]{parikh2008understanding} gives a more practical example about an
+intraocular pressure test and the impact of different threshold
+specifications. This correlation
+can be noticed in meta-analysis studies as presented by \textcite[p. 1]{guo2017bayesian}.
 
 \section{Respondent-driven sampling}
 \label{sec:respodent_driven_sampling}
 
-RDS is a procedure developed by Heckathorn
-\cite[]{heckathorn1997} to survey {\em hidden} or {\em hard-to-reach
+RDS is a procedure developed by 
+\textcite{heckathorn1997} to survey {\em hidden} or {\em hard-to-reach
 populations}, whose main characteristic is the absence of a sampling frame,
-i.e.,it is not possible to enumerate its individuals since size and boundaries
+i.e., it is not possible to enumerate its individuals since size and boundaries
 are unknown. The second characteristic of these populations is the
 confidentiality concerns, given that membership is stigmatized or illegal.
 With that aspect, traditional sampling methods which produce probability
@@ -247,16 +246,16 @@ subjects within the population as a snowball. Examples of studied groups
 include people who inject drugs (PWID), men who have sex with men (MSM), and
 female sex workers (FSW) \cite[p. 66]{gile2018methods}. 
 
-Heckathorn's proposal \citeyear{heckathorn1997} was to specialize this method without the need of
+\textcite{heckathorn1997}'s proposal was to specialize this method without the need of
 nominating peers. In this approach, the researchers select some individuals,
 called {\em seeds} from the target population, and give them a fixed amount of
-{\em recruitment coupons} to recruit their peers. Each recipient of the coupons
+{\em recruitment coupons} to recruit their acquaintances. Each recipient of the coupons
 reclaims it in the study site, is interviewed, and receives more coupons to
 continue the recruitment. This process occurs until it reaches some stopping
 criteria, such as the sample size achieving some desired number. The sampling
 is without replacement, so the participants cannot be recruited more than
 once. Moreover, the respondents inform how many subjects from the population
-they know. Other less usual methods include Key Important Sampling \cite{deaux-callaghan1985}, 
+they know. Other less usual methods include Key Important Sampling \cite{deaux-callaghan1985}
 and Targeted Sampling \cite{watters-biernacki1989}, both are convenience
 sampling methods. 
 
@@ -277,9 +276,9 @@ Since the creation of the method by Heckathorn, several papers have been
 published, as \autoref{fig:chart-research-rds} presents. The figure was produced searching
 publications with the term ``Respondent-driven sampling.'' These works generally
 aim to give basis to public health policies. Good examples in Brazil are
-\cite{damacena2019application}, \cite{mota2012respondent}, and
-\cite{bastos2018hiv}. \textcite{damacena2019application} apply the RDS method
-to carry out biological and behavioral surveillance in FSW populations from twelve cities
+\textcite{damacena2019application}, \textcite{mota2012respondent}, and
+\textcite{bastos2018hiv}. \textcite{damacena2019application} apply the RDS method
+to carry out a biological and behavioral surveillance study in FSW populations from twelve cities
 in Brazil. \textcite{mota2012respondent} proposes the RDS method in MSM populations from ten cities in
 Brazil. \textcite{bastos2018hiv} study several sexually transmitted infections among
 transgender women from twelve Brazilian cities.  
@@ -312,15 +311,15 @@ is a reference to know how to execute an RDS survey. According to it:
 \end{citacao}
 
 No rule was established on the number of seeds to start the sampling. It
-typically varies from 2 to 32, with the mean being 10 \cite[p. 70]{world2013introduction}. The number can not be
+typically varies from 2 to 32, with the mean being 10 \cite[p. 70]{world2013introduction}. The number cannot be
 small since unsuccessful recruitments are common. A diverse choice among the
 target population may accelerate the convergence to equilibrium. It also
 allows the access to isolate and subpopulations. After this selection, three
-coupons are distributed to each participant. The coupons musta have
+coupons are distributed to each participant. The coupons must have
 information about survey site location, an unique identification code,
 telephone number, and opening hours. \textcite[p. 67]{gile2018methods}
 highlights that ``this number is chosen to strike a balance between the
-inferencial desire [...] and the practical necessity of guarding against early
+inferential desire [...] and the practical necessity of guarding against early
 termination of the sample trees.'' 
 
 Subjects receive a reward for being interviewed and recruiting their peers
@@ -332,7 +331,7 @@ others to comply to get the remuneration for the recruitment. When social
 approval is relevant for the members, recruitment can be more efficient and
 cheaper. It happens because material incentives are converted into peer-based symbolic since there is
 social influence involved. In conclusion, consenting to be recruited provide
-material and symbolic motivation to both recruiter and participant. 
+material and symbolic motivation to both recruiter and recruited. 
 
 For an illustrative example, \autoref{fig:rds-example-drug-users} presents a recruitment structure
 based on a respondent-driven sample among 303 heavy drug users from
@@ -355,7 +354,7 @@ recruited individuals per recruiter was around 0.98.
 
 \subsection{Assumptions and statistical properties}
 
-RDS is a successful recruitment method for reaching hard-to-reach populations
+RDS is a successful recruitment method for accessing hard-to-reach populations
 since the respondents recruit most of the participants. On the other hand,
 this characteristic also makes it hard to derive statistical properties
 without making strong assumptions of the recruitment process.  Some hypotheses
@@ -374,11 +373,11 @@ are related to specific models, which are presented in Section
   probability of inclusion in the survey also depends on the number of
   individuals participating until the recruitment time \cite[p.
   299]{gile2010respondent}. To derive an RDS estimator, 
-  \textcite[p. 81]{volz2008probability} requires a small sampling fraction to
+  \textcite[p. 81]{volz2008probability} require a small sampling fraction to
   compensate for breaking this assumption;
 
   \item {\em homophily} is the tendency of individuals to connect within the same
-  group. For instance, men tend to recruit more men to women. If the process
+  group. For instance, men tend to recruit more men than women. If the process
   has zero homophily, it indicates that individuals do not regard the group to
   recruit. On the other hand, if homophily is one, all the connections are
   intragroup \cite[p. 20]{heckathorn2002}. \textcite[p. 21]{heckathorn2002} proved
@@ -386,7 +385,8 @@ are related to specific models, which are presented in Section
   the respondent-driven sample is unbiased with respect to homophily if it is
   equal for each group;
 
-  \item the connections generated by the RDS process  \autoref{item:without-replacement}violate the independence 
+  \item the connections generated by the RDS process
+  \autoref{item:without-replacement} violate the independence 
   between the samples through {\em clustering}, i.e., people are more likely 
   to connect to those similar \cite[p. 14]{avery2021statistical};
   
@@ -395,7 +395,7 @@ are related to specific models, which are presented in Section
   other \cite[p. 17]{gile2015network}. It constitutes a missing data problem, according to \textcite[p.
   190]{crawford2016};
 
-  \item in apparent contraction to \autoref{item:without-replacement}, to
+  \item in apparent contradiction to \autoref{item:without-replacement}, to
   the distribution achieve its convergence and remove the biases induced by
   the initial sample, enough waves of recruitments are necessary \cite[p. 186]{heckathorn1997};
   
@@ -408,16 +408,16 @@ are related to specific models, which are presented in Section
   heterogeneity among a population of heavy drug users in Rio de Janeiro. 
 \end{alineas}
 
-To check this assumptions and to analyze aspects of RDS,
-\textcite{gile2015diagnostics} developed a tool of diagnostics. From
-that toolbox, convergence of estimates, bottleneck plot and measurement of
-degree are some options. 
+To check these assumptions and to analyze aspects of RDS,
+\textcite{gile2015diagnostics} developed a tool of diagnostics, including
+plots, such as the bottleneck plot, and suggested questions for the
+questionnaire, such as asking the respondents the speed of coupon distribution.
 
 \subsection{Models for the RDS Process}
 \label{sec:models-rds-process}
 
 Since its inception, several authors have tried to better understand and model
-the RDS process because of its non-probability nature. Each modelling approach
+the RDS process because of its non-probabilistic nature. Each modelling approach
 aims to approximate even more the network structure to yield more reliable
 inferences. In this section, we present some of them. Let $G = (V,E)$ be an
 undirected graph representing the hidden population, such that $|V| = N$, and
@@ -425,21 +425,21 @@ $A \in \{0,1\}^{N \times N}$ its adjacency matrix, where $A_{ij} = 1$ if there
 is a connection between individuals $i$ and $j$, and $A_{ij} = 0$ otherwise.
 We denote $|V|$ to mean the number of nodes, and $|E|$ the number of edges in
 the graph $G$. The choice of an undirected model for the hidden population is very common,
-but not obliged. The degree of a person is, therefore, $d_i = \sum_{j=1}^N
+but not mandatory. The degree of a person is, therefore, $d_i = \sum_{j=1}^N
 A_{ij}$.
 
 Besides the following models, there are two additional and relevant works  to
 cite. \textcite{goel2009respondent} described RDS as a Markov chain Monte
-Carlo to analyse the structure created by the recruitment links. They deeply
+Carlo (MCMC) to analyse the structure created by the recruitment links. They deeply
 discussed the problems that bottlenecks can cause.
-\textcite{mclaughlin2021bayesian} developes a Bayesian model for the
-recruitment process considering preferential selection based on the covariates.
+\textcite{mclaughlin2021bayesian} develops a Bayesian model for the
+recruitment process considering preferential selection based on covariates.
 
 
 \subsubsection{First-order Markov process}
 \label{sec:first-order-markov-process}
 
-This approximation was the first model proposed by \textcite{heckathorn1997}. 
+The first model was proposed by \textcite{heckathorn1997}. 
 He argues RDS recruitment has the characteristic that ``any subject's recruits are
 a function of his or her type, such as his or her ethnicity; and not of
 previous events, such as who recruited the recruiter'' \cite[p. 182]{heckathorn1997}. Consequently, 
