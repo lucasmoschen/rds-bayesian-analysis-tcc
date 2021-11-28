@@ -100,6 +100,7 @@ if __name__ == '__main__':
                            )
         ax[0].plot(rho_values, array_moran[:, 2], color='black', label='Median')
         ax[0].axhline(0, linestyle='--', color='red')
+        ax[1].axhline(0, linestyle='--', color='red')
         ax[0].set_xlabel(r'$\rho$', fontsize=16)
         ax[0].set_ylabel("Moran's I autocorrelation", fontsize=16)
         ax[0].legend(loc='upper left')
