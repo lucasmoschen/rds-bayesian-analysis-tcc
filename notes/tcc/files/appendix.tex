@@ -17,8 +17,8 @@ Lebesgue measure is given by
   f_U(u_1, u_2, u_3) = \frac{1}{B(\boldsymbol{\alpha})}u_1^{\alpha_1-1}u_2^{\alpha_2-1}u_3^{\alpha_3-1}(1-u_1-u_2-u_3)^{\alpha_4-1}, 
 \end{equation}
 when $u_i \in [0,1], i = 1,2,3$, $u_1 + u_2 + u_3 \le 1$, and $0$ otherwise.
-The normalizing constant is defined for $v \in \R^n$ as
-$$B(v) = \frac{\prod_{i=1}^n \Gamma(v_i)}{\Gamma\left(\sum_{i=1}^n v_i\right)}.$$ 
+The normalizing constant is defined for $\boldsymbol{v} \in \R^n$ as
+$$B(\boldsymbol{v}) = \frac{\prod_{i=1}^n \Gamma(v_i)}{\Gamma\left(\sum_{i=1}^n v_i\right)}.$$ 
 \begin{definition}
   Let 
   \begin{equation}
@@ -31,7 +31,7 @@ $$B(v) = \frac{\prod_{i=1}^n \Gamma(v_i)}{\Gamma\left(\sum_{i=1}^n v_i\right)}.$
 \autoref{fig:beta-bivariate} presents the joint density of $X$ and $Y$ for
 different values of $\boldsymbol{\alpha}$. The following two propositions describe the marginal and joint
 densities of
-bivariate beta distribution. Their proofs are in the Appendix. 
+bivariate beta distribution.
 
 \begin{figure}[!ht]
   \centering
@@ -174,7 +174,7 @@ At last we derive the covariance and the correlation between $X$ and $Y$.
   The covariance between $X$ and $Y$ is 
   $$\cov(X,Y) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1\alpha_4 - \alpha_2\alpha_3)$$
   and
-  $$\cor(X,Y) = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\sqrt{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}}$$
+  $$\cor(X,Y) = \frac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\sqrt{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}}.$$
 \end{proposition}
 
 \begin{proof}
@@ -190,7 +190,7 @@ and the variance of $U_i$ is
 since $U_i \sim \operatorname{Beta}(\alpha_i, \tilde{\alpha} -\alpha_i)$.
 Therefore 
 \begin{equation}
-  \cov(X,Y) = \cov(U_1+U_2, U_1+U_3) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1\alpha_4 - \alpha_2\alpha_3)
+  \cov(X,Y) = \cov(U_1+U_2, U_1+U_3) = \frac{1}{\tilde{\alpha}^2(\tilde{\alpha}+1)}(\alpha_1\alpha_4 - \alpha_2\alpha_3).
 \end{equation}
   
 \end{proof}
@@ -223,7 +223,7 @@ which removes the constraint.
 
 \section{Comments about integration}
 
-The density of $(X,Y)$ is $f_{X,Y}(x,y)$ as in equation \eqref{eq:dist-X-Y}. Therefore it can be undefined in sets of null Lebesgue measure in $\R^2$ and these sets may be important when plotting in a grid, for instance. This section illustrates one of these sets. If $\alpha_i \ge 1,
+The density of $(X,Y)$ is $f_{X,Y}(x,y)$ as in equation \eqref{eq:dist-X-Y} and it can be undefined in sets of null Lebesgue measure in $\R^2$ and these sets may be important when plotting in a grid, for instance. This section illustrates one of these sets. If $\alpha_i \ge 1,
 \, i = 1,...,4$, the integral is clearly well defined for every $x,y \in [0,1]$. Let $0 < \alpha_2 = \alpha_3 = a \le 0.5$ and $x = y < 0.5$. Then
 \begin{equation*}
   \begin{split}
@@ -274,7 +274,7 @@ case:
   $\alpha_4$ is defined in a way that $\alpha_4 = \frac{1}{2}(1 + \cor(X,Y))$.
   If no information about the variables' correlation is available, it is recommended to use
   the independent setting since it is more flexible;
-  \item both parameters receive a Jeffreys prior distribution
+  \item both parameters receive a Jeffreys' prior distribution
   ($\betadist(1/2,1/2)$): in this case,  $\alpha_1 =
   \alpha_4 \in (0,1/2)$ and $\alpha_2 = \alpha_3 = 1 - \alpha_4$. The parameter
   $\alpha_4$ is defined in a way that $\alpha_4 = \frac{1}{4}(1 + \cor(X,Y))$.
@@ -293,17 +293,17 @@ unknown variables. Hence, we want to solve the following
 \begin{equation}
   \label{eq:system-moments-alpha}
   \begin{cases}
-    m_1 = \dfrac{\alpha_1+\alpha_2}{\tilde{\alpha}} \\
-    m_2 = \dfrac{\alpha_1+\alpha_3}{\tilde{\alpha}} \\ 
-    v_1 = \dfrac{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)}{\tilde{\alpha}^2(\tilde{\alpha}+1)} \\
-    v_2 = \dfrac{(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}{\tilde{\alpha}^2(\tilde{\alpha}+1)} \\
-    \rho = \dfrac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\sqrt{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}}
+    m_1 = \dfrac{\alpha_1+\alpha_2}{\tilde{\alpha}}, \\
+    m_2 = \dfrac{\alpha_1+\alpha_3}{\tilde{\alpha}}, \\ 
+    v_1 = \dfrac{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)}{\tilde{\alpha}^2(\tilde{\alpha}+1)}, \\
+    v_2 = \dfrac{(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}{\tilde{\alpha}^2(\tilde{\alpha}+1)}, \\
+    \rho = \dfrac{\alpha_1\alpha_4 - \alpha_2\alpha_3}{\sqrt{(\alpha_1+\alpha_2)(\alpha_3+\alpha_4)(\alpha_1+\alpha_3)(\alpha_2+\alpha_4)}}.
   \end{cases}
 \end{equation}
 
 Notice that we can simplify the third and fourth equations since 
 $$
-\frac{\alpha_3 + \alpha_4}{\tilde{\alpha}} = \frac{\tilde{\alpha} - (\alpha_1 + \alpha_2)}{\tilde{\alpha}} = 1 - m_1 
+\frac{\alpha_3 + \alpha_4}{\tilde{\alpha}} = \frac{\tilde{\alpha} - (\alpha_1 + \alpha_2)}{\tilde{\alpha}} = 1 - m_1, 
 $$
 and analogously, 
 $$
@@ -311,8 +311,8 @@ $$
 $$
 Therefore, 
 \begin{align*}
-    v_1 &= \frac{m_1(1 - m_1)}{\tilde{\alpha} + 1} \\
-    v_2 &= \frac{m_2(1 - m_2)}{\tilde{\alpha} + 1}
+    v_1 &= \frac{m_1(1 - m_1)}{\tilde{\alpha} + 1}, \\
+    v_2 &= \frac{m_2(1 - m_2)}{\tilde{\alpha} + 1}.
 \end{align*}
 
 This already tells us that the system do not have a solution if 
@@ -328,9 +328,9 @@ The following proposition builds a solution excluding the fourth equation, given
 \begin{gather}
  \label{eq:system-solution}
  \begin{aligned}
-  \alpha_1 &= (m_1 + m_2 - 1)\tilde{\alpha} + \alpha_4 \\
-  \alpha_2 &=  (1 - m_2)\tilde{\alpha} - \alpha_4 \\
-  \alpha_3 &= (1-m_1)\tilde{\alpha} - \alpha_4. \\
+  \alpha_1 &= (m_1 + m_2 - 1)\tilde{\alpha} + \alpha_4, \\
+  \alpha_2 &=  (1 - m_2)\tilde{\alpha} - \alpha_4, \\
+  \alpha_3 &= (1-m_1)\tilde{\alpha} - \alpha_4, \\
   \alpha_4 &= \rho\tilde{\alpha}\sqrt{m_1m_2(1-m_1)(1-m_2)} + (1-m_1)(1-m_2),
 \end{aligned}
 \end{gather}
@@ -344,12 +344,12 @@ $$
   The first two equations of the system \eqref{eq:system-moments-alpha} can be
 rewritten as a linear system:
 \begin{align*}
-  (m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\alpha_4 &= 0 \\
+  (m_1 - 1)\alpha_1 + (m_1 - 1)\alpha_2 + m_1\alpha_3 + m_1\alpha_4 &= 0, \\
   (m_2 - 1)\alpha_1 + m_2\alpha_2 + (m_2-1)\alpha_3 + m_2\alpha_4 &= 0,   
 \end{align*}
 which is equivalent to 
 \begin{align*}
-  \alpha_1 + \alpha_2 + \frac{m_1}{m_1-1}\alpha_3 + \frac{m_1}{m_1-1}\alpha_4 &= 0 \\
+  \alpha_1 + \alpha_2 + \frac{m_1}{m_1-1}\alpha_3 + \frac{m_1}{m_1-1}\alpha_4 &= 0, \\
   \alpha_2 + \frac{1-m_2}{m_1-1}\alpha_3 + \frac{m_1-m_2}{m_1-1}\alpha_4 &= 0.
 \end{align*}
 Then, we can write $\alpha_1$ and $\alpha_2$ as functions of $\alpha_3$ and
@@ -372,8 +372,8 @@ $$
 $$
 that is a linear function of $\alpha_4$. We summarize the expressions in function of $\alpha_4$ with some simplifications: 
 \begin{align*}
-  \alpha_1 &= (m_1 + m_2 - 1)\frac{(m_1 - m_1^2 - v_1)}{v_1} + \alpha_4 \\
-  \alpha_2 &=  (1 - m_2)\frac{(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4 \\
+  \alpha_1 &= (m_1 + m_2 - 1)\frac{(m_1 - m_1^2 - v_1)}{v_1} + \alpha_4, \\
+  \alpha_2 &=  (1 - m_2)\frac{(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4, \\
   \alpha_3 &= (1-m_1)\frac{(m_1 - m_1^2 - v_1)}{v_1} - \alpha_4,
 \end{align*}
 which implies that 
@@ -409,8 +409,9 @@ then
 \end{equation}
 
 Besides solving the system \eqref{eq:system-moments-alpha}, the bivariate 
-beta distribution needs that $\alpha_1, \dots, \alpha_4 > 0$. However, this is not necessarily
-true. Since it is difficult to find the subset $D \subset [0,1]^4$ in which
+beta distribution needs that $\alpha_1, \dots, \alpha_4 > 0$. However, this is
+not always achievable. Since it is difficult to find the subset $D \subset [0,1]^4$ in
+which
 the solution for \eqref{eq:system-solution} is strictly positive for
 $\alpha_1, \dots, \alpha_4$, we present some examples in Figure
 \ref{fig:alpha-solutions}. For each subplot, the values of $v_1$ and $\rho$
@@ -433,26 +434,26 @@ solution, which is not desirable.
     \label{fig:alpha-solutions}
 \end{figure}
 
-Because of that reason, we can only have an approximation using some
-optimization solver. From now on we suppose the researcher has knowledge about
+In light of this, we can only have an approximation using some
+optimization solver. From now on, we suppose the researcher has knowledge about
 $m_1$, $m_2$ and $\rho$. Through equations
 \eqref{eq:alpha1-as-function-alpha3-alpha4}, 
-\ref{eq:alpha2-as-function-alpha3-alpha4}, and solving the correlation
+\eqref{eq:alpha2-as-function-alpha3-alpha4}, and solving the correlation
 equation for $\alpha_3$ with help of the symbolic solver SymPy \cite{sympy},
 we have the following three expressions: 
 \begin{equation*}
   \begin{aligned}
-    \alpha_1 &= \alpha_4\frac{m_1m_2 + \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}}{(1-m_1)(1-m_2) + \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}} \\
-    \alpha_2 &= \alpha_4\frac{m_1(1-m_2) - \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}}{(1-m_1)(1-m_2) + \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}} \\
+    \alpha_1 &= \alpha_4\frac{m_1m_2 + \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}}{(1-m_1)(1-m_2) + \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}}, \\
+    \alpha_2 &= \alpha_4\frac{m_1(1-m_2) - \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}}{(1-m_1)(1-m_2) + \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}}, \\
     \alpha_3 &= \alpha_4\frac{m_2(1-m_1) - \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}}{(1-m_1)(1-m_2) + \rho\sqrt{m_1m_2(1-m_1)(1-m_2)}},
   \end{aligned}
 \end{equation*}
 and $\alpha_4 > 0$ is a free parameter. In order to have $\boldsymbol{\alpha} >
 0$, we have two situations:
 \begin{alineas}
-  \item the denominador of $\alpha_1, \alpha_2, \alpha_3$ is negative: in this
+  \item the denominator of $\alpha_1, \alpha_2, \alpha_3$ is negative: in this
   case, it is not possible to have both $\alpha_2$ and $\alpha_3$ positives;
-  \item the denominador of  $\alpha_1, \alpha_2, \alpha_3$ is positive: in
+  \item the denominator of  $\alpha_1, \alpha_2, \alpha_3$ is positive: in
   this case, we have that 
   $$
   \rho \in \left(-\frac{\min(m_1m_2, (1-m_1)(1-m_2))}{\sqrt{m_1m_2(1-m_1)(1-m_2)}}, 
@@ -484,25 +485,25 @@ solution in several situations. Because of that, two approaches are suggested:
 \begin{alineas}
   \item no variable is fixed: solve the optimizing problem given by 
   \textcite[p. 7]{olkin2015constructions}. The problem with this approach is 
-  that $\rho$ and the means $m_1, m_2$ get distanced from the given values.
+  that $\rho$ and the means $m_1, m_2$ get far from the given values.
   Weights can be specified for each parameter to incorporate some preference;  
   \item fix $m_1$ and $m_2$ and let $\rho, v_1$ and $v_2$ vary: it is the
   limit of the above method, with the weights of $m_1$ and $m_2$ going to the
-  infinity. It is more suitable when the researcher has more beliefs in the
+  infinity. It is more suitable when the researcher has stronger beliefs or information in the
   means than the other moments. 
 \end{alineas}
 
-In this work, we use the second approach, which give less importance to the
+In this work, we use the second approach, which gives less importance to the
 correlation in comparison to the means. 
 
 \begin{remark}
   If the researcher has information about a credibility interval, this
-  information needs to be converted in terms of the variance.
+  information needs to be converted in terms of the variance for our framework.
 \end{remark}
 
 \section{Simulate data}
 
-In this section we experiment the estimation process of $\hat{\boldsymbol{\alpha}}$ through
+In this section, we experiment the estimation process of $\hat{\boldsymbol{\alpha}}$ through
 two different simulations: 
 
 \begin{alineas}
@@ -587,7 +588,7 @@ proposal distribution to both conditionals:
    \eqref{eq:likelihood-wainting-times}. Deriving it, we obtain 
    \begin{equation*}
      \begin{split}
-      \frac{d}{d \lambda} \log L(w \mid G_S, \lambda) &= \frac{d}{d \lambda}\left[ (n - m)\log(\lambda) + \sum_{k \mathrm{isn't seed}} \log(s_k) - \lambda \boldsymbol{s}^Tw\right] \\
+      \frac{d}{d \lambda} \log L(w \mid G_S, \lambda) &= \frac{d}{d \lambda}\left[ (n - m)\log(\lambda) + \sum_{k \text{ isn't seed}} \log(s_k) - \lambda \boldsymbol{s}^Tw\right] \\
       &= \frac{n-m}{\lambda} - \boldsymbol{s}^Tw,
      \end{split}
    \end{equation*}
@@ -609,7 +610,7 @@ proposal distribution to both conditionals:
 Now, it remains to calculate the probability of acceptance for both
 Metropolis-Hastings samplings. \textcite{crawford2016} 
 establishes several results to make the calculations more efficient. We omit
-then here. Using relation \eqref{eq:alpha-metropolis-hastings}, the probabilities are: 
+them here. Using relation \eqref{eq:alpha-metropolis-hastings}, the probabilities are: 
 
 \begin{alineas}
   \item for the graph transition:
