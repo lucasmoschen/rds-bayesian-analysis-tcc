@@ -1400,11 +1400,18 @@ described in Appendix \ref{sec:sampling-posterior-graph}. We used 10000 warmup
 and 100 sampling iterations $\hat{G}_S$, which took around five minutes. With each
 graph, we performed HMC to obtain samples for the other parameters with 2200
 warmup and 400 sampling iterations for two chains. This marginalize the
-effect of the graphs. This process took about four hours. Informative priors
+effect of the graphs. This process took about four hours. 
+
+Informative priors
 were placed on $\theta$ and $\beta$, since even without considering the
 uncertainty of the graph, the credible intervals already are too wide. Counter
-intuitively, the credible intervals were not too broad. Therefore, well defined
-priors can help with our uncertainty about the graph. 
+intuitively, the credible intervals were not too broad. In special, the intervals were
+almost equal, with a difference of about 0.1 for the parameters. There are two
+possible reasons: a hundred graphs are a small quantity for integrating the
+graph uncertainty, or the estimated graph $\hat{G}_S^{(i)}$ contains more
+information since it predicts missing links, which individually reduces the
+uncertainty about the parameters. Therefore, well defined
+priors for the prevalence and effects can mitigate our uncertainty about the graph. 
 
 \begin{figure}[htbp]
   \centering
