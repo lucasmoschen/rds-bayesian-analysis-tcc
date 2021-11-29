@@ -1,50 +1,36 @@
-\chapter{Conclusion}
+\chapter{Conclusions}
 \label{ch:conclusions}
 
-Respondent-driven sampling is a useful tool when the population can not be
-enumerated since by building a dual incentive system, it encourages the
-individuals from the target population to engage in the research and convince
-others to do the same. Analysis of RDS started with \textcite{heckathorn1997}
-and much work has being done as a wall of bricks. The resulting structure of
-the process needs many assumptions that need to be considered in our analysis.
-This work proposed a method to quantity the uncertainty about the
-characteristics of these populations, which is vital for correction of
-expectations. 
+Respondent-driven sampling is a useful tool when the researchers cannot directly enumerate the population since building a dual incentive system encourages the individuals from the target population to engage in the research and convince others to do the same. Analysis of RDS started with \textcite{heckathorn1997} and much work has been done as a wall of bricks. The resulting structure of the process needs many assumptions that need to be considered in our analysis. This work proposed a method to quantify the uncertainty about the characteristics of these populations, which is vital for robust decision making.  
 
-Regression analysis is powerful toolbox of statistical procedures that help
-the understanding of the populations, but ``with great power comes great
-responsibility'' \cite[p. 13]{spider_man}. When correct analysis are not done,
-problems of estimation, such as identifiability and biases, can lead to wrong
-inferences. In this work, we showed the importance of identifiability and
-possible solutions in the Bayesian paradigm. CAR models showed to be a good
-representation of spatial correlation, but with hidden problems. The parameter of
-correlation is very difficult to interpret and even high values can not
-generate the correct expected spatial dependencies. However, these models
-complicate the sampling by increasing the parameter space dimension. For an unbiased estimation of prevalence, this work presented the relevant 
-role of sensitivity and specificity, in special when there considering theirs
-uncertainties. 
+Regression analysis is a powerful toolbox of statistical procedures that help the understanding of the populations, but ``with great power comes great responsibility'' \cite[p. 13]{spider_man}. When correct analyses are not done, problems of estimation, such as identifiability and biases, can lead to wrong inferences. In this work, we showed the importance of identifiability and solutions in the Bayesian paradigm. CAR models showed to be a good representation of the correlation between recruitments, but with hidden problems. The parameter of correlation is very difficult to interpret and even high values may not generate the correct expected dependencies. These models complicate the sampling by increasing the parameter space dimension and leading to an intricate geometry. In addition, this model can be a non-useful model when correlation is not so strong. 
 
-We also analysed different prior specifications of sensitivity and specificity
-since strong priors are required. We highlighted each one's advantages and
-disadvantages. In particular, we detailed several characteristics of the
-bivariate beta distribution derived by \textcite{olkin2015constructions}. This
-distribution showed to have some specification problems since not all
-information can be directly converted to a well-defined distribution. 
+We also analysed the uncertainty of the graph through
+\textcite{crawford2016}'s model sampling from its posterior distribution using
+a Metropolis-within-Gibbs method. This method showed to not wide the credible
+intervals, at least with our experiment settings. Furthermore, model
+extensions from the literature addressing distinct problems were described as
+future work. 
 
-Other key aspect of Bayesian inference is the prior specification. It can save
-our life in identification problems, but it can derive wrong results when
-badly specified. In particular, when there is not much spatial correlation, a 
-finite mean prior specification leads to divergences in the sampling method
-and incorrect inferences. Prior information is not always easily converted to
-prior distributions as we studied in the logit normal case. Prior and
-posterior predictive checks are possible ways to understand the process. 
+For unbiased estimation of prevalence, this work presented the relevant role
+of sensitivity and specificity, in special when considering their
+uncertainties. RDS estimators, without including the accuracy of the
+diagnostic test, usually failed to give reasonable results. We also analysed
+different prior specifications of sensitivity and specificity, since strong
+priors are required. We highlighted each one's advantages and disadvantages.
+In particular, we detailed several characteristics of the bivariate beta
+distribution derived by \textcite{olkin2015constructions}. This distribution
+showed to have some specification problems since not all information can be
+directly converted to a well-defined distribution.  
+ 
+Another key aspect of Bayesian inference is the prior specification. It can save our life from identification problems, but it can derive wrong results when badly specified. In particular, when there is not much spatial correlation, a finite mean prior specification leads to divergences in the sampling method and incorrect inferences. The Gumbel type-II, derived as a penalized complexity prior for the precision when data comes from normal distribution, showed to fit better in general cases. Moreover, prior information is not always easily converted to prior distributions as we studied in the logit normal case. Prior and posterior predictive checks are possible ways to understand the process. 
 
-Analysis of HMC results and its diagnostics are very important for the
-learning process. Observing divergences, mixing of the chain, energy of the
-model, among other diagnoses can enlighten problems with the parametrization
-of the model and indicate possible solution paths. 
+Analysis of HMC results and its diagnostics are very important for the learning process. Observing divergences, mixing of the chain, energy of the model, among other diagnoses, can enlighten problems with the parametrization of the model and indicate possible solution paths. These diagnostics proved to be useful in implementing a better reparametrization of the model.
 
-Finally, the simulations indicated two important characteristics of the
-presented model: the computational burden is high with a very complicated
-geometry, and the inferences are consistent when HMC is well diagnosed and
-prior specification is well thought.  
+Finally, the simulations showed two important characteristics of the presented
+model: the computational burden is high with very complicated geometry, and
+the inferences are consistent when HMC is well diagnosed and prior
+specification is well thought. Therefore, it can be a valid option in
+respondent-driven samples, especially when compared to the most used point
+estimates for prevalence, such as RDS-VH and RDS-SS, and bootstrap
+distributions.  
