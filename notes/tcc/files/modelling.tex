@@ -3,8 +3,8 @@
 
 \textcite[p. 311]{fisher1922mathematical} stated that the objective of
 statistics is to reduce the data since its volume is impossible
-to comprehend by the researchers. In that sense, few parameters should represent the whole phenomenon catching the most relevant information.
-Years later, Newman studied the theory of modelling which can be divided
+to comprehend by researchers. In that sense, few parameters should represent the whole phenomenon catching the most relevant information.
+Years later, J. Neyman studied the theory of modelling which can be divided
 in three aspects \cite[p. 161]{lehmann2012model}:
 
 \begin{alineas}
@@ -29,7 +29,7 @@ positive test in the $i^{th}$ individual is denoted by $p_i$.
 
 Another important feature of the model is that sensitivity and
 specificity have the same distribution for all individuals and
-it only depends on the test used to diagnose. This is an assumption
+it only depends on the test used. This is an assumption
 that must be analysed for each particular case. For instance, COVID-19
 Sofia test has different sensitivity and specificity for symptomatic and
 asymptomatic individuals \cite[Table 1][p. 3]{mitchell2021performance}.
@@ -44,10 +44,11 @@ RDS structure. Some considerations are made to improve the model's
 The implementation of the following models were in the statistical computation
 platform Stan \cite{carpenter2017stan} within Python Interface PyStan
 \cite{pystan} which uses an implementation for HMC algorithm. All the codes
-are written in \autoref{appendix:stan-codes}. For plotting the diagnosis and
+are provided in \autoref{appendix:stan-codes}. For plotting the diagnosis and
 the distributions, ArviZ \cite{arviz_2019} and Matplotlib \cite{Hunter_2007}
 Python packages were used. For handling networks, we use NetworkX
-\cite{hagberg2008exploring}.
+\cite{hagberg2008exploring}. All experiments were run on a Linux
+PC with Intel(R) Core(TM) i5-7200U 2.5GHz processor (4 cores) and 8 GB of memory.
 
 \section{Perfect tests}
 
@@ -63,17 +64,18 @@ which means that $\theta_i = p_i$ for all $i$. Therefore it only considers the r
 \end{equation}
 where $g(\cdot)$ is the $\logit$ function.
 The parameter $\beta \in \R^{k}$ is the risk effects. For Bayesian inference, priors on
-$\beta$ and $\theta$ must be included. We use $\beta ~ \sim \N(\mu_{\beta}, \Sigma_{\beta})$
+$\beta$ and $\theta$ must be included. We suppose they are independent before
+the data and use $\beta ~ \sim \N(\mu_{\beta}, \Sigma_{\beta})$
 and $\theta \sim \betadist(a^{p}, b^p)$, where the vector $\mu_{\beta}
-  \in \R^{k}$, the symmetric positive-definite matrix $\Sigma_{\beta} \in
-  \R^{k\times k}$, and the positive real values $a^p, b^p \in \R_{>0}$ are fixed
+\in \R^{k}$, the symmetric positive-definite matrix $\Sigma_{\beta} \in
+\R^{k\times k}$, and the positive real values $a^p, b^p \in \R_{>0}$ are fixed
 hyperparameters. Inferences about $\beta$ and $\theta$ are based on the
 posterior distribution. Keeping the notation of
-Section \ref{sec:glm}, we denote $\boldsymbol{X}$ the covariate matrix.
+Section \ref{sec:glm}, we denote the covariate matrix by $\boldsymbol{X}$.
 
 \begin{remark}[Interpretation of prevalence]
   \label{remark:interpretation-prevalence}
-  According to the model formulation, if the risk factors are zero, i.e $\x_i
+  According to the model formulation, if the risk factors are zero, i.e. $\x_i
     = 0$, the probability of the $i$-th individual having been exposed is the prevalence $\theta$, which means that in
   a population with no risk effects, the probability of a person having the
   disease is exactly the proportion in this population.
@@ -82,7 +84,10 @@ Section \ref{sec:glm}, we denote $\boldsymbol{X}$ the covariate matrix.
 \subsection{Identifiability}
 \label{sec:perfect-test-identifiability}
 
-A formal definition for identifiability regards the likelihood function \cite[p.
+Identifiability is a key concept in statistical modelling. It formalizes the 
+basic idea of identifying a model parameter from data. Roughly, a non-identifiable
+model cannot distinguish values of the parameter after observing data through
+the sampling model. A formal definition regards the likelihood function \cite[p.
   3459]{xie2006measures}:
 
 \begin{definition}
@@ -150,7 +155,7 @@ sampler took around 1.39s, and the improved results are shown in
     distribution, trace plot, and posterior samples of parameters
     $\theta$ and $\beta$ from model \eqref{model:perfect-tests} with uncentered covariate.}
   \includegraphics[width=14cm]{identifiability_perfect_tests_unscaled_x.pdf}
-  \fonte{Prepared by the author (2021).}
+  \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.}
 \end{figure}
 
 \begin{figure}
@@ -159,7 +164,7 @@ sampler took around 1.39s, and the improved results are shown in
     distribution, trace plot, and posterior samples of parameters
     $\theta$ and $\beta$ from model \eqref{model:perfect-tests} with centralized covariate.}
   \includegraphics[width=14cm]{identifiability_scaled_x.pdf}
-  \fonte{Prepared by the author (2021).}
+  \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.}
 \end{figure}
 
 We observe that the interpretation of prevalence from Remark
@@ -167,7 +172,7 @@ We observe that the interpretation of prevalence from Remark
 uncentered since the meaning of $\x_i = 0$ is different. Along with this
 discussion, it is usual to divide the centred variable by its
 standard deviation, to put all predictors on a common scale. Discussions about
-the problems caused by standardizing are outside the scope of this work.
+the problems caused by standardizing are outside of the scope of this work.
 \textcite{gelman2008scaling} suggests to divide de continuous variables by 2
 times de standard deviation to allow ``the coefficients to be interpreted in
 the same way as binary deviation.'' \cite[p. 2867]{gelman2008scaling} Binary
@@ -188,7 +193,7 @@ procedure, we simulate fake data from the model and make inferences about the
 result. We follow the experiment from Section
 \ref{sec:perfect-test-identifiability}.
 \autoref{table:experiments-perfect-test} summarizes the experiment
-parameters.
+settings.
 
 \begin{table}[!ht]
   \centering
@@ -196,7 +201,7 @@ parameters.
     simulation of model \eqref{model:perfect-tests}.}
   \begin{tabular}{ccccccc}
     \hline
-    Exp                   & $n$  & $k_{c}$ (normal) & $k_{c}$ (cauchy) & $k_{b}$ & $\beta$                         & $\theta$ \\ \hline
+    Experiment            & $n$  & $k_{c}$ (normal) & $k_{c}$ (cauchy) & $k_{b}$ & $\beta$                         & $\theta$ \\ \hline
     \multicolumn{1}{c}{1} & 100  & 3                & 0                & 2       & {[}-0.1, 2.5, 1.4, -1.8, 0.3{]} & 0.05     \\
     \multicolumn{1}{c}{2} & 100  & 3                & 0                & 2       & {[}-0.1, 2.5, 1.4, -1.8, 0.3{]} & 0.9      \\
     \multicolumn{1}{c}{3} & 100  & 2                & 2                & 1       & {[}-0.1, 2.5, 1.4, -1.8, 0.3{]} & 0.1      \\
@@ -210,17 +215,17 @@ parameters.
     probability 0.3, and 0 otherwise.}
 \end{table}
 
-We primally look at the settings from experiment 1. With a non-informative prior for $\theta$
-(Jeffreys prior $\betadist(1/2, 1/2)$) and a weakly informative for $\beta$
+We primarily look at the settings from experiment 1. With a non-informative prior for $\theta$
+($\betadist(1/2, 1/2)$) and a weakly informative for $\beta$
 (zero mean and covariance matrix four times the identity matrix),
 \autoref{fig:result-experiment1-perfect-test} shows the posterior
 distributions for the parameters. The prevalence estimate is good despite
-Jeffreys' prior. When the distance between the prior and the true value is large, the
+the non-informative prior. When the distance between the prior and the true value is large, the
 inferences seem to be biased. However, this makes sense regarding the model. For
 instance, for $\beta_2$, before observing the data, we put 0.7 mass probability
 for values less than 0.1. The data decreased it to 0.125. This highlights
-the importance of a well defined prior distribution. The values for bulk-ESS
-was greater than 3000 for all parameters, while Tails ESS were greater that
+the importance of a well-defined prior distribution. The values for bulk-ESS
+were greater than 3000 for all parameters, while Tails ESS were greater than
 2200 with 1000 warmup and 1000 sampling iterations, and 4 chains. For all
 parameters $\hat{R} = 1$. Trace plots and scatter plots were also good and we
 omit here since they do not bring new information for the discussion.
@@ -228,9 +233,10 @@ omit here since they do not bring new information for the discussion.
 \begin{figure}[!ht]
   \centering
   \caption{\label{fig:result-experiment1-perfect-test}Posterior
-    distribution for parameters of model \eqref{model:perfect-tests}.}
+    distribution for parameters of model \eqref{model:perfect-tests} with
+    experiment 1 settings.}
   \includegraphics[width=14cm]{posterior_perfect_tests_exp1.pdf}
-  \fonte{Prepared by the author (2021). The red line represents the true value
+  \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs. The red line represents the true value
     inputed for the simulation.}
 \end{figure}
 
@@ -245,29 +251,30 @@ informative priors for $\beta$ and $\theta$.
 \begin{figure}[!ht]
   \centering
   \caption{\label{fig:predicted-vs-simulated-perfect-tests}Comparing predicted
-    and simulated probabilities of having the disease from model \eqref{model:perfect-tests}.}
+    and simulated probabilities of having the disease from model
+    \eqref{model:perfect-tests} with experiment 1 settings.}
   \includegraphics[width=10cm]{predicted-vs-simulated-perfect-tests.pdf}
-  \fonte{Prepared by the author (2021). The green area is delimited by the curves generated
+  \fonte{Prepared by the author (2021) and based on Stan output. The green area is delimited by the curves generated
     by $2\sqrt{\theta_i(1-\theta_i)/n}$, where $n=500$ is the number of points.
     This area is a proxy for $\pm 2$ standard-error bounds. }
 \end{figure}
 
 Experiment 2 is used to see if these properties repeat when the prevalence is
 higher. The same regressors were used for the comparison, but the input data
-$Y$ were generated with different prevaleces. With prevalence being 0.9, the
-estimates were a little high for all coefficients as
+$Y$ were generated with different prevaleces. When prevalence was 0.9, the
+estimates were a little higher for all coefficients as
 \autoref{fig:comparing-diff-prevalence-perfect-tests} presents. This is
-related to the fact that the posterior mean underestimated the true value for this
-experiment. After increasing the number of samples, the estimates were closer,
+related to the fact that the posterior mean of $\theta$ underestimated the true value for this
+experiment. After increasing the number of sampled individuals, the estimates were closer,
 as expected.
 
 \begin{figure}[!ht]
   \centering
   \caption{\label{fig:comparing-diff-prevalence-perfect-tests}Comparing
-    posterior mean and 94\% credibility intervals for $\beta$ in model \eqref{model:perfect-tests} with the same regressors
+    posterior mean and 95\% credibility intervals for $\beta$ in model \eqref{model:perfect-tests} with the same regressors
     $\boldsymbol{X}$ but different prevalences.}
   \includegraphics[width=12cm]{comparing-diff-prevalence-perfect-tests.pdf}
-  \fonte{Prepared by the author (2021).}
+  \fonte{Prepared by the author (2021) and based on Stan output.}
 \end{figure}
 
 The third experiment aims to analyse what happens if some covariates have a
@@ -285,10 +292,10 @@ case.
   \centering
   \caption{\label{fig:predicted-vs-simulated-high-dimension-perfect-tests}
     Comparing predicted and simulated probabilities of having the disease from
-    model \eqref{model:perfect-tests} with high dimension.}
+    model \eqref{model:perfect-tests} with high dimension for experiment 4 settings.}
   \includegraphics[width=10cm]{predicted-vs-simulated-high-dimension-perfect-tests.pdf}
-  \fonte{Prepared by the author (2021). The green area indicated the 95\%
-    credible interval for each predicted $\theta_i$}
+  \fonte{Prepared by the author (2021) and based on Stan output. The green area indicated the 95\%
+    credible interval for each predicted $\theta_i$.}
 \end{figure}
 
 \section{Sensitivity and specificity}
@@ -311,8 +318,8 @@ positives and  $n_{\gamma_e}$ true negatives, we denote
 \end{equation}
 such that $y_{\mathrm{neg}}$ are negative tests on known negative
 subjects and $y_{\mathrm{pos}}$ are positive tests on
-known positive. In the Two-by-two formulation from \autoref{table:two-by-two},
-we have
+known positive. \autoref{table:two-by-two-data} presents the Two-by-two
+formulation from \autoref{table:two-by-two} with the model objects. 
 
 \begin{quadro}[!ht]
   \centering
@@ -408,9 +415,9 @@ the regressors, which simplifies to
 such that $\sigma_{\gamma_s} > 0$ and $\sigma_{\gamma_e} > 0$ are the
 standard deviations from log odds of sensitivity and specificity,
 respectively, and $\rho$ is the correlation between the parameters in the log
-odds space. The possible problem with that prior approach is that the moments
+odds space. The possible problem with this prior approach is that the moments
 of logit normal distribution are not in closed form and there is no available
-formula to derive $\ev[\gamma_s]$ from the parameters of the normal
+formula to compute $\ev[\gamma_s]$ from the parameters of the normal
 distribution \cite{kurt2021logit}.
 
 \subsection{A bivariate beta prior}
@@ -437,8 +444,8 @@ we employ
 \begin{equation*}
   \alpha_i \sim \operatorname{Gamma}(a^i, b^i), \quad a^i, b^i > 0, \quad \text{ for } i = 1,\dots,4.
 \end{equation*}
-Suppose the research have prior information about specificity and specificity,
-such their mean and correlation.
+Suppose the researcher has prior information about specificity and specificity,
+such as their mean and correlation.
 
 To specify the prior hyperparameters using prior information, Section
 \ref{sec:elicitation-bivariate-beta} discusses the results when the
@@ -466,23 +473,6 @@ an approximation of the researcher's input values. For more details, see Appendi
   specially when the input values are far from the estimated ones.
 \end{alineas}
 
-\subsubsection*{Implementation of the dirichlet distribution in Stan}
-
-The Dirichlet distribution is defined on the simplex of lower dimension.
-Therefore the sampler has to consider the restriction of $\sum_{i=1}^4 U_i =
-  1$. \textcite{betancourt2012cruising} presents a simplification in the
-structure of the simplex. The propose is \cite[p. 2]{betancourt2012cruising}
-\begin{equation*}
-  \begin{aligned}
-    z_i & \sim \betadist(\tilde{\alpha}_i, \alpha_i), \text{ where } \tilde{\alpha}_i = \sum_{k=i+1}^4 \alpha_k, \quad i = 1,2,3 \\
-    U_i & = \left(\prod_{k=1}^{i-1} z_k\right)\cdot \begin{cases}
-      1 - z_i, & i < 4 \\
-      1,       & i = 4
-    \end{cases},
-  \end{aligned}
-\end{equation*}
-which removes the constraint.
-
 \begin{remark}
   When $\alpha$ is a random variable, the adapt delta parameter had to be
   increased to 0.9, since some divergences were found.
@@ -504,12 +494,12 @@ the binomial likelihood with $n_{\gamma_s}, n_{\gamma_e} \sim
 \end{alineas}
 
 For each situation and each dataset, it was drawn 2000 samples from the
-posterior distribution and the HDI 75\% interval and posterior mean were calculated. The Hits
+posterior distribution and the HDI 75\% interval and posterior mean were calculated. The coverage
 column counts the percentage of the times that the true values lied in the
 interval, while the MSE column calculates the mean squared error of the
 posterior mean with respect to the true value. We notice that the fourth prior
 approach had a little number of effective samples when compared to the other
-methods.  Notice that there is no big different among the approaches. The
+methods, and there is no big different among the approaches. The
 logit normal prior is worst when strong information is given. This may be
 related to the difficulty to convert information from the probability space to
 the log odds space. The estimation error decreased when information about the
@@ -526,7 +516,7 @@ is driving the posterior.
   \begin{tabular}{cccccc}
     \hline
     \multirow{2}{*}{\textbf{Situation}}                                                 & \multirow{2}{*}{\textbf{Prior
-    approach}}                                                                          & \multicolumn{2}{c}{\textbf{Hits}} &
+    approach}}                                                                          & \multicolumn{2}{c}{\textbf{Coverage}} &
     \multicolumn{2}{c}{\textbf{MSE} $10^{-3}$}                                                                                                                                              \\ \cline{3-6}
                                                                                         &                                   & \textbf{Sens} & \textbf{Spec} & \textbf{Sens} & \textbf{Spec} \\ \hline
     \multirow{4}{*}{\autoref{item:vague-information-sensitivity-specificity}}           & Independent betas                 & 73.8\%        & 76.1\%        & 2.531         & 2.843         \\
@@ -551,7 +541,7 @@ is driving the posterior.
     posterior mean estimate and average HDI 75\% intervals
     for each prior strategy and level of information for sensitivity.}
   \includegraphics[width=12cm]{comparing_hdi_prior_approaches_sens-spec.pdf}
-  \fonte{Prepared by the author (2021).}
+  \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.}
 \end{figure}
 
 By the above analysis, we choose the independent betas approach given it
@@ -578,14 +568,14 @@ with priors on $(\gamma_e, \gamma_s)$ as studied in the previous section. It is
 important to highlight that we suppose prior the data that $\theta$ is
 independent of $\gamma_e$ and $\gamma_s$, which is not necessarily true as
 pointed out by \textcite{leeflang2013variation}, who concluded that
-specificity tends to be lower when prevalence is higher. This
-is an extension of model presented by \textcite{gelman2020bayesian} and
+specificity tends to be lower when prevalence is higher. Model \eqref{model:imperfect-tests}
+is an extension of the one presented by \textcite{gelman2020bayesian} and
 studied by \textcite{mcinturff2004modelling}.
 
 \subsection{Identifiability}
 
 If the regressors $\boldsymbol{x}_i$ are not present in model
-\eqref{model:imperfect-tests}, it is no identifiable with respect to its
+\eqref{model:imperfect-tests}, it is not identifiable with respect to its
 likelihood as pointed out by \textcite[p. 1271]{gelman2020bayesian}.
 Intuitively, the problem happens because $Y_i$ brings information about
 $p_i$ which is subdivided in three parameters: $\theta, \gamma_s$ and
@@ -601,11 +591,11 @@ function for $Y$. As a consequence, the model is non-identifiable. Including the
 regressors, the calculations are harder. Suppose that $g(\theta)$
 is increased by a real $a$. The effect of $a$ on $p_i$ is through
 $g^{-1}(g(\theta) + a + \boldsymbol{x}_i^T\beta)$, which depends on
-$\boldsymbol{x}_i$. Because of that, sensitivity and specificity can not generally
-offset this difference, and identifiability can not be proved or disproved.
+$\boldsymbol{x}_i$. Because of that, sensitivity and specificity cannot generally
+offset this difference, and identifiability cannot be proved or disproved.
 
 Nevertheless, there are some tractable cases. For instance, if $\boldsymbol{x}_i = x_i$ is a binary variable, with the same
-reasoning, it can be shown that the model is not identifiable. Moreover the
+reasoning, it can be shown that the model is non-identifiable. Moreover the
 problems concerning the covariates $\boldsymbol{X}$ appear here in the same
 manner. To avoid any identifiability problem, information should be added by
 the prior distribution, specially through $\gamma_s$ and $\gamma_s$.
@@ -620,8 +610,8 @@ each $\beta_i$. After 4000 iterations for warmup and 4000 for sampling, the
 results are summarized in
 \autoref{tab:results-identifiability-imperfect-tests}
 and \autoref{fig:posterior-trace-imperfect-tests-identifiability}. Notice that
-the effective sample size is very small for the Bulk. The posterior mean are
-very bad estimates for the true values. The high density set is test is the
+the bulk effective sample size is very small. The posterior mean are
+very bad estimates for the true values. The high density set is the
 union of two intervals for the prevalence, mich makes little sense in the real
 life.
 
@@ -674,27 +664,27 @@ two binary regressors and three continuous drawn from the normal distribution.
     simulation of model \eqref{model:imperfect-tests}.}
   \begin{tabular}{ccccc}
     \hline
-    Exp                   & $n$  & $\theta$ & $\gamma_s$ & $\gamma_e$ \\ \hline
+    Experiment            & $n$  & $\theta$ & $\gamma_s$ & $\gamma_e$ \\ \hline
     \multicolumn{1}{c}{1} & 100  & 0.1      & 0.9        & 0.8        \\
     \multicolumn{1}{c}{2} & 100  & 0.02     & 0.85       & 0.85       \\
     \multicolumn{1}{c}{3} & 2000 & 0.01     & 0.85       & 0.85       \\
     \multicolumn{1}{c}{4} & 2000 & 0.1      & 0.6        & 0.95       \\
     \multicolumn{1}{c}{5} & 2000 & 0.1      & 0.95       & 0.6        \\ \hline
-  \end{tabular}
+  \end{tabular} 
   \fonte{Prepared by the author (2021). We denote $n$ for number of samples.}
 \end{table}
 
 For the first experiment, we placed vague priors on the prevalence and the
 effects and informative priors for the sensitivity and specificity. The
 algorithm took around 1.87s to perform 4000 iterations  (2000 for a warm-up
-and 2000 for sampling). All the basic diagnosis from HMC were good.
+and 2000 for sampling). All the basic diagnostics from HMC were good.
 \autoref{fig:trace_plot_experiment1_imperfect_test} summarizes the posterior
 distribution. We also applied the first model in this dataset. For this model,
 the posterior mean of the prevalence was 0.148 (HDI 94\% 0-0.326), while for
 the perfect test model, it was 0.238 (HDI 94\% 0.096-0.375), a biased
-estimate. \textcite[p. 1271]{gelman2020bayesian} concludes in its application
+estimate. \textcite[p. 1271]{gelman2020bayesian} conclude in its application
 that ``uncertainty in the population prevalence is in large part driven by
-uncertainty in the specificity.'' However we did not noticed this effect in
+uncertainty in the specificity.'' However, this effect is not so clear in
 this model. \autoref{fig:scatter_plot_posterior_imperfect_tests} presents the
 resultant scatter plot of the posterior simulations. Here we observe that all
 parameters drive prevalence uncertainty.
@@ -716,7 +706,7 @@ parameters drive prevalence uncertainty.
   \caption{\label{fig:scatter_plot_posterior_imperfect_tests} Scatter plot of
     the posterior simulations of prevalence, specificity, sensitivity and effects of model
     \eqref{model:imperfect-tests-rds}}
-  \includegraphics[width=12cm]{scatter_plot_posterior_imperfect_tests.pdf}
+  \includegraphics[width=14.4cm]{scatter_plot_posterior_imperfect_tests.pdf}
   \fonte{Prepared by the author (2021) from the Stan sampling result.}
 \end{figure}
 
@@ -730,16 +720,16 @@ times, respectively for $\theta, \gamma_s, \gamma_e, \beta_1, \dots, \beta_5$.
 The second experiment considers the case where the number of samples is not so
 high, but prevalece is low. It contrasts with the third experiment where many
 more samples are obtained. \autoref{fig:posterior_imperfect_tests_exp2_3}
-presents the differences. Notice that the uncertainty was decreased for all
+presents these differences. Notice that the uncertainty was decreased for all
 parameters, but specificity decreased the most. Even with a small quantity of
 data points, the model had a good performance. When the number of points
-increase,
+increase, the credible intervals get narrower.
 
 \begin{figure}[ht]
   \centering
   \caption{\label{fig:posterior_imperfect_tests_exp2_3} Posterior
     distribution for $\theta$, $\gamma_s$ and $\gamma_e$ from model
-    \eqref{model:imperfect-tests-rds}}
+    \eqref{model:imperfect-tests-rds} with experiments 2 and 3 settings}
   \includegraphics[width=12cm]{posterior_imperfect_tests_exp2_3.pdf}
   \fonte{Prepared by the author (2021) from the Stan sampling result. The red
     line represents the true value for each parameter.}
@@ -761,13 +751,13 @@ The fourth and fifth experiments compare two opposite situations. The former
 sets a low sensitivity and a high specificity, while the latter has high
 sensitivity and low specificity. These examples are convenient for detecting
 the problem with identifiability in high dimensional data. Specifying the hyperparameters with $\alpha_p =
-  2$,  $\beta_p = 8$, $alpha_s = 6$, $\beta_s = 4$, $\alpha_e = 18$, $\beta_e =
+  2$,  $\beta_p = 8$, $\alpha_s = 6$, $\beta_s = 4$, $\alpha_e = 18$, $\beta_e =
   2$, with 2000 iterations for warmup the resulting posterior and trace is given
 by \autoref{fig:trace_plot_experiment4_imperfect_test}. Notice that one of the
-chains was very far from the tru value driving a very high $\hat{R}$. Although
+chains was very far from the true value yielding a very high $\hat{R}$. Although
 the result seems awkward, it makes sense under the identifiability problem,
-since the chain produces a very similar probability of positive test. A more
-strong prior for $\gamma_s$ can handle this effect, which means that the prior
+since the chain produces a very similar probability of positive test. A
+stronger prior for $\gamma_s$ can handle this effect, which means that the prior
 distribution depends on the size of the sample. A similar behavior happens
 for the fifth experiment.
 
@@ -777,7 +767,7 @@ After understanding the problem when not considering the specificity and the
 sensitivity of the diagnostic test for the estimation of $\theta$, we focus on
 the sampling strategy studied in Section \ref{sec:respodent_driven_sampling}.
 One problem with RDS is that we
-can not make probability statements without making assumptions about the
+cannot make probability statements without making assumptions about the
 sampling process. Since the participants recruit their peers, the sampled
 individuals depend on the recruiters and whom they recruited. In this section,
 we propose a model for the network dependence of RDS extending
@@ -786,7 +776,7 @@ we propose a model for the network dependence of RDS extending
 For now, the recruitment graph (see Definition  \ref{def:recruitment-graph})
 has no uncertainty
 incorporated, and we included it as a random effect on the model through a
-Conditionally autoregressive (CAR) model (see Section \ref{sec:car-models}) in the Gaussian case.
+CAR model (see Section \ref{sec:car-models}) in the Gaussian case.
 \textcite{besag1974spatial} introduced
 CAR for spatial effects, but they fit in this situation since, by
 adjacent sites, we understand recruitment. We remark that for RDS, we
@@ -795,7 +785,7 @@ could interpret it as interaction or friendship depending on the population.
 
 Following the notation of Section \ref{sec:models-rds-process} and Section
 \ref{sec:car-models}, we denote $A$ for the adjacency matrix, where $[A]_{ij}
-  =a_{ij} = 1$ if, and only if, $i$ connects to $j$ and $0$ otherwise; we also
+  =a_{ij} = 1$ if, and only if, $i$ connects to $j$ and $0$ otherwise. We also
 denote $a_{i+} = \sum_j a_{ij}$. Besides the
 parameters from model \ref{model:imperfect-tests}, we use $\tau$
 for the spatial precision parameter and $\rho$ for controlling the dependence between neighbors. Hence, we specify
@@ -820,7 +810,7 @@ We remind that $\omega \sim \N\left(0, \left[\tau (D - \rho
       A)\right]^{-1}\right)$ as discussed in Section \ref{sec:car-models}, such that
 $D_{ii} = a_{i+}$.
 
-The prior specification of $\rho$ has several discussions in the literature.
+The prior specification of $\rho$ is highly debated in the literature.
 Since we established that the lower bound is 0, we are saying that there is a
 positive correlation between the respondents, which is an usual assumption,
 but must be verified for each real application. As we noticed in Section
@@ -835,7 +825,7 @@ available regarding the magnitude of $\alpha$'' \cite[$\alpha$ is the
 discrete uniform distribution over $\{0, 0.05, 0.1, \dots, 0.9, 0.95\}$.
 
 The prior distribution on $\tau$ is also subject to discussion. Since it is a
-precision parameter, \textcite[p. 9, Theorem 1]{simpson2017penalising} proves
+precision parameter, \textcite[p. 9, Theorem 1]{simpson2017penalising} prove
 that if the prior has finite mean, it {\em overfits}, which intuitively means
 that the prior puts not enough mass at the base model, in this case the model
 without spatial correlation. They calculate a penalized complexity prior for
@@ -845,7 +835,7 @@ $\tau$ as the type-2 Gumbel distribution with density
   \pi(\tau) = \frac{\lambda}{2}\tau^{-3/2}\exp(-\lambda \tau^{-1/2}), \tau > 0,
 \end{equation}
 where $\lambda > 0$ determines the magnitude of the penalty.
-\textcite[p. 9]{simpson2017penalising} suggests to specify $U$ and
+\textcite[p. 9]{simpson2017penalising} suggest to specify $U$ and
 $\alpha$ so that $\Pr(1 / \sqrt{\tau} > U) = \alpha \implies \lambda =
   -\log(\alpha)/U$. This distribution can be rewritten in terms of the standard
 deviation $\sigma = 1/ \sqrt{\tau}$ by the Change of Variables
@@ -885,7 +875,7 @@ as
   \sum_{i=1}^n \omega_i = 0.
 \end{equation}
 Relation \eqref{eq:hard-restriction} is called in optimization as {\em hard
-    constraint} since the solution must strictly satisfies it. In probability
+    constraint} since the solution must strictly satisfy it. In probability
 theory, it would mean to give a point mass distribution for the sum.
 In Stan, a common alternative is to put a {\em soft constraint} such as
 \begin{equation}
@@ -927,7 +917,7 @@ The first Stan implementation is exactly as presented in equation
 \eqref{model:imperfect-tests-rds}. Coding as we model is an advantage of Stan
 since it improves readability of the code. However this implementation suffers from
 some problems concerning the geometry of the parameter space. For this
-implementation we treat $\rho$ as a fixed parameter. 1000 iterations of the
+implementation we treat $\rho$ as a fixed parameter. Performing 1000 iterations of the
 algorithm took around six minutes. The resulting inferences were not so bad despite
 the small number of iterations.
 \autoref{fig:energy_plot_inefficient_implementation_stan} presents a
@@ -938,13 +928,13 @@ this case, ``the stochastic exploration between level sets will become so slow t
 number of transitions the exploration of the Markov chain will be
 incomplete.'' \cite[p. 44]{betancourt2017conceptual}.
 
-\begin{figure}
+\begin{figure}[htb]
   \centering
   \caption{\label{fig:energy_plot_inefficient_implementation_stan}Energy plot
     raw Stan implementation of model \eqref{model:imperfect-tests-rds}}
   \includegraphics[width=10cm]{energy_plot_inefficient_implementation_stan.pdf}
   \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.
-    The blue curve is the marginal distribution of the evnergy, while the red
+    The blue curve is the marginal distribution of the energy, while the red
     is the distribution of the energy transition.}
 \end{figure}
 
@@ -961,8 +951,8 @@ the general recommendations of the documentation.
 
 \subsubsection*{Non-centered parameterization}
 
-Parametrization of hierarchical models is a longstanding topic.
-\autoref{fig:scatter_plot_inefficient_samples_rds} shows a how the posterior
+Parametrization of hierarchical models is a longstanding issue.
+\autoref{fig:scatter_plot_inefficient_samples_rds} shows how the posterior
 samples behavior in a hierarchical model. This effect is known as funnel since
 there is a high density region with low volume and a low density region with
 high volume \cite[p. 1]{betancourt2015hamiltonian}. The posterior correlation
@@ -984,7 +974,7 @@ same thing for the effects $\beta$:
 \end{equation*}
 where $V_{\beta}V_{\beta}^{*} = \Sigma_{\beta}$. With that little exchange,
 the time to run the four chains and 1000 iterations took around one minute, much
-better than the previous.
+better than previously.
 \autoref{fig:energy_plot_non_centered_implementation_stan} shows how this
 improves the results on the energy plot. However, this implementation is not
 efficient yet, since we are only taking a few iterations.
@@ -1004,7 +994,7 @@ efficient yet, since we are only taking a few iterations.
     non-centered Stan implementation of model \eqref{model:imperfect-tests-rds}}
   \includegraphics[width=8cm]{energy_plot_non_centered_implementation_stan.pdf}
   \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.
-    The blue curve is the marginal distribution of the evnergy, while the red
+    The blue curve is the marginal distribution of the energy, while the red
     is the distribution of the energy transition.}
 \end{figure}
 
@@ -1019,7 +1009,7 @@ density of a multivariate normal distribution with zero mean is
 \begin{equation}
   \label{eq:multivariate_normal}
   f_{\omega}(\omega \mid \tau, \rho) = \frac{1}{\sqrt{(2\pi)^n\det(\Sigma^{-1})}
-  }\exp\{-\frac{1}{2}\omega^T\Sigma^{-1}\omega\},
+  }\exp\left\{-\frac{1}{2}\omega^T\Sigma^{-1}\omega\right\},
 \end{equation}
 where $\Sigma^{-1} = \tau(D - \rho A)$. \textcite[p. 955]{jin2005generalized}
 proves the following relation
@@ -1046,7 +1036,7 @@ efficient implementation has the disadvantage of not
 allowing to rescale the multivariate normal distribution, given that matrix $V_{\omega}$ does not have
 a sparse representation. Therefore, the energy plot is very similar to
 \autoref{fig:energy_plot_inefficient_implementation_stan}. The scatter plot is
-aso very similar to \autoref{fig:scatter_plot_inefficient_samples_rds}, but
+also very similar to \autoref{fig:scatter_plot_inefficient_samples_rds}, but
 since the we can draw more samples without worrying about time of execution,
 the funnel effects is more evident as presented in \autoref{fig:scatter_plot_efficient_samples_rds}.
 
@@ -1060,10 +1050,7 @@ the funnel effects is more evident as presented in \autoref{fig:scatter_plot_eff
 \end{figure}
 
 Although the Cholesky decomposition of $D - \rho A$ is not sparse, we can
-rescale the parameter $\tau$ from the sparse re\begin{equation*}
-  \log f_{\omega}(\omega \mid \tau, \rho) = \frac{n}{2}\log(\tau) +
-  \frac{1}{2}\sum_{i=1}^n(1 - \rho \lambda_i) - \frac{\tau}{2}\omega^T(D - \rho A)\omega.
-\end{equation*}presentation of CAR model. Let
+rescale the parameter $\tau$ from the sparse representation of CAR model. Let
 \begin{align*}
   \omega^{\mathrm{scaled}}_i & \sim \N(0,1)                                    \\
   \omega                     & = 1/\sqrt{\tau} \cdot \omega^{\mathrm{scaled}}.
@@ -1088,7 +1075,7 @@ highlights how the funnel effect decreased after this change.
     efficient and scaled Stan implementation of model \eqref{model:imperfect-tests-rds}}
   \includegraphics[width=8cm]{energy_plot_partially_centered_implementation_stan.pdf}
   \fonte{Prepared by the author (2021) and based on Stan and ArviZ outputs.
-    The blue curve is the marginal distribution of the evnergy, while the red
+    The blue curve is the marginal distribution of the energy, while the red
     is the distribution of the energy transition.}
 \end{figure}
 
@@ -1113,23 +1100,23 @@ the hidden population. We use four different approaches:
   nodes. For each pair of nodes, we connect them by a link with probability
   $P$. The expected number of edges is $PN(N-1)/2$ and the average number of
   neighbors of a node is $P(N-1)$.
-  \item Erdős–Rényi with preferencial attachment by a binary variable (ER2):
+  \item Erdős–Rényi with preferential attachment by a binary variable (ER2):
   from a graph $G$ with $N$ nodes, each
   node $i$ receives a binary variable $Z_i \in \{0,1\}$ with $\Pr(Z_i =
     1) = 0.3$ creating two subpopulations. Two individuals within the same
-  subpopulation connects with probability $P_1$, while individuals with
+  subpopulation are connected with probability $P_1$, while individuals with
   different values of $Z$ connect with probability $P_2 < P_1$. Each
   subpopulation, conditioned on the binary variables, is a Erdős–Rényi
   graph.
-  \item Barabasi-Albert (BA1) \cite{barabasi1999emergence}: let $m_0$ be a
+  \item Barabási-Albert (BA1) \cite{barabasi1999emergence}: let $m_0$ be a
   initial number of nodes. Each time, a node is added to the graph and connects
   to $m \le m_0$ other nodes with probability $P^i$ proportional to the degree of
   the nodes without replacement. If $k_i$ is the degree of node $i \in \{1, \dots,
     m_0\}$, so $P^i \propto k_i$. The algorithm ends when the number of nodes
-  is $N$. This property is called {\em Preferential attachment} since nodes
-  with high degree are preferred for the new connections. The average degree
+  is $N$. This property is called {\em preferential attachment} since nodes
+  with higher degree are preferred for the new connections. The average degree
   is $2m - m/N - m^2/N$.
-  \item Barabasi-Albert with preferencial attachment by a binary variable
+  \item Barabási-Albert with preferential attachment by a binary variable
   (BA2): the only change in BA1 is that each node connects to other within the
   same population with probability $P$ and to any node disregarding variable
   $Z$ with probability $1- P$.
@@ -1150,7 +1137,7 @@ we use two different approaches:
 After specifying the network and the sampling simulation, we obtain the
 matrices $A$ and $D$. We set $\beta =
   [-0.1, 2.5, 1.4, -1.8, 0.3]
-$ with two binary regressors and three continuous draw form the normal
+$ with two binary regressors and three continuous drawn form the normal
 distribution, $\gamma_s = 0.9$, $\gamma_e = 0.85$, and $\theta = 0.1$.
 The second binary regressor is used for creating the subpopulation whenever
 necessary. \autoref{tab:experiments-imperfect-tests-rds} summarizes the
@@ -1158,7 +1145,7 @@ experiments. All the experiments set $N=10000$ and choose the other parameters
 to obtain an average number of neighbors of approximately $50$. All
 experiments have $500$ samples. The choice of $\rho = 0.9995$ reflects the
 observation of \autoref{tab:correlations-car-model}, since with $\rho = 0.95$
-and $n=500$, the Pearson correlation is too short. We can verify this
+and $n=500$, the Pearson correlation is too small. We can verify this
 empirically with a contingency table comparing the test result of the
 recruiter and the recruit.
 
@@ -1168,7 +1155,7 @@ recruiter and the recruit.
     the simulation of model \eqref{model:imperfect-tests-rds}.}
   \begin{tabular}{ccccc}
     \hline
-    Exp & Grafo                           & RDS                     & $\rho$ & $\tau$ \\ \hline
+    Experiment & Graph                    & RDS                     & $\rho$ & $\tau$ \\ \hline
     1   & (ER1, $P=0.005$)                & Standard                & 0.9995  & 1      \\
     2   & (ER1, $P=0.005$)                & Standard                & 0.9995  & 10000  \\
     3   & (ER1, $P=0.005$)                & Standard                & 0.5    & 10      \\
@@ -1176,14 +1163,14 @@ recruiter and the recruit.
     5   & (BA1, $m = 25$)                 & Standard                & 0.9999  & 5      \\
     6   & (BA2, $P = 0.5, m = 25$)        & Preferential($R=0.5$)   & 0.99999  & 5      \\ \hline
   \end{tabular}
-  \fonte{Prepared by the author (2021).}specificity
+  \fonte{Prepared by the author (2021).}
 \end{table}
-101010
+
 For the first experiment, \autoref{fig:rds_erdos_renyi_experiment1}  shows the
 simulated RDS structure. We disregarded unsuccessful seeds, so, from the ten
 starting individuals, only five continued the recruitments. Running a
 Chi-square test with significant level 5\% in the contingency
-table from \autoref{tab:contingency-table-experiment1} reveals the existence
+table from \autoref{tab:contingency-table-experiment1} indicates the existence
 of a relation between the variables, as we wanted to simulate.
 
 \begin{figure}[htb]
@@ -1212,12 +1199,12 @@ of a relation between the variables, as we wanted to simulate.
 
 Placing strong priors on $\gamma_s$ and $\gamma_e$ as usual, and weakly
 informative priors on the other parameters, we perform 4000 warmup and 2000
-sampling interactions. The execution time was around nine minutes.
+sampling iterations. The execution time was around nine minutes.
 \autoref{fig:posterior_rds_imperfect_tests_exp1} shows the learning of the
 parameters from the data. An interesting thing is that $\gamma_s$ moved the
 mode of the prior distribution closer to the true value. The bulk-ESS was less
-than a thousand for $\theta$ and $\rho$. Despite that, all the HMC diagnoses were
-good. Besides the prior for $\rho$ was a uniform distribution, the posterior
+than a thousand for $\theta$ and $\rho$. Despite that, all the HMC diagnostics were
+good. Although the prior for $\rho$ is a uniform distribution, the posterior
 is very tight (see \autoref{fig:posterior_rds_imperfect_tests_exp1_rho}).
 
 \begin{figure}
@@ -1225,7 +1212,7 @@ is very tight (see \autoref{fig:posterior_rds_imperfect_tests_exp1_rho}).
   \caption{\label{fig:posterior_rds_imperfect_tests_exp1}Posterior distribution of
     $\theta$, $\gamma_s$, $\gamma_e$ and $\tau$ for experiment 1 of model
     \eqref{model:imperfect-tests-rds}.}
-  \includegraphics[width=15cm]{posterior_rds_imperfect_tests_exp1.pdf}
+  \includegraphics[width=16cm]{posterior_rds_imperfect_tests_exp1.pdf}
   \fonte{Prepared by the author (2021) and based on Stan and ArviZ results.}
 \end{figure}
 
@@ -1233,7 +1220,7 @@ is very tight (see \autoref{fig:posterior_rds_imperfect_tests_exp1_rho}).
   \centering
   \caption{\label{fig:posterior_rds_imperfect_tests_exp1_rho}Posterior distribution of
     $\rho$ for experiment 1 of model \eqref{model:imperfect-tests-rds}.}
-  \includegraphics[width=6cm]{posterior_rds_imperfect_tests_exp1_rho.pdf}
+  \includegraphics[width=7cm]{posterior_rds_imperfect_tests_exp1_rho.pdf}
   \fonte{Prepared by the author (2021) and based on Stan and ArviZ results.}
 \end{figure}
 
@@ -1246,7 +1233,7 @@ because of the uncertainty which $\omega$ adds. However, the estimates were
 not so different, implying that this model was not capable of proving to be
 better. The estimates of the prevalence were 0.105 (94\% HDI of 0.0-0.38) for
 the model that includes RDS, while 0.13 (94\% HDI of 0.008-0.27) for the
-other. This implies that the covariates influence much more on the results 
+other. This implies that the covariates influence the results much more on 
 than the RDS itself regarding this model. 
 
 \begin{figure}
@@ -1270,8 +1257,8 @@ $$
 When we include $\tau = 100$, we notice that the posterior of $\rho$, as in
 \autoref{fig:posterior_parameters_rds_tau100}, differs from
 \autoref{fig:posterior_rds_imperfect_tests_exp1_rho}. It means that the
-correlation between recruiter and recruited in the data is not strong. Because
-of that reason, we have to set a higher $\rho$. We highlight that there is a non-trivial
+correlation between recruiter and recruit in the data is not strong. Because
+of this, we have to set a higher $\rho$. We highlight that there is a non-trivial
 relation between $\rho$ and $\tau$.
 \autoref{fig:posterior_parameters_rds_tau100} also answers what happens when
 $\rho$ is small, as in the third experiment. Unfortunately, as higher as $\rho$
@@ -1281,9 +1268,9 @@ had very problematic divergences. We also noticed that the beta prior for
 $\rho$ with high mass around 1, such as specifying $\alpha_{\rho} = 900$ and
 $\beta_{\rho} = 1$, for instance, provokes inefficient searches, which is
 shown to us through the maximum tree depth. This should be investigated in
-future works. 
+future work. 
 
-\begin{figure}
+\begin{figure}[htb]
   \centering
   \caption{\label{fig:tau-influence-probability-space}Comparing
   the transformed values of $\omega$ by the inverse logit for different
@@ -1293,7 +1280,7 @@ future works.
   graphic was tightened because the density is very concentrated.}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[htb]
   \centering
   \caption{\label{fig:posterior_parameters_rds_tau100}Posterior distribution
   for $\theta$, $\tau$ and $\rho$ from model \eqref{model:imperfect-tests-rds}
@@ -1311,7 +1298,7 @@ impacts the inferences with $\lambda = \log(10)$, which is equivalent to setting
 $\Pr(1/\sqrt{\tau} > 1) = 0.1$. The prior distribution for $\theta$ was very
 strong leading to little learning from the data. 
 
-\begin{figure}
+\begin{figure}[htb]
   \centering
   \caption{\label{fig:trace_plot_experiment2_gumbel_imperfect_test_rds}Posterior
   distribution and trace plot for $\theta$, $\tau$ and $\rho$ from model 
@@ -1320,8 +1307,8 @@ strong leading to little learning from the data.
   \fonte{Prepared by the author (2021) and based on Stan and ArviZ results.}
 \end{figure}
 
-At last we compare the last three experiments to verify if the inferences for
-$\theta$ are robust for different graphs structures. We compare the posterior
+At last, we compare the last three experiments to verify if the inferences for
+$\theta$ are robust for different graph structures. We compare the posterior
 94\% HDI and the posterior mean for the parameter $\beta$ for each different
 graph structure in
 \autoref{fig:credible_intervals_effects_prev_comparison_rds_graphs}. Weakly
@@ -1331,24 +1318,24 @@ including $\beta_2$, the parameter related to the variable used for
 preferential recruitment in the models ER2 and BA2. The credible intervals are
 wide, as observed before. The credible intervals for $\theta$ presents
 something already noted in the literature (see \cite{gile2018methods} for
-instance). The estimates of the model not considering sampling weights and
-homophily generate biased estimates when RDS structure habe these behaviors.
-This is a relevant limitation of this model. However, the credible intervals
-included the true value, which is an evidence of uncertainty quantification.
+instance). 
 
-Performing model \eqref{model:imperfect-tests} over the dataset with BA2 graph
-structure resulted in a posterior for $\theta$ of 0.51 with 94\% credible
-interval of 0.2 to 0.84, which not included the true value of $\theta$. This
-fact show that ignoring RDS structure can derive misleading results. 
-
-\begin{figure}
+\begin{figure}[htb]
   \centering
   \caption{\label{fig:credible_intervals_effects_prev_comparison_rds_graphs}Comparing
   posterior mean and 94\% credibility intervals for $\beta$ and $\theta$ for model
   \eqref{model:imperfect-tests-rds} from three different graph structures.}
-  \includegraphics[width=12cm]{credible_intervals_effects_prev_comparison_rds_graphs.pdf}
-  \fonte{Prepared by the author (2021) ans based on Stan result}
+  \includegraphics[width=16cm]{credible_intervals_effects_prev_comparison_rds_graphs.pdf}
+  \fonte{Prepared by the author (2021) ans based on Stan result.}
 \end{figure}
+
+The estimates of the model not considering sampling weights and
+homophily generate biased estimates when RDS structure has these characteristics.
+This is a relevant limitation of model \eqref{model:imperfect-tests-rds}. However, the credible intervals
+included the true value, which is an evidence of uncertainty quantification. Performing model \eqref{model:imperfect-tests} over the dataset with BA2 graph
+structure resulted in a posterior for $\theta$ of 0.51 with 94\% credible
+interval of 0.2 to 0.84, which not included the true value of $\theta$. This
+fact show that ignoring RDS structure can lead to misleading results. 
 
 We compare the prevalence estimates when strong priors are posed on $\theta$
 in \autoref{fig:credible_intervals_effects_prev_comparison_rds_graphs_strong}.
@@ -1356,14 +1343,14 @@ Notice that the estimates are much better for the prevalence, but the graph stru
 BA1 leads to inferences that are much closer to the true value in comparison
 to ER2 and BA2 that add homophily effects in the recruitment.
 
-\begin{figure}
+\begin{figure}[htb]
   \centering
   \caption{\label{fig:credible_intervals_effects_prev_comparison_rds_graphs_strong}Comparing
   posterior mean and 94\% credibility intervals for $\beta$ and $\theta$ for model
   \eqref{model:imperfect-tests-rds} from three different graph structures with
   strong priors.}
-  \includegraphics[width=12cm]{credible_intervals_effects_prev_comparison_rds_graphs_strong.pdf}
-  \fonte{Prepared by the author (2021) ans based on Stan result}
+  \includegraphics[width=16cm]{credible_intervals_effects_prev_comparison_rds_graphs_strong.pdf}
+  \fonte{Prepared by the author (2021) ans based on Stan result.}
 \end{figure}
 
 \subsection{Including uncertainty about the recruitment graph}
@@ -1382,11 +1369,11 @@ follows:
   recruitment graph $G_R$;
   \item we sample from the posterior distribution given by equation
   \eqref{eq:posterior-distribution-graph} using a Metropolis-within-Gibbs
-  procedure detailed below (see Appendix \ref{sec:sampling-posterior-graph});
-  \item with the sampled compatible subgraphs $\hat{G}_S^{(i)}$ and its
-  corresponding adjacency matrix $A^{(i)}$, we have the distribution of the
-  recruitment-induced subgraph $G_S$. 
-  \item for each sampled $A^{(i)}$ we can obtain samples from model
+  procedure detailed in Appendix \ref{sec:sampling-posterior-graph};
+  \item with the sampled compatible subgraphs $\hat{G}_S^{(i)}$ and their
+  corresponding adjacency matrices $A^{(i)}$, we have the distribution of the
+  recruitment-induced subgraph $G_S$;
+  \item for each sampled $A^{(i)}$, we can obtain samples from model
   \eqref{model:imperfect-tests-rds}. The collection of all samples form a
   complete sampling considering the uncertainty over $G_R$. 
 \end{alineas}
@@ -1394,15 +1381,15 @@ follows:
 There are several limitations in \textcite{crawford2016}'s work. The
 recruitment are independent of the recruiter identity, the neighbors,
 and all the other waiting times in the model, but in real applications, this is
-hardly the case. It supposes that $\boldsymbol{d}lambda$ is a fixed data without
+hardly the case. It supposes that $\boldsymbol{d}$ is a fixed data without
 considering the uncertainty about it. Moreover, the sampled graphs are subject
 to inaccuracies since the uniform prior does not offer information to
 distinguish edge $\{i, j\}$ from $\{i, k\}$ when both do not appear in the
 recruitment graph. In general, there are many more wrong options to $i$
-connect than right options. Inclusion of recruiter's characteristics can be
-helpful in future works. 
+connect than right ones. Inclusion of recruiter's characteristics can be
+helpful in future work. 
 
-As a validation of this method, with the same specifications of the Experiment
+As a validation of this method, with the same specifications of the experiment
 1 of \autoref{tab:experiments-imperfect-tests-rds}, we generate RDS data
 through \textcite{crawford2016}'s model obtaining $G_R, \boldsymbol{d},
 \boldsymbol{t}$ and matrix $C$. Moreover, we can get the recruitment-induced
@@ -1414,9 +1401,9 @@ and 100 sampling iterations $\hat{G}_S$, which took around five minutes. With ea
 graph, we performed HMC to obtain samples for the other parameters with 2200
 warmup and 400 sampling iterations for two chains. This marginalize the
 effect of the graphs. This process took about four hours. Informative priors
-were placed in $\theta$ and $\beta$, since even without considering the
+were placed on $\theta$ and $\beta$, since even without considering the
 uncertainty of the graph, the credible intervals already are too wide. Counter
-intuitively, the credible intervals were not too wide. Therefore, well defined
+intuitively, the credible intervals were not too broad. Therefore, well defined
 priors can help with our uncertainty about the graph. 
 
 \begin{figure}[htbp]
@@ -1431,9 +1418,9 @@ priors can help with our uncertainty about the graph.
 \section{Model extensions}
 \label{sec:model_extensions}
 
-Several characteristics of RDS were not include in the previous model, such as
-homophily, bottlenecks and sampling weights. This section aims to build some
-options for these aspects and establish future works in that line.
+Several characteristics of RDS were not included in the previous model, such as
+homophily, bottlenecks and sampling weights. This section aims to outline
+avenues of further work.
 
 \begin{alineas}
   \item {\em homophily model}: ignoring homophily effects can lead to biased 
@@ -1449,11 +1436,11 @@ options for these aspects and establish future works in that line.
  choice. The parameter $\gamma$ has
   serious problems with identification as pointed out by \textcite[p.
   11]{yauck2021general}, which, in our case, could be dealt with a strong prior.
-  \item {\em sampling weights}: One objective of introducing the
-  Volz-Heckathorn estimator for prevalence was to consider the inclusion
+  \item {\em sampling weights}: one objective of introducing the
+  RDS-VH estimator for prevalence was to consider the inclusion
   probabilities of the individuals in the research. Our model does not
   consider these probabilities, which can contribute to wrong inferences.
-  \textcite{bastos2018hiv} use the pseudo-likelihood strategy to ponder the likelihood of each
+  \textcite{bastos2018hiv} used the pseudo-likelihood strategy to ponder the likelihood of each
   individual. For point estimate of $\theta$, other approaches are used, such
   as 
   $$
@@ -1464,7 +1451,7 @@ options for these aspects and establish future works in that line.
   \item {\em Bottlenecks}: bottleneck effects create clusters of individuals 
   based on their characteristics. Fortunately, hierarchical models can address
   this situation including an additional index $j$ for the corresponding
-  cluster. Then, the expression of $\theta_i$ turns to
+  cluster. Then, the expression of $\theta_i$ turns into
   $$
   g(\theta_{ij}) = g(\theta) + \boldsymbol{X}\beta + \omega_{ij},
   $$
@@ -1472,6 +1459,6 @@ options for these aspects and establish future works in that line.
   cluster and between clusters. 
 \end{alineas}
 
-These modifications are possible future works. There are other limitations we do not comment, such as differential activity
+These modifications are possible future works. There are other limitations we do not discuss, such as differential activity
 \cite[p. 68]{gile2018methods}, limited number of sample waves, random
 recruitment, and small size networks \cite{gile2015diagnostics}.

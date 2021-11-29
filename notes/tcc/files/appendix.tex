@@ -204,6 +204,23 @@ whose solution is $\alpha_1 = \alpha_4 \in (0,1)$ and $\alpha_2 = \alpha_3 = 1
 - \alpha_4$. The correlation formula boils down to 
 $$\cor(X,Y) = \alpha_4^2 - (1 - \alpha_4)^2 = 2\alpha_4 - 1 \in (-1,1).$$
 
+\section{Implementation of the dirichlet distribution in Stan}
+
+The Dirichlet distribution is defined on the simplex of lower dimension.
+Therefore the sampler has to consider the restriction of $\sum_{i=1}^4 U_i =
+  1$. \textcite{betancourt2012cruising} presents a simplification in the
+structure of the simplex. The propose is \cite[p. 2]{betancourt2012cruising}
+\begin{equation*}
+  \begin{aligned}
+    z_i & \sim \betadist(\tilde{\alpha}_i, \alpha_i), \text{ where } \tilde{\alpha}_i = \sum_{k=i+1}^4 \alpha_k, \quad i = 1,2,3 \\
+    U_i & = \left(\prod_{k=1}^{i-1} z_k\right)\cdot \begin{cases}
+      1 - z_i, & i < 4 \\
+      1,       & i = 4
+    \end{cases},
+  \end{aligned}
+\end{equation*}
+which removes the constraint.
+
 \section{Comments about integration}
 
 The density of $(X,Y)$ is $f_{X,Y}(x,y)$ as in equation \eqref{eq:dist-X-Y}. Therefore it can be undefined in sets of null Lebesgue measure in $\R^2$ and these sets may be important when plotting in a grid, for instance. This section illustrates one of these sets. If $\alpha_i \ge 1,
